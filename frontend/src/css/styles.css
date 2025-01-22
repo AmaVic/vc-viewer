@@ -1,0 +1,161 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,.05);
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.credential-card {
+    border-left: 4px solid #007bff;
+}
+
+.credential-card:hover {
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.card-container {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+#jsonInput {
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    padding: 0.5rem 2rem;
+}
+
+/* University Degree Credential Styles */
+.degree-credential-card {
+    border: none;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.degree-credential-card .degree-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 2rem 1rem;
+    position: relative;
+    text-align: center;
+}
+
+.degree-credential-card .university-seal {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.degree-credential-card .university-seal i {
+    font-size: 2.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.degree-credential-card .degree-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2a5298;
+    margin-bottom: 0.5rem;
+    font-family: 'Georgia', serif;
+}
+
+.degree-credential-card .degree-type {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+
+.degree-credential-card .degree-content {
+    padding: 2rem;
+}
+
+.degree-credential-card .degree-details {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.degree-credential-card .degree-details .row {
+    align-items: center;
+}
+
+.degree-credential-card .degree-details .row strong {
+    color: #495057;
+}
+
+.degree-credential-card .credential-id {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #6c757d;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.degree-credential-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.degree-credential-card .degree-footer {
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Honors styling */
+.degree-credential-card .honors {
+    color: #856404;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+/* Custom scrollbar */
+.card-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.card-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.card-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.card-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+} 

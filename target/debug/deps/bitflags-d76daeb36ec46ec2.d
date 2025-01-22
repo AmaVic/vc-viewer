@@ -1,0 +1,11 @@
+/Users/vamarald/Dev/vc-viewer/target/debug/deps/libbitflags-d76daeb36ec46ec2.rmeta: /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/lib.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/iter.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/parser.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/traits.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/public.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/internal.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/external.rs
+
+/Users/vamarald/Dev/vc-viewer/target/debug/deps/bitflags-d76daeb36ec46ec2.d: /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/lib.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/iter.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/parser.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/traits.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/public.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/internal.rs /Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/external.rs
+
+/Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/lib.rs:
+/Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/iter.rs:
+/Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/parser.rs:
+/Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/traits.rs:
+/Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/public.rs:
+/Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/internal.rs:
+/Users/vamarald/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.8.0/src/external.rs:
