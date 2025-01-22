@@ -1,0 +1,86 @@
+/* University theme specific styles */
+.university-theme .credential-banner {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+.university-theme .university-name {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 0.25rem;
+}
+
+.university-theme .degree-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.university-theme .degree-name {
+    font-family: 'Georgia', serif;
+    color: #2a5298;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.university-theme .degree-type {
+    color: #6c757d;
+    font-size: 1.2rem;
+}
+
+.university-theme .degree-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.university-theme .info-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.university-theme .info-section h5 {
+    color: #495057;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.university-theme .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.university-theme .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.university-theme .info-item strong {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+}
+
+.university-theme .info-item span {
+    color: #212529;
+}
+
+.university-theme .honors-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.university-theme .honor-item {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+} 

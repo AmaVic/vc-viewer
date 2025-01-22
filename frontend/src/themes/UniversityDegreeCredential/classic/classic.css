@@ -1,0 +1,112 @@
+/* Classic University Theme */
+.classic-university-theme {
+    font-family: 'Crimson Text', Georgia, serif;
+}
+
+.classic-university-theme .credential-banner {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    position: relative;
+}
+
+.classic-university-theme .credential-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+    opacity: 0.1;
+}
+
+.classic-university-theme .university-name {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-style: italic;
+}
+
+.classic-university-theme .degree-content {
+    padding: 3rem 2rem;
+}
+
+.classic-university-theme .degree-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.classic-university-theme .university-seal {
+    width: 80px;
+    height: 80px;
+    background: rgba(42, 82, 152, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: #1e3c72;
+}
+
+.classic-university-theme .degree-name {
+    font-size: 2.5rem;
+    color: #1e3c72;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.classic-university-theme .degree-type {
+    font-size: 1.5rem;
+    color: #666;
+    font-style: italic;
+}
+
+.classic-university-theme .info-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.classic-university-theme .info-section h5 {
+    color: #1e3c72;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(30, 60, 114, 0.1);
+}
+
+.classic-university-theme .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.classic-university-theme .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.classic-university-theme .info-item strong {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #495057;
+}
+
+.classic-university-theme .honors-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.classic-university-theme .honor-item {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-style: italic;
+} 

@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // Setup console logging with timestamp
-    const logger = {
+    window.logger = {
         info: (msg, data) => {
             const time = new Date().toISOString();
             console.log(`[${time}] INFO: ${msg}`, data || '');
@@ -15,228 +15,74 @@ $(document).ready(function() {
         }
     };
 
-    const credentialTemplates = {
-        // Default template for unknown credential types
-        'default': function(credential) {
-            logger.debug('Using default template for credential', credential);
-            const template = document.getElementById('defaultCredentialTemplate');
-            const clone = document.importNode(template.content, true);
-            
-            // Set basic credential info
-            clone.querySelector('.card-title').textContent = credential.type.join(', ');
-            clone.querySelector('.card-text:nth-child(1)').innerHTML = 
-                `<strong>Issuer:</strong> ${typeof credential.issuer === 'string' ? credential.issuer : credential.issuer.id || 'Unknown'}`;
-            clone.querySelector('.card-text:nth-child(2)').innerHTML = 
-                `<strong>Issuance Date:</strong> ${new Date(credential.issuanceDate).toLocaleDateString()}`;
-            
-            // Handle credential subject
-            const subjectDiv = clone.querySelector('.credential-subject');
-            const subject = credential.credentialSubject;
-            
-            Object.entries(subject).forEach(([key, value]) => {
-                if (key !== 'id') {
-                    const p = document.createElement('p');
-                    p.className = 'card-text';
-                    p.innerHTML = `<strong>${key}:</strong> ${JSON.stringify(value, null, 2)}`;
-                    subjectDiv.appendChild(p);
-                }
+    // Theme management
+    function getThemesByCredentialType(credentialType) {
+        return BaseTheme.getAllThemes()
+            .filter(themeId => themeId.startsWith(credentialType + ':'))
+            .map(themeId => {
+                const ThemeClass = BaseTheme.getTheme(themeId);
+                return {
+                    id: themeId,
+                    ...ThemeClass.info
+                };
             });
-            
-            return clone;
-        },
+    }
+
+    function updateThemeSelect(credential) {
+        const $themeSelect = $('#themeSelect');
+        const $themeInfo = $('.theme-info');
         
-        // University Degree Credential template
-        'UniversityDegreeCredential': function(credential) {
-            logger.debug('Using UniversityDegreeCredential template for credential', credential);
-            const template = document.getElementById('universityDegreeTemplate');
-            const clone = document.importNode(template.content, true);
-            
-            try {
-                // Extract degree information
-                const degree = credential.credentialSubject.degree || {};
-                const recipientId = credential.credentialSubject.id || 'Unknown';
-                
-                // Set degree title and type
-                clone.querySelector('.degree-title').textContent = degree.name || 'Degree';
-                clone.querySelector('.degree-type').textContent = degree.type || '';
-                
-                // Set recipient information
-                const shortRecipientId = recipientId.length > 30 
-                    ? recipientId.substring(0, 15) + '...' + recipientId.substring(recipientId.length - 15)
-                    : recipientId;
-                clone.querySelector('.recipient-id').textContent = shortRecipientId;
-                
-                // Set recipient name if available
-                if (credential.credentialSubject.name) {
-                    const nameElem = document.createElement('div');
-                    nameElem.className = 'row mb-3';
-                    nameElem.innerHTML = `
-                        <div class="col-sm-4"><strong>Recipient Name:</strong></div>
-                        <div class="col-sm-8">${credential.credentialSubject.name}</div>
-                    `;
-                    clone.querySelector('.degree-details').appendChild(nameElem);
-                }
-                
-                // Set issuer information
-                const issuerName = typeof credential.issuer === 'string' 
-                    ? credential.issuer 
-                    : credential.issuer.name || credential.issuer.id || 'Unknown Institution';
-                clone.querySelector('.issuer-name').textContent = issuerName;
-                
-                // Format and set issuance date
-                const issuanceDate = new Date(credential.issuanceDate);
-                const formattedDate = issuanceDate.toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                clone.querySelector('.issuance-date').textContent = formattedDate;
-                
-                // Add additional degree details if available
-                const degreeDetails = clone.querySelector('.degree-details');
-                
-                if (degree.major) {
-                    const majorElem = document.createElement('div');
-                    majorElem.className = 'row mb-3';
-                    majorElem.innerHTML = `
-                        <div class="col-sm-4"><strong>Major:</strong></div>
-                        <div class="col-sm-8">${degree.major}</div>
-                    `;
-                    degreeDetails.appendChild(majorElem);
-                }
-
-                if (degree.minor) {
-                    const minorElem = document.createElement('div');
-                    minorElem.className = 'row mb-3';
-                    minorElem.innerHTML = `
-                        <div class="col-sm-4"><strong>Minor:</strong></div>
-                        <div class="col-sm-8">${degree.minor}</div>
-                    `;
-                    degreeDetails.appendChild(minorElem);
-                }
-
-                if (degree.gpa) {
-                    const gpaElem = document.createElement('div');
-                    gpaElem.className = 'row mb-3';
-                    gpaElem.innerHTML = `
-                        <div class="col-sm-4"><strong>GPA:</strong></div>
-                        <div class="col-sm-8">${degree.gpa}</div>
-                    `;
-                    degreeDetails.appendChild(gpaElem);
-                }
-
-                if (degree.honors) {
-                    const honorsElem = document.createElement('div');
-                    honorsElem.className = 'row mb-3';
-                    honorsElem.innerHTML = `
-                        <div class="col-sm-4"><strong>Honors:</strong></div>
-                        <div class="col-sm-8">${Array.isArray(degree.honors) ? degree.honors.join(', ') : degree.honors}</div>
-                    `;
-                    degreeDetails.appendChild(honorsElem);
-                }
-
-                if (degree.graduationDate) {
-                    const gradDate = new Date(degree.graduationDate);
-                    const formattedGradDate = gradDate.toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                    const gradDateElem = document.createElement('div');
-                    gradDateElem.className = 'row mb-3';
-                    gradDateElem.innerHTML = `
-                        <div class="col-sm-4"><strong>Graduation Date:</strong></div>
-                        <div class="col-sm-8">${formattedGradDate}</div>
-                    `;
-                    degreeDetails.appendChild(gradDateElem);
-                }
-                
-                // Set credential ID if present
-                if (credential.id) {
-                    clone.querySelector('.credential-id').textContent = `Credential ID: ${credential.id}`;
-                }
-            } catch (error) {
-                logger.error('Error processing UniversityDegreeCredential', error);
-                throw error;
-            }
-            
-            return clone;
-        },
-
-        // Belgian Driver's License template
-        'BelgianDriverLicenseCredential': function(credential) {
-            logger.debug('Using BelgianDriverLicenseCredential template for credential', credential);
-            const template = document.getElementById('belgianDriverLicenseTemplate');
-            const clone = document.importNode(template.content, true);
-            
-            try {
-                const license = credential.credentialSubject;
-                const holderDetails = clone.querySelector('.holder-details');
-                
-                // Add holder details
-                const details = [
-                    { label: 'Name', value: license.name },
-                    { label: 'Date of Birth', value: new Date(license.dateOfBirth).toLocaleDateString() },
-                    { label: 'Place of Birth', value: license.placeOfBirth },
-                    { label: 'National Number', value: license.nationalNumber },
-                    { label: 'License Number', value: license.licenseNumber }
-                ];
-
-                details.forEach(detail => {
-                    if (detail.value) {
-                        const row = document.createElement('div');
-                        row.className = 'row';
-                        row.innerHTML = `
-                            <div class="col-12">
-                                <strong>${detail.label}</strong><br>
-                                ${detail.value}
-                            </div>
-                        `;
-                        holderDetails.appendChild(row);
-                    }
-                });
-
-                // Add categories
-                const categoriesGrid = clone.querySelector('.categories-grid');
-                if (license.categories && Array.isArray(license.categories)) {
-                    license.categories.forEach(cat => {
-                        const categoryItem = document.createElement('div');
-                        categoryItem.className = 'category-item' + (cat.status === 'active' ? ' active' : '');
-                        categoryItem.innerHTML = `
-                            <div class="category-name">${cat.code}</div>
-                            <div class="category-date">${new Date(cat.validUntil).toLocaleDateString()}</div>
-                        `;
-                        categoriesGrid.appendChild(categoryItem);
-                    });
-                }
-
-                // Set issuer information
-                const issuerName = typeof credential.issuer === 'string' 
-                    ? credential.issuer 
-                    : credential.issuer.name || credential.issuer.id || 'Unknown Authority';
-                clone.querySelector('.issuer-name').textContent = issuerName;
-
-                // Set valid until date
-                if (license.validUntil) {
-                    const validUntil = new Date(license.validUntil);
-                    clone.querySelector('.valid-until').textContent = validUntil.toLocaleDateString();
-                }
-
-                // Set credential ID if present
-                if (credential.id) {
-                    clone.querySelector('.credential-id').textContent = `Credential ID: ${credential.id}`;
-                }
-            } catch (error) {
-                logger.error('Error processing BelgianDriverLicenseCredential', error);
-                throw error;
-            }
-            
-            return clone;
+        // Clear existing options except the first one
+        $themeSelect.find('option:not(:first)').remove();
+        
+        if (!credential) {
+            $themeSelect.prop('disabled', true);
+            $themeInfo.addClass('d-none');
+            return;
         }
-    };
 
-    function displayCredential(credential) {
-        logger.info('Displaying credential', credential);
+        // Get all themes for each credential type
+        const availableThemes = credential.type.reduce((themes, type) => {
+            return themes.concat(getThemesByCredentialType(type));
+        }, []);
+
+        // Add available themes to select
+        availableThemes.forEach(theme => {
+            $themeSelect.append(`<option value="${theme.id}">${theme.name}</option>`);
+        });
+
+        // If credential has a matching theme, select it
+        if (credential.type) {
+            // Try to find a theme for the most specific type first
+            for (let i = credential.type.length - 1; i >= 0; i--) {
+                const type = credential.type[i];
+                const themes = getThemesByCredentialType(type);
+                if (themes.length > 0) {
+                    $themeSelect.val(themes[0].id);
+                    updateThemeInfo(themes[0]);
+                    break;
+                }
+            }
+        }
+
+        $themeSelect.prop('disabled', false);
+    }
+
+    function updateThemeInfo(theme) {
+        const $themeInfo = $('.theme-info');
+        if (!theme) {
+            $themeInfo.addClass('d-none');
+            return;
+        }
+
+        $('.theme-name', $themeInfo).text(theme.name);
+        $('.theme-description', $themeInfo).text(theme.description);
+        $('.theme-author', $themeInfo).text(`Created by ${theme.author}`);
+        $themeInfo.removeClass('d-none');
+    }
+
+    function renderCredential(credential, selectedTheme = '') {
+        logger.info('Rendering credential', { credential, selectedTheme });
         const output = $('#output');
         output.empty();
         
@@ -246,20 +92,47 @@ $(document).ready(function() {
                 throw new Error('Invalid credential: missing or invalid type');
             }
             
-            // Determine which template to use based on credential type
-            const templateName = credential.type.find(t => credentialTemplates[t]) || 'default';
-            logger.debug(`Selected template: ${templateName}`);
-            const template = credentialTemplates[templateName];
+            // Determine which theme to use
+            let themeId = selectedTheme;
+            if (!themeId || themeId === '') {
+                // Try to find a matching theme from credential types
+                for (let i = credential.type.length - 1; i >= 0; i--) {
+                    const type = credential.type[i];
+                    const themes = getThemesByCredentialType(type);
+                    if (themes.length > 0) {
+                        themeId = themes[0].id;
+                        break;
+                    }
+                }
+                // If no matching theme found, use default
+                if (!themeId) {
+                    themeId = 'VerifiableCredential:default';
+                }
+            }
             
-            output.append(template(credential));
+            logger.debug(`Using theme: ${themeId}`);
+            const ThemeClass = BaseTheme.getTheme(themeId);
+            
+            if (!ThemeClass) {
+                throw new Error(`Theme not found: ${themeId}`);
+            }
+            
+            const theme = new ThemeClass(credential);
+            output.append(theme.render());
+            
+            // Update theme selector and info
+            updateThemeSelect(credential);
+            // Set the selected theme in the dropdown
+            $('#themeSelect').val(themeId);
+            updateThemeInfo(ThemeClass.info);
         } catch (error) {
-            logger.error('Error displaying credential', error);
-            showError('Error displaying credential: ' + error.message);
+            logger.error('Error rendering credential', error);
+            showError('Error rendering credential: ' + error.message);
         }
     }
 
-    function displayPresentation(presentation) {
-        logger.info('Displaying presentation', presentation);
+    function renderPresentation(presentation) {
+        logger.info('Rendering presentation', presentation);
         const output = $('#output');
         output.empty();
         
@@ -270,13 +143,11 @@ $(document).ready(function() {
             
             presentation.verifiableCredential.forEach((credential, index) => {
                 logger.debug(`Processing credential ${index + 1}/${presentation.verifiableCredential.length}`);
-                const templateName = credential.type.find(t => credentialTemplates[t]) || 'default';
-                const template = credentialTemplates[templateName];
-                output.append(template(credential));
+                renderCredential(credential);
             });
         } catch (error) {
-            logger.error('Error displaying presentation', error);
-            showError('Error displaying presentation: ' + error.message);
+            logger.error('Error rendering presentation', error);
+            showError('Error rendering presentation: ' + error.message);
         }
     }
 
@@ -290,6 +161,7 @@ $(document).ready(function() {
         $('#output').prepend(errorHtml);
     }
 
+    // Event handlers
     $('#processBtn').click(function() {
         const inputType = $('#inputType').val();
         let jsonData;
@@ -319,9 +191,9 @@ $(document).ready(function() {
             success: function(response) {
                 logger.info('Server response received', response);
                 if (inputType === 'credential') {
-                    displayCredential(response);
+                    renderCredential(response, $('#themeSelect').val());
                 } else {
-                    displayPresentation(response);
+                    renderPresentation(response);
                 }
             },
             error: function(xhr, status, error) {
@@ -331,7 +203,6 @@ $(document).ready(function() {
                     const response = JSON.parse(xhr.responseText);
                     errorMessage = response.error || errorMessage;
                 } catch (e) {
-                    // If response is not JSON, use the error string
                     errorMessage = error || errorMessage;
                 }
                 showError(errorMessage);
@@ -339,7 +210,26 @@ $(document).ready(function() {
         });
     });
 
-    // Example university degree credential
+    // Theme selection change
+    $('#themeSelect').change(function() {
+        const themeId = $(this).val();
+        try {
+            const jsonInput = $('#jsonInput').val();
+            if (!jsonInput.trim()) {
+                throw new Error('No credential loaded');
+            }
+            
+            const credential = JSON.parse(jsonInput);
+            renderCredential(credential, themeId);
+        } catch (e) {
+            logger.error('Error applying theme', e);
+            showError('Please process a valid credential first');
+            // Reset to previous selection on error
+            updateThemeSelect(JSON.parse($('#jsonInput').val()));
+        }
+    });
+
+    // Example credentials
     const exampleUniversityCredential = {
         "@context": [
             "https://www.w3.org/2018/credentials/v1",
@@ -421,7 +311,7 @@ $(document).ready(function() {
         }
     };
 
-    // Update example loading
+    // Example loading
     $('#loadUniversityExample').click(function() {
         logger.debug('Loading university degree example');
         $('#inputType').val('credential');
@@ -433,7 +323,4 @@ $(document).ready(function() {
         $('#inputType').val('credential');
         $('#jsonInput').val(JSON.stringify(exampleDriverLicenseCredential, null, 2));
     });
-
-    // Remove the old example button if it exists
-    $('.btn.btn-secondary:not(.dropdown-toggle)').remove();
 }); 

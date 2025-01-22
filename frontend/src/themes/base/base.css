@@ -1,0 +1,155 @@
+/* Base styles for all themes */
+.credential-wrapper {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.credential-wrapper:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.credential-banner {
+    padding: 1rem;
+    border-radius: 8px 8px 0 0;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.credential-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.credential-title {
+    flex: 1;
+}
+
+.credential-title h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.credential-content {
+    padding: 1rem;
+}
+
+.credential-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* Loading state */
+.credential-wrapper.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Theme selector */
+.theme-selector {
+    position: relative;
+}
+
+.theme-info {
+    margin-top: 0.5rem;
+}
+
+/* Compact grid layouts */
+.info-grid, .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+}
+
+.info-section {
+    margin-bottom: 1rem;
+}
+
+.info-section h5 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Compact property displays */
+.credential-property {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.credential-property strong {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #666;
+    margin-bottom: 0.1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .credential-wrapper {
+        margin-bottom: 0.75rem;
+    }
+
+    .credential-banner {
+        padding: 0.75rem;
+    }
+
+    .credential-content {
+        padding: 0.75rem;
+    }
+
+    .info-grid, .details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Default theme specific styles */
+.default-theme .credential-banner {
+    background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+}
+
+.default-theme .credential-properties {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.default-theme .credential-property {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.default-theme .credential-property strong {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.default-theme .credential-property span {
+    display: block;
+    color: #212529;
+    font-family: var(--bs-font-sans-serif);
+    white-space: pre-wrap;
+    word-break: break-word;
+} 

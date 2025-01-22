@@ -6,7 +6,13 @@
     <title>VC Viewer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/static/css/styles.css" rel="stylesheet">
+    <!-- Theme styles -->
+    <link href="/frontend/src/themes/base/base.css" rel="stylesheet">
+    <link href="/frontend/src/themes/UniversityDegreeCredential/classic/classic.css" rel="stylesheet">
+    <link href="/frontend/src/themes/UniversityDegreeCredential/modern/modern.css" rel="stylesheet">
+    <link href="/frontend/src/themes/BelgianDriverLicenseCredential/classic/classic.css" rel="stylesheet">
+    <link href="/frontend/src/themes/BelgianDriverLicenseCredential/modern/modern.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -34,6 +40,21 @@
                             <label for="jsonInput" class="form-label">JSON Input</label>
                             <textarea class="form-control" id="jsonInput" rows="10" placeholder="Paste your VC/VP here..."></textarea>
                         </div>
+                        <div class="mb-3">
+                            <label for="themeSelect" class="form-label">Visual Theme</label>
+                            <div class="theme-selector">
+                                <select class="form-select" id="themeSelect" disabled>
+                                    <option value="">Auto (based on credential type)</option>
+                                </select>
+                                <div class="theme-info mt-2 d-none">
+                                    <div class="alert alert-info">
+                                        <h6 class="theme-name mb-1"></h6>
+                                        <p class="theme-description mb-0 small"></p>
+                                        <small class="theme-author d-block mt-1 text-muted"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary" id="processBtn">Process</button>
                         <div class="btn-group ms-2">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="exampleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -48,8 +69,8 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div id="output" class="card-container">
-                    <!-- Cards will be dynamically inserted here -->
+                <div id="output">
+                    <!-- Credentials will be dynamically inserted here -->
                 </div>
             </div>
         </div>
@@ -169,6 +190,14 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/main.js"></script>
+    
+    <!-- Theme system -->
+    <script src="/frontend/src/js/core/BaseTheme.js"></script>
+    <script src="/frontend/src/themes/VerifiableCredential/default/DefaultTheme.js"></script>
+    <script src="/frontend/src/themes/UniversityDegreeCredential/classic/ClassicUniversityTheme.js"></script>
+    <script src="/frontend/src/themes/UniversityDegreeCredential/modern/ModernUniversityTheme.js"></script>
+    <script src="/frontend/src/themes/BelgianDriverLicenseCredential/classic/ClassicDriverLicenseTheme.js"></script>
+    <script src="/frontend/src/themes/BelgianDriverLicenseCredential/modern/ModernDriverLicenseTheme.js"></script>
+    <script src="/frontend/src/js/main.js"></script>
 </body>
 </html> 

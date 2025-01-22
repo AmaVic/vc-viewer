@@ -1,5 +1,5 @@
 use actix_files as fs;
-use actix_web::{web, App, HttpResponse, Result, error, middleware::Logger, HttpServer};
+use actix_web::{web, App, HttpResponse, Result, middleware::Logger, HttpServer};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use log::{info, error, debug};
@@ -26,8 +26,10 @@ struct VerifiableCredential {
     #[serde(rename = "type")]
     credential_type: Vec<String>,
     issuer: IssuerType,
-    issuanceDate: String,
-    credentialSubject: Value,
+    #[serde(rename = "issuanceDate")]
+    issuance_date: chrono::DateTime<chrono::Utc>,
+    #[serde(rename = "credentialSubject")]
+    credential_subject: Value,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -36,7 +38,8 @@ struct VerifiablePresentation {
     context: Vec<String>,
     #[serde(rename = "type")]
     presentation_type: Vec<String>,
-    verifiableCredential: Vec<VerifiableCredential>,
+    #[serde(rename = "verifiableCredential")]
+    verifiable_credential: Vec<VerifiableCredential>,
 }
 
 async fn index() -> Result<HttpResponse> {
@@ -64,14 +67,6 @@ async fn process_credential(credential: web::Json<VerifiableCredential>) -> Resu
         })));
     }
 
-    // Validate issuance date format
-    if let Err(e) = chrono::DateTime::parse_from_rfc3339(&credential.issuanceDate) {
-        error!("Invalid issuance date format: {}", e);
-        return Ok(HttpResponse::BadRequest().json(json!({
-            "error": format!("Invalid issuance date format: {}", e)
-        })));
-    }
-
     debug!("Credential processed successfully");
     Ok(HttpResponse::Ok().json(credential.0))
 }
@@ -94,7 +89,7 @@ async fn process_presentation(presentation: web::Json<VerifiablePresentation>) -
         })));
     }
 
-    if presentation.verifiableCredential.is_empty() {
+    if presentation.verifiable_credential.is_empty() {
         error!("Invalid presentation: no credentials found");
         return Ok(HttpResponse::BadRequest().json(json!({
             "error": "Invalid presentation: no credentials found"
@@ -115,9 +110,10 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T"))
             // Serve static files from the frontend directory
-            .service(fs::Files::new("/static/css", "../frontend/src/css"))
-            .service(fs::Files::new("/static/js", "../frontend/src/js"))
-            .service(fs::Files::new("/static", "../frontend/public"))
+            .service(fs::Files::new("/frontend/src/themes", "../frontend/src/themes").show_files_listing())
+            .service(fs::Files::new("/frontend/src/js", "../frontend/src/js").show_files_listing())
+            .service(fs::Files::new("/frontend/src/css", "../frontend/src/css").show_files_listing())
+            .service(fs::Files::new("/frontend/public", "../frontend/public").show_files_listing())
             .route("/", web::get().to(index))
             .route("/process-credential", web::post().to(process_credential))
             .route("/process-presentation", web::post().to(process_presentation))

@@ -1,0 +1,159 @@
+/* Classic Driver License Theme */
+.classic-driver-license-theme {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.classic-driver-license-theme .credential-banner {
+    background: #1e3d59;
+    padding: 1rem;
+}
+
+.classic-driver-license-theme .license-title {
+    text-align: center;
+}
+
+.classic-driver-license-theme .subtitle {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.classic-driver-license-theme .license-content {
+    padding: 1.5rem;
+}
+
+.classic-driver-license-theme .license-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.classic-driver-license-theme .issuer-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.classic-driver-license-theme .country-logo {
+    height: 40px;
+    width: auto;
+}
+
+.classic-driver-license-theme .holder-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.classic-driver-license-theme .photo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.classic-driver-license-theme .photo-placeholder {
+    width: 120px;
+    height: 150px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #adb5bd;
+}
+
+.classic-driver-license-theme .signature-box {
+    width: 120px;
+    height: 40px;
+    border: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.classic-driver-license-theme .personal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.classic-driver-license-theme .info-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.classic-driver-license-theme .info-row strong {
+    min-width: 2.5rem;
+    color: #495057;
+}
+
+.classic-driver-license-theme .categories-section {
+    background: #f8f9fa;
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.classic-driver-license-theme .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.classic-driver-license-theme .category-item {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.classic-driver-license-theme .category-item.active {
+    border-color: #28a745;
+}
+
+.classic-driver-license-theme .category-code {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e3d59;
+    margin-bottom: 0.5rem;
+}
+
+.classic-driver-license-theme .category-validity {
+    font-size: 0.8rem;
+}
+
+.classic-driver-license-theme .category-validity small {
+    display: block;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.classic-driver-license-theme .restrictions-section {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    padding: 1.5rem;
+}
+
+.classic-driver-license-theme .restrictions-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+}
+
+.classic-driver-license-theme .restrictions-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    color: #856404;
+}
+
+.classic-driver-license-theme .restrictions-list li:last-child {
+    border-bottom: none;
+} 
