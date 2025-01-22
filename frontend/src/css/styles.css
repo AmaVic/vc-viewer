@@ -158,4 +158,131 @@ body {
 
 .card-container::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/* Belgian Driver's License Styles */
+.driver-license-card {
+    border: none;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.driver-license-card .license-header {
+    background: linear-gradient(135deg, #000000 0%, #2b2b2b 100%);
+    color: white;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.driver-license-card .license-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+    opacity: 0.1;
+}
+
+.driver-license-card .license-logo {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.driver-license-card .license-content {
+    padding: 2rem;
+}
+
+.driver-license-card .photo-placeholder {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    width: 100%;
+    aspect-ratio: 3/4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+}
+
+.driver-license-card .holder-details {
+    font-size: 0.95rem;
+}
+
+.driver-license-card .holder-details .row {
+    margin-bottom: 0.5rem;
+}
+
+.driver-license-card .holder-details strong {
+    color: #495057;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.driver-license-card .categories-title {
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.driver-license-card .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem;
+}
+
+.driver-license-card .category-item {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.driver-license-card .category-item.active {
+    background: #e8f5e9;
+    border-color: #c8e6c9;
+    color: #2e7d32;
+}
+
+.driver-license-card .category-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.driver-license-card .category-date {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.driver-license-card .license-footer {
+    border-top: 1px solid #dee2e6;
+    padding-top: 1.5rem;
+}
+
+.driver-license-card .issuer-name {
+    font-weight: 500;
+    color: #212529;
+}
+
+.driver-license-card .valid-until {
+    font-weight: 500;
+    color: #212529;
+}
+
+.driver-license-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 } 

@@ -161,6 +161,77 @@ $(document).ready(function() {
             }
             
             return clone;
+        },
+
+        // Belgian Driver's License template
+        'BelgianDriverLicenseCredential': function(credential) {
+            logger.debug('Using BelgianDriverLicenseCredential template for credential', credential);
+            const template = document.getElementById('belgianDriverLicenseTemplate');
+            const clone = document.importNode(template.content, true);
+            
+            try {
+                const license = credential.credentialSubject;
+                const holderDetails = clone.querySelector('.holder-details');
+                
+                // Add holder details
+                const details = [
+                    { label: 'Name', value: license.name },
+                    { label: 'Date of Birth', value: new Date(license.dateOfBirth).toLocaleDateString() },
+                    { label: 'Place of Birth', value: license.placeOfBirth },
+                    { label: 'National Number', value: license.nationalNumber },
+                    { label: 'License Number', value: license.licenseNumber }
+                ];
+
+                details.forEach(detail => {
+                    if (detail.value) {
+                        const row = document.createElement('div');
+                        row.className = 'row';
+                        row.innerHTML = `
+                            <div class="col-12">
+                                <strong>${detail.label}</strong><br>
+                                ${detail.value}
+                            </div>
+                        `;
+                        holderDetails.appendChild(row);
+                    }
+                });
+
+                // Add categories
+                const categoriesGrid = clone.querySelector('.categories-grid');
+                if (license.categories && Array.isArray(license.categories)) {
+                    license.categories.forEach(cat => {
+                        const categoryItem = document.createElement('div');
+                        categoryItem.className = 'category-item' + (cat.status === 'active' ? ' active' : '');
+                        categoryItem.innerHTML = `
+                            <div class="category-name">${cat.code}</div>
+                            <div class="category-date">${new Date(cat.validUntil).toLocaleDateString()}</div>
+                        `;
+                        categoriesGrid.appendChild(categoryItem);
+                    });
+                }
+
+                // Set issuer information
+                const issuerName = typeof credential.issuer === 'string' 
+                    ? credential.issuer 
+                    : credential.issuer.name || credential.issuer.id || 'Unknown Authority';
+                clone.querySelector('.issuer-name').textContent = issuerName;
+
+                // Set valid until date
+                if (license.validUntil) {
+                    const validUntil = new Date(license.validUntil);
+                    clone.querySelector('.valid-until').textContent = validUntil.toLocaleDateString();
+                }
+
+                // Set credential ID if present
+                if (credential.id) {
+                    clone.querySelector('.credential-id').textContent = `Credential ID: ${credential.id}`;
+                }
+            } catch (error) {
+                logger.error('Error processing BelgianDriverLicenseCredential', error);
+                throw error;
+            }
+            
+            return clone;
         }
     };
 
@@ -269,7 +340,7 @@ $(document).ready(function() {
     });
 
     // Example university degree credential
-    const exampleCredential = {
+    const exampleUniversityCredential = {
         "@context": [
             "https://www.w3.org/2018/credentials/v1",
             "https://www.w3.org/2018/credentials/examples/v1"
@@ -303,14 +374,66 @@ $(document).ready(function() {
         }
     };
 
-    // Add example button to the UI
-    $('<button>')
-        .addClass('btn btn-secondary ms-2')
-        .text('Load Example')
-        .click(function() {
-            logger.debug('Loading example credential');
-            $('#inputType').val('credential');
-            $('#jsonInput').val(JSON.stringify(exampleCredential, null, 2));
-        })
-        .insertAfter('#processBtn');
+    const exampleDriverLicenseCredential = {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://www.w3.org/2018/credentials/examples/v1"
+        ],
+        "id": "https://example.be/credentials/driver-license/123",
+        "type": ["VerifiableCredential", "BelgianDriverLicenseCredential"],
+        "issuer": {
+            "id": "https://mobilit.belgium.be/",
+            "name": "FPS Mobility and Transport"
+        },
+        "issuanceDate": "2023-01-15T10:00:00Z",
+        "credentialSubject": {
+            "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+            "name": "Jean Dupont",
+            "dateOfBirth": "1990-05-20",
+            "placeOfBirth": "Brussels",
+            "nationalNumber": "90.05.20-123.45",
+            "licenseNumber": "B123456789",
+            "validUntil": "2033-01-15T10:00:00Z",
+            "categories": [
+                {
+                    "code": "B",
+                    "status": "active",
+                    "validUntil": "2033-01-15T10:00:00Z"
+                },
+                {
+                    "code": "A",
+                    "status": "active",
+                    "validUntil": "2033-01-15T10:00:00Z"
+                },
+                {
+                    "code": "AM",
+                    "status": "active",
+                    "validUntil": "2033-01-15T10:00:00Z"
+                }
+            ],
+            "restrictions": ["Requires corrective lenses"],
+            "address": {
+                "streetAddress": "Rue de la Loi 16",
+                "locality": "Brussels",
+                "postalCode": "1000",
+                "country": "Belgium"
+            }
+        }
+    };
+
+    // Update example loading
+    $('#loadUniversityExample').click(function() {
+        logger.debug('Loading university degree example');
+        $('#inputType').val('credential');
+        $('#jsonInput').val(JSON.stringify(exampleUniversityCredential, null, 2));
+    });
+
+    $('#loadDriverLicenseExample').click(function() {
+        logger.debug('Loading driver license example');
+        $('#inputType').val('credential');
+        $('#jsonInput').val(JSON.stringify(exampleDriverLicenseCredential, null, 2));
+    });
+
+    // Remove the old example button if it exists
+    $('.btn.btn-secondary:not(.dropdown-toggle)').remove();
 }); 

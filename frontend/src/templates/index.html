@@ -35,6 +35,15 @@
                             <textarea class="form-control" id="jsonInput" rows="10" placeholder="Paste your VC/VP here..."></textarea>
                         </div>
                         <button class="btn btn-primary" id="processBtn">Process</button>
+                        <div class="btn-group ms-2">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="exampleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Load Example
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" id="loadUniversityExample">University Degree</a></li>
+                                <li><a class="dropdown-item" href="#" id="loadDriverLicenseExample">Belgian Driver's License</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -100,6 +109,58 @@
                     <div class="degree-footer text-center mt-4">
                         <small class="text-muted">This is a verifiable credential</small>
                         <div class="credential-id mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Belgian Driver's License template -->
+    <template id="belgianDriverLicenseTemplate">
+        <div class="card mb-3 driver-license-card">
+            <div class="card-header license-header">
+                <div class="d-flex align-items-center">
+                    <div class="license-logo">
+                        <i class="fas fa-id-card fa-2x"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h4 class="mb-0">Belgian Driver's License</h4>
+                        <small class="text-light">Permis de conduire · Rijbewijs · Führerschein</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="license-content">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-3x"></i>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="holder-details">
+                                <!-- Dynamic content will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="license-categories mt-4">
+                        <h5 class="categories-title">Categories</h5>
+                        <div class="categories-grid">
+                            <!-- Dynamic categories will be inserted here -->
+                        </div>
+                    </div>
+                    <div class="license-footer mt-4">
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">Issuing Authority</small>
+                                <div class="issuer-name"></div>
+                            </div>
+                            <div class="col-6 text-end">
+                                <small class="text-muted">Valid Until</small>
+                                <div class="valid-until"></div>
+                            </div>
+                        </div>
+                        <div class="credential-id mt-3 text-center"></div>
                     </div>
                 </div>
             </div>
