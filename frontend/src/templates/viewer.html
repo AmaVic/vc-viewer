@@ -115,9 +115,14 @@
                                     <select class="form-select form-select-sm w-auto" id="themeSelect">
                                         <option value="">Select Theme...</option>
                                     </select>
-                                    <button class="btn btn-primary btn-sm" id="exportImage">
-                                        <i class="fas fa-download me-2"></i>Export
-                                    </button>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary btn-sm" id="exportImage">
+                                            <i class="fas fa-image me-2"></i>Image
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" id="exportPDF">
+                                            <i class="fas fa-file-pdf me-2"></i>PDF
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -137,7 +142,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Theme Scripts -->
     <script src="/frontend/src/themes/base/BaseTheme.js"></script>
     <script src="/frontend/src/themes/VerifiableCredential/default/DefaultTheme.js"></script>
