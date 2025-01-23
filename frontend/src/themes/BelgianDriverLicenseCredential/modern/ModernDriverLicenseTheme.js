@@ -1,4 +1,13 @@
 class ModernDriverLicenseTheme extends BaseTheme {
+    static info = {
+        id: 'modern',
+        name: 'Modern Driver License Theme',
+        description: 'A contemporary design for driver license credentials',
+        author: 'VC Viewer Team'
+    };
+
+    static supportedTypes = ['BelgianDriverLicenseCredential'];
+
     constructor(credential) {
         super(credential);
         this.subject = credential.credentialSubject;
@@ -118,14 +127,7 @@ class ModernDriverLicenseTheme extends BaseTheme {
             </div>
         `;
     }
-
-    static info = {
-        name: 'Modern Digital',
-        description: 'Contemporary digital license design with modern layout',
-        credentialType: 'BelgianDriverLicenseCredential',
-        author: 'VC Viewer',
-    };
 }
 
-// Register this theme
-BaseTheme.register('BelgianDriverLicenseCredential:modern', ModernDriverLicenseTheme); 
+// Register the theme
+BaseTheme.register('BelgianDriverLicenseCredential', ModernDriverLicenseTheme); 

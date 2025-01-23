@@ -1,4 +1,13 @@
 class ClassicUniversityTheme extends BaseTheme {
+    static info = {
+        id: 'classic',
+        name: 'Classic University Theme',
+        description: 'A traditional, elegant design for university degree credentials',
+        author: 'VC Viewer Team'
+    };
+
+    static supportedTypes = ['UniversityDegreeCredential'];
+
     constructor(credential) {
         super(credential);
         this.degree = credential.credentialSubject.degree || {};
@@ -7,7 +16,7 @@ class ClassicUniversityTheme extends BaseTheme {
     render() {
         const wrapper = document.createElement('div');
         wrapper.className = 'credential-wrapper classic-university-theme';
-        wrapper.innerHTML = this.getBaseHTML();
+        wrapper.innerHTML = this.getContentHTML();
         return wrapper;
     }
 
@@ -19,35 +28,98 @@ class ClassicUniversityTheme extends BaseTheme {
         return 'University Degree';
     }
 
-    getBannerContent() {
+    getContentHTML() {
+        const { degree } = this;
         return `
-            <div class="credential-icon">
+            <div class="credential-banner">
                 ${this.getThemeIcon()}
-            </div>
-            <div class="credential-title">
-                <h4>${this.getThemeTitle()}</h4>
+                <h1>${this.getThemeTitle()}</h1>
                 <div class="university-name">${this.getIssuerName()}</div>
             </div>
-        `;
-    }
 
-    getContentHTML() {
-        return `
             <div class="degree-content">
-                <div class="degree-header">
-                    <div class="university-seal">
-                        <i class="fas fa-university fa-3x"></i>
+                <h2 class="degree-name">${degree.name || 'Degree'}</h2>
+                <h3 class="degree-type">${degree.type || 'Not specified'}</h3>
+
+                <div class="recipient-info">
+                    <div class="info-item">
+                        <strong>NAME</strong>
+                        <span>${this.credential.credentialSubject.name || 'Unknown Recipient'}</span>
                     </div>
-                    <h2 class="degree-name">${this.degree.name || 'Degree'}</h2>
-                    <div class="degree-type">${this.degree.type || ''}</div>
+                    <div class="info-item">
+                        <strong>IDENTIFIER</strong>
+                        <span>${this.credential.credentialSubject.id || 'Not specified'}</span>
+                    </div>
+                    ${this.credential.credentialSubject.birthDate ? `
+                        <div class="info-item">
+                            <strong>DATE OF BIRTH</strong>
+                            <span>${this.formatDate(this.credential.credentialSubject.birthDate)}</span>
+                        </div>
+                    ` : ''}
+                    ${this.credential.credentialSubject.nationality ? `
+                        <div class="info-item">
+                            <strong>NATIONALITY</strong>
+                            <span>${this.credential.credentialSubject.nationality}</span>
+                        </div>
+                    ` : ''}
                 </div>
 
-                <div class="degree-details">
-                    ${this.getRecipientInfo()}
-                    ${this.getAcademicInfo()}
-                    ${this.getHonorsInfo()}
+                <div class="academic-info">
+                    <div class="info-item">
+                        <strong>GRADUATION DATE</strong>
+                        <span>${this.formatDate(degree.graduationDate)}</span>
+                    </div>
+                    ${degree.gpa ? `
+                        <div class="info-item">
+                            <strong>GPA</strong>
+                            <span>${degree.gpa}</span>
+                        </div>
+                    ` : ''}
+                    ${degree.major ? `
+                        <div class="info-item">
+                            <strong>MAJOR</strong>
+                            <span>${degree.major}</span>
+                        </div>
+                    ` : ''}
+                    ${degree.minor ? `
+                        <div class="info-item">
+                            <strong>MINOR</strong>
+                            <span>${degree.minor}</span>
+                        </div>
+                    ` : ''}
+                    ${degree.studyType ? `
+                        <div class="info-item">
+                            <strong>STUDY TYPE</strong>
+                            <span>${degree.studyType}</span>
+                        </div>
+                    ` : ''}
+                </div>
+
+                ${degree.honors?.length ? `
+                    <div class="honors">
+                        <h3>Honors & Achievements</h3>
+                        <ul>
+                            ${degree.honors.map(honor => `<li>${honor}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+
+                <div class="credential-footer">
+                    <div class="info-item">
+                        <strong>ISSUANCE DATE</strong>
+                        <span>${this.formatDate(this.credential.issuanceDate)}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>ISSUER</strong>
+                        <span>${this.getIssuerName()}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>CREDENTIAL ID</strong>
+                        <span>${this.credential.id || 'Not specified'}</span>
+                    </div>
                 </div>
             </div>
+            ${this.getBaseFooterHTML()}
         `;
     }
 
@@ -65,7 +137,7 @@ class ClassicUniversityTheme extends BaseTheme {
                     ` : ''}
                     <div class="info-item">
                         <strong>Identifier</strong>
-                        <span>${this.truncateId(id)}</span>
+                        <span>${id}</span>
                     </div>
                 </div>
             </div>
@@ -143,14 +215,7 @@ class ClassicUniversityTheme extends BaseTheme {
             </div>
         `;
     }
-
-    static info = {
-        name: 'Classic Academic',
-        description: 'A traditional academic style with classic typography and layout',
-        credentialType: 'UniversityDegreeCredential',
-        author: 'VC Viewer',
-    };
 }
 
-// Register this theme
-BaseTheme.register('UniversityDegreeCredential:classic', ClassicUniversityTheme); 
+// Register the theme
+BaseTheme.register('UniversityDegreeCredential', ClassicUniversityTheme); 

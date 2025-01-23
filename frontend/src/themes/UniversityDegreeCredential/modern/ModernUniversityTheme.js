@@ -1,14 +1,41 @@
 class ModernUniversityTheme extends BaseTheme {
+    static info = {
+        id: 'modern',
+        name: 'Modern University Theme',
+        description: 'A modern, clean design for university degree credentials',
+        author: 'VC Viewer Team'
+    };
+
+    static supportedTypes = ['UniversityDegreeCredential'];
+
+    static example = {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://www.w3.org/2018/credentials/examples/v1"
+        ],
+        "id": "http://example.edu/credentials/3732",
+        "type": ["VerifiableCredential", "UniversityDegreeCredential"],
+        "issuer": {
+            "id": "https://example.edu/issuers/14",
+            "name": "Example University"
+        },
+        "issuanceDate": "2023-06-15T12:00:00Z",
+        "credentialSubject": {
+            "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+            "name": "Alice Johnson",
+            "degree": {
+                "type": "Bachelor of Science",
+                "name": "Computer Science",
+                "graduationDate": "2023-05-15",
+                "honors": ["Magna Cum Laude"],
+                "gpa": "3.8"
+            }
+        }
+    };
+
     constructor(credential) {
         super(credential);
-        this.degree = credential.credentialSubject.degree || {};
-    }
-
-    render() {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'credential-wrapper modern-university-theme';
-        wrapper.innerHTML = this.getBaseHTML();
-        return wrapper;
+        this.degree = credential.credentialSubject.degree;
     }
 
     getThemeIcon() {
@@ -16,102 +43,82 @@ class ModernUniversityTheme extends BaseTheme {
     }
 
     getThemeTitle() {
-        return 'Academic Credential';
-    }
-
-    getBannerContent() {
-        return `
-            <div class="banner-content">
-                <div class="credential-icon">
-                    ${this.getThemeIcon()}
-                </div>
-                <div class="credential-title">
-                    <h4>${this.getThemeTitle()}</h4>
-                    <div class="metadata-grid">
-                        <div class="metadata-item">
-                            <i class="fas fa-calendar"></i>
-                            <span>${this.formatDate(this.credential.issuanceDate)}</span>
-                        </div>
-                        <div class="metadata-item">
-                            <i class="fas fa-fingerprint"></i>
-                            <span>${this.truncateId(this.credential.id || 'Not specified')}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+        return `${this.credential.credentialSubject.name}'s Degree`;
     }
 
     getContentHTML() {
+        const { degree } = this;
         return `
-            <div class="modern-content">
-                <div class="main-info">
-                    <h1 class="university-name">${this.getIssuerName()}</h1>
-                    <div class="degree-info">
-                        <h2>${this.degree.name || 'Degree'}</h2>
-                        <h3>Conferred upon</h3>
-                        <h2 class="recipient-name">${this.credential.credentialSubject.name || 'Unknown Recipient'}</h2>
-                        <p class="degree-type">${this.degree.type || ''}</p>
+            <div class="credential-banner">
+                <div class="credential-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="university-name">${this.getIssuerName()}</div>
+            </div>
+            
+            <div class="degree-content">
+                <div class="degree-info">
+                    <h2>${degree.name || 'Degree'}</h2>
+                    <h3>Conferred upon</h3>
+                    <div class="recipient-name">${this.credential.credentialSubject.name || 'Unknown Recipient'}</div>
+                    <div class="degree-type">${degree.type || 'Not specified'}</div>
+                </div>
+
+                <div class="info-section">
+                    <h5>Academic Information</h5>
+                    <div class="info-grid">
+                        ${degree.graduationDate ? `
+                            <div class="info-item">
+                                <strong>Graduated</strong>
+                                <span>${this.formatDate(degree.graduationDate)}</span>
+                            </div>
+                        ` : ''}
+                        ${degree.gpa ? `
+                            <div class="info-item">
+                                <strong>GPA</strong>
+                                <span>${degree.gpa}</span>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
 
-                <div class="details-grid">
-                    ${this.getDetailsSection()}
-                </div>
-
-                ${this.getHonorsSection()}
-            </div>
-        `;
-    }
-
-    getDetailsSection() {
-        const details = [
-            { label: 'Major', value: this.degree.major },
-            { label: 'Minor', value: this.degree.minor },
-            { label: 'GPA', value: this.degree.gpa },
-            { label: 'College', value: this.credential.credentialSubject.college },
-            { label: 'Department', value: this.credential.credentialSubject.department },
-            { label: 'Credits Earned', value: this.credential.credentialSubject.creditsEarned },
-            { label: 'Graduation Date', value: this.degree.graduationDate ? this.formatDate(this.degree.graduationDate) : 'Not specified' },
-            { label: 'Program Duration', value: this.credential.credentialSubject.programDuration }
-        ].filter(detail => detail.value);
-
-        return details.map(detail => `
-            <div class="detail-item">
-                <div class="detail-label">${detail.label}</div>
-                <div class="detail-value">${detail.value}</div>
-            </div>
-        `).join('');
-    }
-
-    getHonorsSection() {
-        const { honors } = this.degree;
-        if (!honors || (Array.isArray(honors) && honors.length === 0)) return '';
-
-        const honorsList = Array.isArray(honors) ? honors : [honors];
-        
-        return `
-            <div class="honors-section">
-                <h4>Honors & Distinctions</h4>
-                <div class="honors-list">
-                    ${honorsList.map(honor => `
-                        <div class="honor-badge">
-                            <i class="fas fa-award"></i>
-                            <span>${honor}</span>
+                ${degree.honors?.length ? `
+                    <div class="info-section">
+                        <h5>Honors & Achievements</h5>
+                        <div class="honors-list">
+                            ${degree.honors.map(honor => `
+                                <div class="honor-item">${honor}</div>
+                            `).join('')}
                         </div>
-                    `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+
+            <div class="credential-footer">
+                <div>
+                    <i class="fas fa-calendar"></i>
+                    Issued on ${this.formatDate(this.credential.issuanceDate)}
+                </div>
+                <div>
+                    <i class="fas fa-university"></i>
+                    ${this.getIssuerName()}
+                </div>
+                <div>
+                    <i class="fas fa-fingerprint"></i>
+                    ${this.credential.id}
                 </div>
             </div>
+            ${this.getBaseFooterHTML()}
         `;
     }
 
-    static info = {
-        name: 'Modern Academic',
-        description: 'A contemporary design with clean typography and modern layout',
-        credentialType: 'UniversityDegreeCredential',
-        author: 'VC Viewer',
-    };
+    render() {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'modern-university-theme';
+        wrapper.innerHTML = this.getContentHTML();
+        return wrapper;
+    }
 }
 
-// Register this theme
+// Register the theme
 BaseTheme.register('UniversityDegreeCredential:modern', ModernUniversityTheme); 

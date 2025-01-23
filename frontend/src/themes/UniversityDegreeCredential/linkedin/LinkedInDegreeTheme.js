@@ -1,4 +1,13 @@
 class LinkedInDegreeTheme extends BaseTheme {
+    static info = {
+        id: 'linkedin',
+        name: 'LinkedIn Post',
+        description: 'Optimized for LinkedIn feed dimensions',
+        author: 'VC Viewer Team'
+    };
+
+    static supportedTypes = ['UniversityDegreeCredential'];
+
     constructor(credential) {
         super(credential);
         this.degree = {
@@ -65,16 +74,7 @@ class LinkedInDegreeTheme extends BaseTheme {
     getThemeTitle() {
         return 'LinkedIn Post';
     }
-
-    static get info() {
-        return {
-            name: 'LinkedIn Post',
-            description: 'Optimized for LinkedIn feed dimensions',
-            author: 'VC Viewer',
-            credentialType: 'UniversityDegreeCredential'
-        };
-    }
 }
 
-// Register the theme with the correct identifier
-BaseTheme.register('UniversityDegreeCredential:LinkedIn Post', LinkedInDegreeTheme); 
+// Register the theme
+BaseTheme.register('UniversityDegreeCredential', LinkedInDegreeTheme); 

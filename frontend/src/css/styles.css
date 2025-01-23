@@ -365,4 +365,64 @@ body {
 #processBtn:not(:disabled):hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.editor-container {
+    position: relative;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background: #f8f9fa;
+    min-height: 200px;
+}
+
+.editor-container pre {
+    margin: 0;
+    padding: 0.75rem;
+    background: transparent;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.editor-container code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    tab-size: 4;
+}
+
+.editor-container code:focus {
+    outline: none;
+}
+
+/* Editor validation states */
+.editor-container.is-valid {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.editor-container.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+/* Prism.js theme overrides */
+.token.property {
+    color: #e83e8c;
+}
+
+.token.string {
+    color: #28a745;
+}
+
+.token.number {
+    color: #fd7e14;
+}
+
+.token.boolean {
+    color: #007bff;
+}
+
+.token.null {
+    color: #6c757d;
 } 

@@ -10,10 +10,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/fontawesome.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/solid.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/brands.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet">
     <link href="/frontend/src/css/styles.css" rel="stylesheet">
     
     <!-- Theme stylesheets -->
-    <link href="/frontend/src/themes/base/base.css" rel="stylesheet">
+    <link href="/frontend/src/themes/VerifiableCredential/default/default.css" rel="stylesheet">
     <link href="/frontend/src/themes/UniversityDegreeCredential/classic/classic.css" rel="stylesheet">
     <link href="/frontend/src/themes/UniversityDegreeCredential/modern/modern.css" rel="stylesheet">
     <link href="/frontend/src/themes/UniversityDegreeCredential/linkedin/linkedin.css" rel="stylesheet">
@@ -33,7 +35,9 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="jsonInput" class="form-label">Verifiable Credential (JSON)</label>
-                            <textarea class="form-control" id="jsonInput" rows="10"></textarea>
+                            <div class="editor-container position-relative">
+                                <pre class="mb-0"><code id="jsonInput" class="language-json" contenteditable="true" spellcheck="false"></code></pre>
+                            </div>
                             <div class="validation-feedback mt-2 d-none">
                                 <div class="valid-feedback text-success">
                                     <i class="fas fa-check-circle"></i> Valid Verifiable Credential
@@ -99,6 +103,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script>
     
     <!-- Core scripts - order matters -->
     <script src="/frontend/src/js/core/BaseTheme.js"></script>

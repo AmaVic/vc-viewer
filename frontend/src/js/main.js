@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    // Validation timeout for debouncing
+    let validationTimeout;
+
     // Setup console logging with timestamp
     window.logger = {
         info: (msg, data) => {
@@ -111,34 +114,32 @@ $(document).ready(function() {
     }
 
     function updateValidationUI(validationResult) {
-        const $input = $('#jsonInput');
+        const $container = $('.editor-container');
         const $feedback = $('.validation-feedback');
         const $validFeedback = $('.valid-feedback');
         const $invalidFeedback = $('.invalid-feedback');
         const $processBtn = $('#processBtn');
         
         // Remove existing validation states
-        $input.removeClass('is-valid is-invalid');
+        $container.removeClass('is-valid is-invalid');
         $feedback.removeClass('d-none');
         
         if (validationResult.isValid) {
-            $input.addClass('is-valid');
+            $container.addClass('is-valid');
             $validFeedback.removeClass('d-none');
             $invalidFeedback.addClass('d-none');
             $processBtn.prop('disabled', false);
             
-            // Simple success message
             $validFeedback.html(`
                 <i class="fas fa-check-circle"></i>
                 <div>Valid Verifiable Credential</div>
             `);
         } else {
-            $input.addClass('is-invalid');
+            $container.addClass('is-invalid');
             $validFeedback.addClass('d-none');
             $invalidFeedback.removeClass('d-none');
             $processBtn.prop('disabled', true);
             
-            // Show error details if available
             if (validationResult.details) {
                 const detailsHtml = Array.isArray(validationResult.details)
                     ? `<ul class="validation-details mb-0 mt-1">
@@ -162,118 +163,162 @@ $(document).ready(function() {
         }
     }
 
-    // Add input event listener for real-time validation with debounce
-    let validationTimeout;
-    $('#jsonInput').on('input', function() {
-        const $input = $(this);
+    // Initialize JSON editor
+    const jsonEditor = document.getElementById('jsonInput');
+    
+    // Function to update editor content with proper formatting
+    function updateEditor(json) {
+        let formatted;
+        try {
+            // If json is a string, parse it first
+            const obj = typeof json === 'string' ? JSON.parse(json) : json;
+            formatted = JSON.stringify(obj, null, 2);
+        } catch (e) {
+            formatted = json || '';
+        }
         
+        jsonEditor.textContent = formatted;
+        Prism.highlightElement(jsonEditor);
+    }
+
+    // Handle editor input events
+    jsonEditor.addEventListener('input', function() {
         // Clear existing timeout
         clearTimeout(validationTimeout);
         
         // Remove validation states while typing
-        $input.removeClass('is-valid is-invalid');
+        $('.editor-container').removeClass('is-valid is-invalid');
         $('.validation-feedback').addClass('d-none');
         
         // Set new timeout for validation
         validationTimeout = setTimeout(() => {
-            const result = validateVC($input.val());
+            const result = validateVC(this.textContent);
             updateValidationUI(result);
-        }, 300); // Debounce for 300ms
+        }, 300);
+    });
+
+    // Handle paste events to format JSON
+    jsonEditor.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const text = e.clipboardData.getData('text');
+        updateEditor(text);
     });
 
     // Theme management
     function getThemesByCredentialType(credentialType) {
-        return BaseTheme.getAllThemes()
-            .filter(themeId => themeId.startsWith(credentialType + ':'))
-            .map(themeId => {
-                const ThemeClass = BaseTheme.getTheme(themeId);
-                return {
-                    id: themeId,
-                    ...ThemeClass.info
-                };
-            });
+        logger.debug('Getting themes for credential type:', credentialType);
+        return BaseTheme.getThemesByType(credentialType);
     }
 
     function updateThemeSelect(credential) {
-        const $themeSelect = $('#themeSelect');
+        const $select = $('#themeSelect');
         const $themeInfo = $('.theme-info');
         
-        // Clear existing options except the first one
-        $themeSelect.find('option:not(:first)').remove();
+        // Clear existing options
+        $select.empty().append('<option value="">Select a theme...</option>');
         
-        if (!credential) {
-            $themeSelect.prop('disabled', true);
+        if (!credential || !credential.type) {
+            $select.prop('disabled', true);
             $themeInfo.addClass('d-none');
             return;
         }
-
-        // Get all themes for the credential type
-        const availableThemes = getThemesByCredentialType(credential.type[credential.type.length - 1]);
-
-        // Add available themes to select
-        availableThemes.forEach(theme => {
-            $themeSelect.append(`<option value="${theme.id}">${theme.name}</option>`);
-        });
-
-        // Select the first available theme
-        if (availableThemes.length > 0) {
-            $themeSelect.val(availableThemes[0].id);
-            updateThemeInfo(availableThemes[0]);
+        
+        // Get the most specific credential type
+        const credentialType = credential.type[credential.type.length - 1];
+        const themes = getThemesByCredentialType(credentialType);
+        
+        if (themes.length > 0) {
+            // Add theme options with full theme IDs
+            themes.forEach(theme => {
+                const fullThemeId = `${credentialType}:${theme.id}`;
+                $select.append(`<option value="${fullThemeId}">${theme.name}</option>`);
+            });
+            
+            // Enable select and show theme info
+            $select.prop('disabled', false);
+            updateThemeInfo(themes[0]);
+            $themeInfo.removeClass('d-none');
+            
+            // Select the first theme by default
+            $select.val(`${credentialType}:${themes[0].id}`);
+        } else {
+            // If no specific themes found, try to use the default theme
+            const defaultThemes = getThemesByCredentialType('VerifiableCredential');
+            if (defaultThemes.length > 0) {
+                defaultThemes.forEach(theme => {
+                    const defaultThemeId = `VerifiableCredential:${theme.id}`;
+                    $select.append(`<option value="${defaultThemeId}">${theme.name}</option>`);
+                });
+                $select.prop('disabled', false);
+                updateThemeInfo(defaultThemes[0]);
+                $themeInfo.removeClass('d-none');
+                $select.val(`VerifiableCredential:${defaultThemes[0].id}`);
+            } else {
+                $select.prop('disabled', true);
+                $themeInfo.addClass('d-none');
+            }
         }
-
-        $themeSelect.prop('disabled', false);
     }
 
-    function updateThemeInfo(theme) {
-        const $themeInfo = $('.theme-info');
-        if (!theme) {
-            $themeInfo.addClass('d-none');
-            return;
-        }
-
-        $('.theme-name', $themeInfo).text(theme.name);
-        $('.theme-description', $themeInfo).text(theme.description);
-        $('.theme-author', $themeInfo).text(`Created by ${theme.author}`);
-        $themeInfo.removeClass('d-none');
+    function updateThemeInfo(themeInfo) {
+        if (!themeInfo) return;
+        
+        $('.theme-info')
+            .removeClass('d-none')
+            .find('.theme-name').text(themeInfo.name)
+            .end()
+            .find('.theme-description').text(themeInfo.description)
+            .end()
+            .find('.theme-author').text(`Created by ${themeInfo.author}`);
     }
 
     function renderCredential(credential, selectedTheme = '') {
-        logger.info('Rendering credential', { credential, selectedTheme });
-        const output = $('#output');
-        output.empty();
-        $('#outputCard').removeClass('d-none');
-        
         try {
-            // Validate credential
-            if (!credential.type || !Array.isArray(credential.type)) {
-                throw new Error('Invalid credential: missing or invalid type');
-            }
+            // Get the most specific credential type
+            const credentialType = credential.type[credential.type.length - 1];
+            logger.debug('Rendering credential of type:', credentialType);
             
-            // Determine which theme to use
-            let themeId = selectedTheme;
-            if (!themeId || themeId === '') {
-                const credentialType = credential.type[credential.type.length - 1];
+            // Get the theme class
+            let ThemeClass;
+            if (selectedTheme) {
+                logger.debug('Using selected theme:', selectedTheme);
+                ThemeClass = BaseTheme.getTheme(selectedTheme);
+            } else {
+                // Try to find a theme that supports this credential type
                 const themes = getThemesByCredentialType(credentialType);
-                themeId = themes.length > 0 ? themes[0].id : 'VerifiableCredential:default';
+                logger.debug('Available themes:', themes);
+                
+                if (themes.length > 0) {
+                    // Use the first theme's full ID (e.g., "UniversityDegreeCredential:classic")
+                    const themeId = `${credentialType}:${themes[0].id}`;
+                    logger.debug('Using first available theme:', themeId);
+                    ThemeClass = BaseTheme.getTheme(themeId);
+                } else {
+                    // Fall back to default theme
+                    logger.debug('No specific themes found, trying default theme');
+                    const defaultThemes = getThemesByCredentialType('VerifiableCredential');
+                    if (defaultThemes.length > 0) {
+                        const defaultThemeId = `VerifiableCredential:${defaultThemes[0].id}`;
+                        ThemeClass = BaseTheme.getTheme(defaultThemeId);
+                    } else {
+                        ThemeClass = null;
+                    }
+                }
             }
             
-            logger.debug(`Using theme: ${themeId}`);
-            const ThemeClass = BaseTheme.getTheme(themeId);
+            logger.debug('Selected ThemeClass:', ThemeClass);
             
             if (!ThemeClass) {
-                throw new Error(`Theme not found: ${themeId}`);
+                throw new Error(`No theme found for credential type: ${credentialType}`);
             }
             
+            // Create and render the theme
             const theme = new ThemeClass(credential);
-            output.append(theme.render());
+            return theme.render();
             
-            // Update theme selector and info
-            updateThemeSelect(credential);
-            $('#themeSelect').val(themeId);
-            updateThemeInfo(ThemeClass.info);
         } catch (error) {
-            logger.error('Error rendering credential', error);
-            showError('Error rendering credential: ' + error.message);
+            logger.error('Error rendering credential:', error);
+            return document.createElement('div');
         }
     }
 
@@ -288,75 +333,73 @@ $(document).ready(function() {
         $('#outputCard').removeClass('d-none');
     }
 
-    // Event handlers
+    // Process button click handler
     $('#processBtn').click(function() {
-        let jsonData;
-        
         try {
-            const jsonInput = $('#jsonInput').val();
-            logger.debug('Processing input', { input: jsonInput });
+            const jsonStr = jsonEditor.textContent;
+            const credential = JSON.parse(jsonStr);
             
-            if (!jsonInput.trim()) {
-                throw new Error('Input is empty');
-            }
+            // Get the selected theme
+            const selectedTheme = $('#themeSelect').val();
+            logger.debug('Processing credential with selected theme:', selectedTheme);
             
-            jsonData = JSON.parse(jsonInput);
-        } catch (e) {
-            logger.error('JSON parsing error', e);
-            showError('Invalid JSON input: ' + e.message);
-            return;
+            // Clear the output and show the card
+            const output = $('#output');
+            output.empty();
+            $('#outputCard').removeClass('d-none');
+            
+            // Render the credential
+            const rendered = renderCredential(credential, selectedTheme);
+            output.append(rendered);
+            
+            // Update theme selector
+            updateThemeSelect(credential);
+            
+            logger.info('Credential processed successfully');
+        } catch (error) {
+            logger.error('Error processing credential:', error);
+            showError('Error processing credential: ' + error.message);
         }
-        
-        $.ajax({
-            url: '/process-credential',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(jsonData),
-            success: function(response) {
-                logger.info('Server response received', response);
-                renderCredential(response, $('#themeSelect').val());
-            },
-            error: function(xhr, status, error) {
-                logger.error('Server request failed', { status, error, response: xhr.responseText });
-                let errorMessage = 'Error processing the credential';
-                try {
-                    const response = JSON.parse(xhr.responseText);
-                    errorMessage = response.error || errorMessage;
-                } catch (e) {
-                    errorMessage = error || errorMessage;
-                }
-                showError(errorMessage);
-            }
-        });
     });
 
-    // Theme selection change
+    // Theme selection change handler
     $('#themeSelect').change(function() {
-        const themeId = $(this).val();
+        const selectedTheme = $(this).val();
         try {
-            const jsonInput = $('#jsonInput').val();
-            if (!jsonInput.trim()) {
-                throw new Error('No credential loaded');
+            // Get the current credential
+            const jsonStr = jsonEditor.textContent;
+            const credential = JSON.parse(jsonStr);
+            
+            // Clear the output and show the card
+            const output = $('#output');
+            output.empty();
+            $('#outputCard').removeClass('d-none');
+            
+            // Render with the new theme
+            const rendered = renderCredential(credential, selectedTheme);
+            output.append(rendered);
+            
+            // Update theme info
+            const ThemeClass = BaseTheme.getTheme(selectedTheme);
+            if (ThemeClass) {
+                updateThemeInfo(ThemeClass.info);
             }
             
-            const credential = JSON.parse(jsonInput);
-            renderCredential(credential, themeId);
-        } catch (e) {
-            logger.error('Error applying theme', e);
-            showError('Please process a valid credential first');
-            // Reset to previous selection on error
-            updateThemeSelect(JSON.parse($('#jsonInput').val()));
+            logger.info('Theme changed successfully:', selectedTheme);
+        } catch (error) {
+            logger.error('Error changing theme:', error);
+            showError('Error changing theme: ' + error.message);
         }
     });
 
-    // Example loading
+    // Update example loading to use new editor
     $('#loadUniversityExample').click(function() {
         logger.debug('Loading university degree example');
         const example = examples['UniversityDegreeCredential'];
         if (example) {
-            $('#jsonInput').val(JSON.stringify(example, null, 2));
+            updateEditor(example);
             // Trigger validation
-            $('#jsonInput').trigger('input');
+            jsonEditor.dispatchEvent(new Event('input'));
             // Automatically process the example
             $('#processBtn').click();
         } else {
@@ -369,9 +412,9 @@ $(document).ready(function() {
         logger.debug('Loading driver license example');
         const example = examples['BelgianDriverLicenseCredential'];
         if (example) {
-            $('#jsonInput').val(JSON.stringify(example, null, 2));
+            updateEditor(example);
             // Trigger validation
-            $('#jsonInput').trigger('input');
+            jsonEditor.dispatchEvent(new Event('input'));
             // Automatically process the example
             $('#processBtn').click();
         } else {

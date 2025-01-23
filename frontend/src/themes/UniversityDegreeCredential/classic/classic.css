@@ -1,112 +1,240 @@
 /* Classic University Theme */
 .classic-university-theme {
-    font-family: 'Crimson Text', Georgia, serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 700px;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 .classic-university-theme .credential-banner {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    position: relative;
+    background: #1e3a8a;
+    padding: 1.25rem;
+    text-align: center;
+    color: #fff;
 }
 
-.classic-university-theme .credential-banner::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
-    opacity: 0.1;
+.classic-university-theme .credential-banner i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
-.classic-university-theme .university-name {
-    font-size: 1.1rem;
-    opacity: 0.9;
+.classic-university-theme .credential-banner h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0.25rem 0;
+}
+
+.classic-university-theme .credential-banner .university-name {
+    font-size: 1.5rem;
+    font-weight: 500;
     font-style: italic;
+    margin-top: 0.5rem;
 }
 
 .classic-university-theme .degree-content {
-    padding: 3rem 2rem;
+    padding: 1.5rem;
+    background: #fff;
 }
 
-.classic-university-theme .degree-header {
+.classic-university-theme .degree-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 0 0 0.25rem 0;
     text-align: center;
-    margin-bottom: 3rem;
+}
+
+.classic-university-theme .degree-type {
+    font-size: 1.1rem;
+    color: #64748b;
+    font-weight: 500;
+    margin: 0 0 1.5rem 0;
+    font-style: italic;
+    text-align: center;
+}
+
+.classic-university-theme .recipient-info {
+    margin-bottom: 1.5rem;
+}
+
+.classic-university-theme .info-item {
+    margin-bottom: 0.75rem;
+}
+
+.classic-university-theme .info-item strong {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 0.2rem;
+}
+
+.classic-university-theme .info-item span {
+    display: block;
+    font-size: 1.1rem;
+    color: #1e3a8a;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.classic-university-theme .academic-info {
+    background: #f8fafc;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.classic-university-theme .honors {
+    margin-top: 1.5rem;
+}
+
+.classic-university-theme .honors h3 {
+    font-size: 1.1rem;
+    color: #0f172a;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.classic-university-theme .honors ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+}
+
+.classic-university-theme .honors li {
+    font-size: 0.9rem;
+    color: #1e3a8a;
+    margin-bottom: 0.25rem;
+    padding-left: 1.25rem;
     position: relative;
 }
 
+.classic-university-theme .honors li:before {
+    content: "•";
+    position: absolute;
+    left: 0.5rem;
+    color: #3b82f6;
+}
+
 .classic-university-theme .university-seal {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background: rgba(42, 82, 152, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 1rem;
     color: #1e3c72;
+    border: 2px solid rgba(30, 60, 114, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
 }
 
-.classic-university-theme .degree-name {
-    font-size: 2.5rem;
-    color: #1e3c72;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.classic-university-theme .degree-type {
-    font-size: 1.5rem;
-    color: #666;
-    font-style: italic;
+.classic-university-theme .university-seal:hover {
+    transform: scale(1.05);
 }
 
 .classic-university-theme .info-section {
-    background: #f8f9fa;
+    background: #fff;
     border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+}
+
+.classic-university-theme .info-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
 }
 
 .classic-university-theme .info-section h5 {
     color: #1e3c72;
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
     border-bottom: 2px solid rgba(30, 60, 114, 0.1);
+    position: relative;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+}
+
+.classic-university-theme .info-section h5::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
 }
 
 .classic-university-theme .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1rem;
-}
-
-.classic-university-theme .info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.classic-university-theme .info-item strong {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #495057;
 }
 
 .classic-university-theme .honors-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .classic-university-theme .honor-item {
-    background: #fff3cd;
+    background: linear-gradient(135deg, #fff3cd 0%, #fff8e5 100%);
     color: #856404;
     border: 1px solid #ffeeba;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.95rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
     font-style: italic;
+    box-shadow: 0 2px 8px rgba(133, 100, 4, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.classic-university-theme .honor-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(133, 100, 4, 0.15);
+}
+
+.classic-university-theme .credential-footer {
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 0.5rem 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.classic-university-theme .credential-footer .info-item strong {
+    font-size: 0.6rem;
+    color: #64748b;
+    margin-bottom: 0.1rem;
+}
+
+.classic-university-theme .credential-footer .info-item span {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    color: #1e3a8a;
+}
+
+.classic-university-theme .credential-footer .info-item {
+    margin-bottom: 0;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
 } 

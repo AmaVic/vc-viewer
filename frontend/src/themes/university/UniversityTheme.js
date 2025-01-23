@@ -62,7 +62,7 @@ class UniversityTheme extends BaseTheme {
                     ` : ''}
                     <div class="info-item">
                         <strong>Identifier</strong>
-                        <span>${this.truncateId(id)}</span>
+                        <span>${id}</span>
                     </div>
                 </div>
             </div>
