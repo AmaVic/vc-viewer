@@ -15,6 +15,83 @@ $(document).ready(function() {
         }
     };
 
+    // Real-time validation
+    function validateVC(jsonStr) {
+        try {
+            if (!jsonStr.trim()) {
+                return { isValid: false, error: 'Input is empty' };
+            }
+
+            const credential = JSON.parse(jsonStr);
+            
+            // Basic VC validation
+            if (!credential['@context'] || !credential['@context'].includes('https://www.w3.org/2018/credentials/v1')) {
+                return { isValid: false, error: 'Missing or invalid @context' };
+            }
+            
+            if (!credential.type || !credential.type.includes('VerifiableCredential')) {
+                return { isValid: false, error: 'Missing or invalid type' };
+            }
+            
+            if (!credential.issuer) {
+                return { isValid: false, error: 'Missing issuer' };
+            }
+            
+            if (!credential.credentialSubject) {
+                return { isValid: false, error: 'Missing credentialSubject' };
+            }
+
+            return { isValid: true };
+        } catch (e) {
+            return { isValid: false, error: 'Invalid JSON format' };
+        }
+    }
+
+    function updateValidationUI(validationResult) {
+        const $input = $('#jsonInput');
+        const $feedback = $('.validation-feedback');
+        const $validFeedback = $('.valid-feedback');
+        const $invalidFeedback = $('.invalid-feedback');
+        const $errorMessage = $('.error-message');
+        const $processBtn = $('#processBtn');
+        
+        // Remove existing validation states
+        $input.removeClass('is-valid is-invalid');
+        $feedback.removeClass('d-none');
+        
+        if (validationResult.isValid) {
+            $input.addClass('is-valid');
+            $validFeedback.removeClass('d-none');
+            $invalidFeedback.addClass('d-none');
+            $processBtn.prop('disabled', false);
+        } else {
+            $input.addClass('is-invalid');
+            $validFeedback.addClass('d-none');
+            $invalidFeedback.removeClass('d-none');
+            $errorMessage.text(validationResult.error);
+            $processBtn.prop('disabled', true);
+        }
+    }
+
+    // Add input event listener for real-time validation with debounce
+    let validationTimeout;
+    $('#jsonInput').on('input', function() {
+        const $input = $(this);
+        
+        // Clear existing timeout
+        clearTimeout(validationTimeout);
+        
+        // Remove validation states while typing
+        $input.removeClass('is-valid is-invalid');
+        $('.validation-feedback').addClass('d-none');
+        
+        // Set new timeout for validation
+        validationTimeout = setTimeout(() => {
+            const result = validateVC($input.val());
+            updateValidationUI(result);
+        }, 300); // Debounce for 300ms
+    });
+
     // Theme management
     function getThemesByCredentialType(credentialType) {
         return BaseTheme.getAllThemes()
@@ -41,28 +118,18 @@ $(document).ready(function() {
             return;
         }
 
-        // Get all themes for each credential type
-        const availableThemes = credential.type.reduce((themes, type) => {
-            return themes.concat(getThemesByCredentialType(type));
-        }, []);
+        // Get all themes for the credential type
+        const availableThemes = getThemesByCredentialType(credential.type[credential.type.length - 1]);
 
         // Add available themes to select
         availableThemes.forEach(theme => {
             $themeSelect.append(`<option value="${theme.id}">${theme.name}</option>`);
         });
 
-        // If credential has a matching theme, select it
-        if (credential.type) {
-            // Try to find a theme for the most specific type first
-            for (let i = credential.type.length - 1; i >= 0; i--) {
-                const type = credential.type[i];
-                const themes = getThemesByCredentialType(type);
-                if (themes.length > 0) {
-                    $themeSelect.val(themes[0].id);
-                    updateThemeInfo(themes[0]);
-                    break;
-                }
-            }
+        // Select the first available theme
+        if (availableThemes.length > 0) {
+            $themeSelect.val(availableThemes[0].id);
+            updateThemeInfo(availableThemes[0]);
         }
 
         $themeSelect.prop('disabled', false);
@@ -85,6 +152,7 @@ $(document).ready(function() {
         logger.info('Rendering credential', { credential, selectedTheme });
         const output = $('#output');
         output.empty();
+        $('#outputCard').removeClass('d-none');
         
         try {
             // Validate credential
@@ -95,19 +163,9 @@ $(document).ready(function() {
             // Determine which theme to use
             let themeId = selectedTheme;
             if (!themeId || themeId === '') {
-                // Try to find a matching theme from credential types
-                for (let i = credential.type.length - 1; i >= 0; i--) {
-                    const type = credential.type[i];
-                    const themes = getThemesByCredentialType(type);
-                    if (themes.length > 0) {
-                        themeId = themes[0].id;
-                        break;
-                    }
-                }
-                // If no matching theme found, use default
-                if (!themeId) {
-                    themeId = 'VerifiableCredential:default';
-                }
+                const credentialType = credential.type[credential.type.length - 1];
+                const themes = getThemesByCredentialType(credentialType);
+                themeId = themes.length > 0 ? themes[0].id : 'VerifiableCredential:default';
             }
             
             logger.debug(`Using theme: ${themeId}`);
@@ -122,32 +180,11 @@ $(document).ready(function() {
             
             // Update theme selector and info
             updateThemeSelect(credential);
-            // Set the selected theme in the dropdown
             $('#themeSelect').val(themeId);
             updateThemeInfo(ThemeClass.info);
         } catch (error) {
             logger.error('Error rendering credential', error);
             showError('Error rendering credential: ' + error.message);
-        }
-    }
-
-    function renderPresentation(presentation) {
-        logger.info('Rendering presentation', presentation);
-        const output = $('#output');
-        output.empty();
-        
-        try {
-            if (!presentation.verifiableCredential || !Array.isArray(presentation.verifiableCredential)) {
-                throw new Error('Invalid presentation: no credentials found');
-            }
-            
-            presentation.verifiableCredential.forEach((credential, index) => {
-                logger.debug(`Processing credential ${index + 1}/${presentation.verifiableCredential.length}`);
-                renderCredential(credential);
-            });
-        } catch (error) {
-            logger.error('Error rendering presentation', error);
-            showError('Error rendering presentation: ' + error.message);
         }
     }
 
@@ -159,16 +196,16 @@ $(document).ready(function() {
             </div>
         `;
         $('#output').prepend(errorHtml);
+        $('#outputCard').removeClass('d-none');
     }
 
     // Event handlers
     $('#processBtn').click(function() {
-        const inputType = $('#inputType').val();
         let jsonData;
         
         try {
             const jsonInput = $('#jsonInput').val();
-            logger.debug('Processing input', { type: inputType, input: jsonInput });
+            logger.debug('Processing input', { input: jsonInput });
             
             if (!jsonInput.trim()) {
                 throw new Error('Input is empty');
@@ -181,24 +218,18 @@ $(document).ready(function() {
             return;
         }
         
-        const endpoint = inputType === 'credential' ? '/process-credential' : '/process-presentation';
-        
         $.ajax({
-            url: endpoint,
+            url: '/process-credential',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(jsonData),
             success: function(response) {
                 logger.info('Server response received', response);
-                if (inputType === 'credential') {
-                    renderCredential(response, $('#themeSelect').val());
-                } else {
-                    renderPresentation(response);
-                }
+                renderCredential(response, $('#themeSelect').val());
             },
             error: function(xhr, status, error) {
                 logger.error('Server request failed', { status, error, response: xhr.responseText });
-                let errorMessage = 'Error processing the input';
+                let errorMessage = 'Error processing the credential';
                 try {
                     const response = JSON.parse(xhr.responseText);
                     errorMessage = response.error || errorMessage;
@@ -229,98 +260,34 @@ $(document).ready(function() {
         }
     });
 
-    // Example credentials
-    const exampleUniversityCredential = {
-        "@context": [
-            "https://www.w3.org/2018/credentials/v1",
-            "https://www.w3.org/2018/credentials/examples/v1"
-        ],
-        "id": "http://example.edu/credentials/3732",
-        "type": ["VerifiableCredential", "UniversityDegreeCredential"],
-        "issuer": {
-            "id": "https://example.edu/issuers/14",
-            "name": "Example University"
-        },
-        "issuanceDate": "2023-06-15T19:23:24Z",
-        "credentialSubject": {
-            "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-            "name": "Jane Marie Smith",
-            "degree": {
-                "type": "Bachelor of Science",
-                "name": "Computer Science and Engineering",
-                "major": "Computer Science",
-                "minor": "Mathematics",
-                "gpa": "3.92",
-                "honors": ["Magna Cum Laude", "Dean's List"],
-                "graduationDate": "2023-05-15T00:00:00Z"
-            },
-            "college": "College of Engineering",
-            "department": "Department of Computer Science",
-            "studentId": "123456789",
-            "completionStatus": "Completed",
-            "enrollmentStatus": "Graduated",
-            "programDuration": "4 years",
-            "creditsEarned": 128
-        }
-    };
-
-    const exampleDriverLicenseCredential = {
-        "@context": [
-            "https://www.w3.org/2018/credentials/v1",
-            "https://www.w3.org/2018/credentials/examples/v1"
-        ],
-        "id": "https://example.be/credentials/driver-license/123",
-        "type": ["VerifiableCredential", "BelgianDriverLicenseCredential"],
-        "issuer": {
-            "id": "https://mobilit.belgium.be/",
-            "name": "FPS Mobility and Transport"
-        },
-        "issuanceDate": "2023-01-15T10:00:00Z",
-        "credentialSubject": {
-            "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-            "name": "Jean Dupont",
-            "dateOfBirth": "1990-05-20",
-            "placeOfBirth": "Brussels",
-            "nationalNumber": "90.05.20-123.45",
-            "licenseNumber": "B123456789",
-            "validUntil": "2033-01-15T10:00:00Z",
-            "categories": [
-                {
-                    "code": "B",
-                    "status": "active",
-                    "validUntil": "2033-01-15T10:00:00Z"
-                },
-                {
-                    "code": "A",
-                    "status": "active",
-                    "validUntil": "2033-01-15T10:00:00Z"
-                },
-                {
-                    "code": "AM",
-                    "status": "active",
-                    "validUntil": "2033-01-15T10:00:00Z"
-                }
-            ],
-            "restrictions": ["Requires corrective lenses"],
-            "address": {
-                "streetAddress": "Rue de la Loi 16",
-                "locality": "Brussels",
-                "postalCode": "1000",
-                "country": "Belgium"
-            }
-        }
-    };
-
     // Example loading
     $('#loadUniversityExample').click(function() {
         logger.debug('Loading university degree example');
-        $('#inputType').val('credential');
-        $('#jsonInput').val(JSON.stringify(exampleUniversityCredential, null, 2));
+        const example = examples['UniversityDegreeCredential'];
+        if (example) {
+            $('#jsonInput').val(JSON.stringify(example, null, 2));
+            // Trigger validation
+            $('#jsonInput').trigger('input');
+            // Automatically process the example
+            $('#processBtn').click();
+        } else {
+            logger.error('University degree example not found');
+            showError('Failed to load university degree example');
+        }
     });
 
     $('#loadDriverLicenseExample').click(function() {
         logger.debug('Loading driver license example');
-        $('#inputType').val('credential');
-        $('#jsonInput').val(JSON.stringify(exampleDriverLicenseCredential, null, 2));
+        const example = examples['BelgianDriverLicenseCredential'];
+        if (example) {
+            $('#jsonInput').val(JSON.stringify(example, null, 2));
+            // Trigger validation
+            $('#jsonInput').trigger('input');
+            // Automatically process the example
+            $('#processBtn').click();
+        } else {
+            logger.error('Driver license example not found');
+            showError('Failed to load driver license example');
+        }
     });
 }); 

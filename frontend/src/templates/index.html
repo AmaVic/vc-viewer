@@ -3,201 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VC Viewer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Verifiable Credential Viewer</title>
+    
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Theme styles -->
+    <link href="/frontend/src/css/styles.css" rel="stylesheet">
+    
+    <!-- Theme stylesheets -->
     <link href="/frontend/src/themes/base/base.css" rel="stylesheet">
     <link href="/frontend/src/themes/UniversityDegreeCredential/classic/classic.css" rel="stylesheet">
     <link href="/frontend/src/themes/UniversityDegreeCredential/modern/modern.css" rel="stylesheet">
     <link href="/frontend/src/themes/BelgianDriverLicenseCredential/classic/classic.css" rel="stylesheet">
     <link href="/frontend/src/themes/BelgianDriverLicenseCredential/modern/modern.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">VC Viewer</a>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
+    <div class="container my-5">
+        <h1 class="mb-4">Verifiable Credential Viewer</h1>
+        
         <div class="row">
             <div class="col-md-6">
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="card-title mb-0">Input</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="inputType" class="form-label">Input Type</label>
-                            <select class="form-select" id="inputType">
-                                <option value="credential">Verifiable Credential</option>
-                                <option value="presentation">Verifiable Presentation</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="jsonInput" class="form-label">JSON Input</label>
-                            <textarea class="form-control" id="jsonInput" rows="10" placeholder="Paste your VC/VP here..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="themeSelect" class="form-label">Visual Theme</label>
-                            <div class="theme-selector">
-                                <select class="form-select" id="themeSelect" disabled>
-                                    <option value="">Auto (based on credential type)</option>
-                                </select>
-                                <div class="theme-info mt-2 d-none">
-                                    <div class="alert alert-info">
-                                        <h6 class="theme-name mb-1"></h6>
-                                        <p class="theme-description mb-0 small"></p>
-                                        <small class="theme-author d-block mt-1 text-muted"></small>
-                                    </div>
+                            <label for="jsonInput" class="form-label">Verifiable Credential (JSON)</label>
+                            <textarea class="form-control" id="jsonInput" rows="10"></textarea>
+                            <div class="validation-feedback mt-2 d-none">
+                                <div class="valid-feedback text-success">
+                                    <i class="fas fa-check-circle"></i> Valid Verifiable Credential
+                                </div>
+                                <div class="invalid-feedback text-danger">
+                                    <i class="fas fa-exclamation-circle"></i> <span class="error-message">Invalid JSON</span>
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary" id="processBtn">Process</button>
-                        <div class="btn-group ms-2">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="exampleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                Load Example
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" id="loadUniversityExample">University Degree</a></li>
-                                <li><a class="dropdown-item" href="#" id="loadDriverLicenseExample">Belgian Driver's License</a></li>
-                            </ul>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Load Example</label>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-primary" id="loadUniversityExample">
+                                    University Degree
+                                </button>
+                                <button class="btn btn-outline-primary" id="loadDriverLicenseExample">
+                                    Driver License
+                                </button>
+                            </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="themeSelect" class="form-label">Visual Theme</label>
+                            <select class="form-select" id="themeSelect" disabled>
+                                <option value="">Select a theme...</option>
+                            </select>
+                            <div class="theme-info mt-2 d-none">
+                                <h6 class="theme-name"></h6>
+                                <p class="theme-description text-muted small mb-1"></p>
+                                <p class="theme-author text-muted small"></p>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" id="processBtn">Process Credential</button>
                     </div>
                 </div>
             </div>
+            
             <div class="col-md-6">
-                <div id="output">
-                    <!-- Credentials will be dynamically inserted here -->
+                <div class="card d-none" id="outputCard">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Output</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="output"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Default template -->
-    <template id="defaultCredentialTemplate">
-        <div class="card mb-3 credential-card">
-            <div class="card-header">
-                <h5 class="card-title">{{type}}</h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text"><strong>Issuer:</strong> {{issuer}}</p>
-                <p class="card-text"><strong>Issuance Date:</strong> {{issuanceDate}}</p>
-                <div class="credential-subject">
-                    <!-- Dynamic content will be inserted here -->
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <!-- University Degree template -->
-    <template id="universityDegreeTemplate">
-        <div class="card mb-3 degree-credential-card">
-            <div class="card-header degree-header">
-                <div class="university-seal">
-                    <i class="fas fa-university fa-2x"></i>
-                </div>
-                <h4 class="text-center mb-0">University Degree Credential</h4>
-            </div>
-            <div class="card-body">
-                <div class="degree-content">
-                    <div class="text-center mb-4">
-                        <h2 class="degree-title"></h2>
-                        <p class="degree-type text-muted"></p>
-                    </div>
-                    <div class="degree-details">
-                        <div class="row mb-3">
-                            <div class="col-sm-4">
-                                <strong>Recipient:</strong>
-                            </div>
-                            <div class="col-sm-8 recipient-id"></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-4">
-                                <strong>Issuing Institution:</strong>
-                            </div>
-                            <div class="col-sm-8 issuer-name"></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-4">
-                                <strong>Issuance Date:</strong>
-                            </div>
-                            <div class="col-sm-8 issuance-date"></div>
-                        </div>
-                    </div>
-                    <div class="degree-footer text-center mt-4">
-                        <small class="text-muted">This is a verifiable credential</small>
-                        <div class="credential-id mt-2"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <!-- Belgian Driver's License template -->
-    <template id="belgianDriverLicenseTemplate">
-        <div class="card mb-3 driver-license-card">
-            <div class="card-header license-header">
-                <div class="d-flex align-items-center">
-                    <div class="license-logo">
-                        <i class="fas fa-id-card fa-2x"></i>
-                    </div>
-                    <div class="ms-3">
-                        <h4 class="mb-0">Belgian Driver's License</h4>
-                        <small class="text-light">Permis de conduire · Rijbewijs · Führerschein</small>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="license-content">
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="photo-placeholder">
-                                <i class="fas fa-user fa-3x"></i>
-                            </div>
-                        </div>
-                        <div class="col-8">
-                            <div class="holder-details">
-                                <!-- Dynamic content will be inserted here -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="license-categories mt-4">
-                        <h5 class="categories-title">Categories</h5>
-                        <div class="categories-grid">
-                            <!-- Dynamic categories will be inserted here -->
-                        </div>
-                    </div>
-                    <div class="license-footer mt-4">
-                        <div class="row">
-                            <div class="col-6">
-                                <small class="text-muted">Issuing Authority</small>
-                                <div class="issuer-name"></div>
-                            </div>
-                            <div class="col-6 text-end">
-                                <small class="text-muted">Valid Until</small>
-                                <div class="valid-until"></div>
-                            </div>
-                        </div>
-                        <div class="credential-id mt-3 text-center"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Theme system -->
+    <!-- Core scripts - order matters -->
     <script src="/frontend/src/js/core/BaseTheme.js"></script>
+    <script src="/frontend/src/js/examples.js"></script>
+    
+    <!-- Theme scripts -->
     <script src="/frontend/src/themes/VerifiableCredential/default/DefaultTheme.js"></script>
     <script src="/frontend/src/themes/UniversityDegreeCredential/classic/ClassicUniversityTheme.js"></script>
     <script src="/frontend/src/themes/UniversityDegreeCredential/modern/ModernUniversityTheme.js"></script>
     <script src="/frontend/src/themes/BelgianDriverLicenseCredential/classic/ClassicDriverLicenseTheme.js"></script>
     <script src="/frontend/src/themes/BelgianDriverLicenseCredential/modern/ModernDriverLicenseTheme.js"></script>
+    
+    <!-- App scripts -->
     <script src="/frontend/src/js/main.js"></script>
 </body>
 </html> 
