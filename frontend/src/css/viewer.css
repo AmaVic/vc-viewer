@@ -1,0 +1,109 @@
+/* Viewer Page Styles */
+.viewer-content {
+    min-height: calc(100vh - 70px);
+    background: #F8FAFC;
+}
+
+/* Editor Styles */
+.editor-container {
+    position: relative;
+    height: 500px;
+    overflow: auto;
+}
+
+.editor-container pre {
+    height: 100%;
+    margin: 0;
+    padding: 1.5rem !important;
+    background: white !important;
+    border: none;
+    border-radius: 0;
+}
+
+.editor-container code {
+    font-family: 'Fira Code', monospace !important;
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+    height: 100%;
+    outline: none;
+}
+
+/* Preview Styles */
+.preview-container {
+    height: 500px;
+    overflow: auto;
+    background: #F8FAFC;
+    padding: 1.5rem;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.card-header h5 {
+    color: #1F2937;
+    font-weight: 600;
+}
+
+/* Button Styles */
+.btn-outline-primary {
+    border-color: #E2E8F0;
+    color: #4F46E5;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4F46E5;
+    border-color: #4F46E5;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #4F46E5;
+    border-color: #4F46E5;
+}
+
+.btn-primary:hover {
+    background-color: #4338CA;
+    border-color: #4338CA;
+}
+
+/* Form Control Styles */
+.form-select {
+    border-color: #E2E8F0;
+    color: #1F2937;
+}
+
+.form-select:focus {
+    border-color: #4F46E5;
+    box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+}
+
+/* Scrollbar Styles */
+.editor-container::-webkit-scrollbar,
+.preview-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.editor-container::-webkit-scrollbar-track,
+.preview-container::-webkit-scrollbar-track {
+    background: #F1F5F9;
+}
+
+.editor-container::-webkit-scrollbar-thumb,
+.preview-container::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+
+.editor-container::-webkit-scrollbar-thumb:hover,
+.preview-container::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+} 

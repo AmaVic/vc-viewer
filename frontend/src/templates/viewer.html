@@ -3,34 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Visualize and validate W3C Verifiable Credentials">
+    <meta name="description" content="Visualize and customize your W3C Verifiable Credentials">
     <title>VC Viewer - Credential Viewer</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/frontend/src/images/logo.svg">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     
-    <!-- Stylesheets -->
+    <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="/frontend/src/css/styles.css" rel="stylesheet">
+    <link href="/frontend/src/css/viewer.css" rel="stylesheet">
     
-    <!-- Theme stylesheets - dynamically loaded based on credential type -->
-    <link href="/frontend/src/themes/VerifiableCredential/default/default.css" rel="stylesheet">
+    <!-- Prism.js -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <i class="fas fa-id-card me-2"></i>
-                VC Viewer
+            <a href="/" class="navbar-brand">
+                <img src="/frontend/src/images/logo.svg" alt="VC Viewer" width="32" height="32">
+                <span>VC Viewer</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link active" href="/viewer">Viewer</a>
                     </li>
@@ -40,71 +45,68 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/docs">Documentation</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/your-username/vc-viewer" target="_blank">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </li>
                 </ul>
-                <div class="d-flex align-items-center">
-                    <a href="https://github.com/yourusername/vc-viewer" class="btn btn-outline-primary" target="_blank">
-                        <i class="fab fa-github me-2"></i>GitHub
-                    </a>
-                </div>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="py-5">
+    <main class="viewer-content py-4">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Input</h5>
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-primary" id="loadUniversityExample">
-                                    <i class="fas fa-graduation-cap"></i> University Example
-                                </button>
-                                <button class="btn btn-outline-primary" id="loadDriverLicenseExample">
-                                    <i class="fas fa-id-card"></i> Driver License Example
-                                </button>
+            <div class="row g-4">
+                <!-- Input Section -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Input</h5>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-primary btn-sm" id="universityExample">
+                                        <i class="fas fa-graduation-cap me-2"></i>University Example
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="driverLicenseExample">
+                                        <i class="fas fa-id-card me-2"></i>Driver License Example
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <div class="editor-container">
-                                    <pre><code class="language-json" id="jsonInput" contenteditable="true" spellcheck="false"></code></pre>
-                                </div>
-                                <div class="validation-feedback mt-2"></div>
-                            </div>
-
-                            <div class="theme-selection mt-3">
-                                <label for="themeSelect" class="form-label">Visual Theme</label>
-                                <select class="form-select" id="themeSelect" disabled>
-                                    <option value="">Select a theme...</option>
-                                </select>
-                                <div class="theme-info mt-2 d-none">
-                                    <h6 class="theme-name"></h6>
-                                    <p class="theme-description text-muted small mb-1"></p>
-                                    <p class="theme-author text-muted small"></p>
-                                </div>
+                        <div class="card-body p-0">
+                            <div class="editor-container">
+                                <pre class="language-json mb-0"><code id="jsonInput" contenteditable="true" spellcheck="false">
+{
+    // Paste your credential here
+    // or use the example buttons above
+}</code></pre>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-6">
-                    <div id="outputCard" class="card d-none">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Output</h5>
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-primary" id="exportImage">
-                                    <i class="fas fa-image"></i> Export Image
-                                </button>
-                                <button class="btn btn-outline-primary" id="exportPDF">
-                                    <i class="fas fa-file-pdf"></i> Export PDF
-                                </button>
+
+                <!-- Preview Section -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Preview</h5>
+                                <div class="d-flex gap-2">
+                                    <select class="form-select form-select-sm w-auto" id="themeSelect">
+                                        <option value="">Select Theme...</option>
+                                    </select>
+                                    <button class="btn btn-primary btn-sm" id="exportImage">
+                                        <i class="fas fa-download me-2"></i>Export
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div id="output"></div>
+                        <div class="card-body p-0">
+                            <div id="previewContainer" class="preview-container">
+                                <!-- Preview content will be rendered here -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,37 +114,12 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="mb-3">VC Viewer</h5>
-                    <p class="mb-0">An open-source tool for visualizing W3C Verifiable Credentials.</p>
-                    <p class="mb-0">No tracking. No ads. Just code.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="footer-links">
-                        <a href="https://github.com/yourusername/vc-viewer" target="_blank">GitHub</a>
-                        <a href="https://www.w3.org/TR/vc-data-model/" target="_blank">W3C VC Spec</a>
-                        <a href="https://learnblockchain.be" target="_blank">LearnBlockchain.be</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- Core scripts -->
-    <script src="/frontend/src/js/core/BaseTheme.js"></script>
-    <script src="/frontend/src/js/examples.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="/frontend/src/js/main.js"></script>
+    <script src="/frontend/src/js/examples.js"></script>
 </body>
 </html> 
