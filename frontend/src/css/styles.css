@@ -144,9 +144,16 @@ body {
 .preview-window {
     background: white;
     border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     margin: 2rem 0;
+    transform: rotateY(-0.4deg) rotateX(1deg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.preview-window:hover {
+    transform: rotateY(0) rotateX(0);
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2), 0 10px 15px -6px rgba(0, 0, 0, 0.15);
 }
 
 .preview-header {
