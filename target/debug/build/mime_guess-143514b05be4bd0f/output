@@ -1,1 +1,0 @@
-cargo:rustc-env=MIME_TYPES_GENERATED_PATH=/Users/vamarald/Dev/vc-viewer/target/debug/build/mime_guess-143514b05be4bd0f/out/mime_types_generated.rs
