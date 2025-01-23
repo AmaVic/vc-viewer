@@ -1,52 +1,31 @@
 class ModernUniversityTheme extends BaseTheme {
-    static info = {
-        id: 'modern',
-        name: 'Modern University Theme',
-        description: 'A modern, clean design for university degree credentials',
-        author: 'VC Viewer Team'
-    };
+    constructor(credential) {
+        super(credential);
+        this.id = 'modern';
+        this.name = 'Modern University Theme';
+        this.description = 'A modern, clean design for university degree credentials';
+        this.author = 'VC Viewer Team';
+        this.supportedTypes = ['UniversityDegreeCredential'];
+        
+        if (credential) {
+            this.degree = credential.credentialSubject.degree;
+        }
+    }
 
     static supportedTypes = ['UniversityDegreeCredential'];
 
-    static example = {
-        "@context": [
-            "https://www.w3.org/2018/credentials/v1",
-            "https://www.w3.org/2018/credentials/examples/v1"
-        ],
-        "id": "http://example.edu/credentials/3732",
-        "type": ["VerifiableCredential", "UniversityDegreeCredential"],
-        "issuer": {
-            "id": "https://example.edu/issuers/14",
-            "name": "Example University"
-        },
-        "issuanceDate": "2023-06-15T12:00:00Z",
-        "credentialSubject": {
-            "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-            "name": "Alice Johnson",
-            "degree": {
-                "type": "Bachelor of Science",
-                "name": "Computer Science",
-                "graduationDate": "2023-05-15",
-                "honors": ["Magna Cum Laude"],
-                "gpa": "3.8"
-            }
-        }
-    };
-
-    constructor(credential) {
-        super(credential);
-        this.degree = credential.credentialSubject.degree;
-    }
 
     getThemeIcon() {
         return '<i class="fas fa-graduation-cap"></i>';
     }
 
     getThemeTitle() {
-        return `${this.credential.credentialSubject.name}'s Degree`;
+        return this.credential ? `${this.credential.credentialSubject.name}'s Degree` : 'University Degree';
     }
 
     getContentHTML() {
+        if (!this.credential) return '';
+        
         const { degree } = this;
         return `
             <div class="credential-banner">
@@ -121,4 +100,4 @@ class ModernUniversityTheme extends BaseTheme {
 }
 
 // Register the theme
-BaseTheme.register('UniversityDegreeCredential:modern', ModernUniversityTheme); 
+BaseTheme.register(ModernUniversityTheme); 

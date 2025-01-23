@@ -113,7 +113,7 @@ $(document).ready(function() {
         }
     }
 
-    function updateValidationUI(validationResult) {
+    function updateValidationUI(validationResult, hasUserInput = false) {
         const $container = $('.editor-container');
         const $feedback = $('.validation-feedback');
         const $validFeedback = $('.valid-feedback');
@@ -122,6 +122,14 @@ $(document).ready(function() {
         
         // Remove existing validation states
         $container.removeClass('is-valid is-invalid');
+        $feedback.addClass('d-none');
+        
+        // Only show validation feedback if there's user input
+        if (!hasUserInput) {
+            $processBtn.prop('disabled', true);
+            return;
+        }
+        
         $feedback.removeClass('d-none');
         
         if (validationResult.isValid) {
@@ -131,8 +139,15 @@ $(document).ready(function() {
             $processBtn.prop('disabled', false);
             
             $validFeedback.html(`
-                <i class="fas fa-check-circle"></i>
-                <div>Valid Verifiable Credential</div>
+                <i class="fas fa-check-circle text-success"></i>
+                <div class="text-success">
+                    <strong>Valid Verifiable Credential</strong>
+                    ${validationResult.details ? `
+                        <ul class="validation-details mb-0 mt-1">
+                            ${validationResult.details.map(detail => `<li>${detail}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                </div>
             `);
         } else {
             $container.addClass('is-invalid');
@@ -148,16 +163,18 @@ $(document).ready(function() {
                     : `<div class="mt-1">${validationResult.details}</div>`;
                 
                 $invalidFeedback.html(`
-                    <i class="fas fa-exclamation-circle"></i>
-                    <div>
-                        <div>${validationResult.error}</div>
+                    <i class="fas fa-exclamation-circle text-danger"></i>
+                    <div class="text-danger">
+                        <strong>${validationResult.error}</strong>
                         ${detailsHtml}
                     </div>
                 `);
             } else {
                 $invalidFeedback.html(`
-                    <i class="fas fa-exclamation-circle"></i>
-                    <div>${validationResult.error}</div>
+                    <i class="fas fa-exclamation-circle text-danger"></i>
+                    <div class="text-danger">
+                        <strong>${validationResult.error}</strong>
+                    </div>
                 `);
             }
         }
@@ -191,7 +208,7 @@ $(document).ready(function() {
         try {
             const credential = JSON.parse(jsonInput);
             const selectedTheme = $('#themeSelect').val();
-            const outputElement = document.getElementById('output');
+            const outputElement = document.getElementById('previewContainer');
             
             // Clear previous output
             outputElement.innerHTML = '';
@@ -214,34 +231,11 @@ $(document).ready(function() {
         }
     }
 
-    // Update input validation to trigger rendering
-    function validateInput() {
-        clearTimeout(validationTimeout);
-        validationTimeout = setTimeout(() => {
-            const jsonInput = jsonEditor.textContent.trim();
-            if (!jsonInput) {
-                showError('Please enter a verifiable credential.');
-                return;
-            }
-
-            try {
-                const credential = JSON.parse(jsonInput);
-                const result = validateVC(jsonInput);
-                updateValidationUI(result);
-                
-                if (result.isValid) {
-                    // Update theme selection and render
-                    updateThemeSelect(credential);
-                    processInput();
-                }
-            } catch (error) {
-                showError('Invalid JSON format: ' + error.message);
-            }
-        }, 500);
-    }
-
     // Handle editor input events
+    let hasUserInput = false;
     jsonEditor.addEventListener('input', function() {
+        hasUserInput = true;
+        
         // Clear existing timeout
         clearTimeout(validationTimeout);
         
@@ -251,18 +245,53 @@ $(document).ready(function() {
         
         // Set new timeout for validation
         validationTimeout = setTimeout(() => {
-            const result = validateVC(this.textContent);
-            updateValidationUI(result);
-            if (result.isValid) {
-                try {
-                    const credential = JSON.parse(this.textContent);
+            const jsonInput = jsonEditor.textContent.trim();
+            if (!jsonInput) {
+                updateValidationUI({ isValid: false, error: 'Input is empty' }, hasUserInput);
+                return;
+            }
+
+            try {
+                const credential = JSON.parse(jsonInput);
+                const result = validateVC(jsonInput);
+                updateValidationUI(result, hasUserInput);
+                
+                if (result.isValid) {
+                    // Update theme selection and render
                     updateThemeSelect(credential);
                     processInput();
-                } catch (error) {
-                    console.error('Error processing input:', error);
                 }
+            } catch (error) {
+                updateValidationUI({
+                    isValid: false,
+                    error: 'Invalid JSON format',
+                    details: error.message
+                }, hasUserInput);
             }
-        }, 300);
+        }, 500);
+    });
+
+    // Handle example buttons
+    $('#universityExample').on('click', function() {
+        const example = window.examples['UniversityDegreeCredential'];
+        updateEditor(example);
+        const result = validateVC(JSON.stringify(example));
+        updateValidationUI(result, true);
+        if (result.isValid) {
+            updateThemeSelect(example);
+            processInput();
+        }
+    });
+
+    $('#driverLicenseExample').on('click', function() {
+        const example = window.examples['BelgianDriverLicenseCredential'];
+        updateEditor(example);
+        const result = validateVC(JSON.stringify(example));
+        updateValidationUI(result, true);
+        if (result.isValid) {
+            updateThemeSelect(example);
+            processInput();
+        }
     });
 
     // Handle paste events to format JSON
@@ -402,7 +431,7 @@ $(document).ready(function() {
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         `;
-        $('#output').prepend(errorHtml);
+        $('#previewContainer').prepend(errorHtml);
         $('#outputCard').removeClass('d-none');
     }
 
@@ -468,7 +497,7 @@ $(document).ready(function() {
             return;
         }
 
-        const $output = $('#output');
+        const $output = $('#previewContainer');
         const $credential = $output.find('.credential-wrapper').first();
         
         try {
@@ -506,7 +535,7 @@ $(document).ready(function() {
             return;
         }
         
-        const $output = $('#output');
+        const $output = $('#previewContainer');
         const $credential = $output.find('.credential-wrapper').first();
         
         try {
@@ -578,4 +607,24 @@ $(document).ready(function() {
             showError('Failed to export PDF. Please try again.');
         }
     });
+
+    // Initial validation if there's content
+    if (jsonEditor.textContent.trim()) {
+        const jsonInput = jsonEditor.textContent.trim();
+        try {
+            const credential = JSON.parse(jsonInput);
+            const result = validateVC(jsonInput);
+            updateValidationUI(result, true);
+            if (result.isValid) {
+                updateThemeSelect(credential);
+                processInput();
+            }
+        } catch (error) {
+            updateValidationUI({
+                isValid: false,
+                error: 'Invalid JSON format',
+                details: error.message
+            }, true);
+        }
+    }
 }); 

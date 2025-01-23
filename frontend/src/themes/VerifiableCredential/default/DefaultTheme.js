@@ -1,21 +1,17 @@
 class DefaultTheme extends BaseTheme {
-    static info = {
-        id: 'default',
-        name: 'Default Theme',
-        description: 'A simple, clean theme for any verifiable credential',
-        author: 'VC Viewer Team'
-    };
-
-    static supportedTypes = ['VerifiableCredential'];
-
     constructor(credential) {
         super(credential);
+        this.id = 'default';
+        this.name = 'Default Theme';
+        this.description = 'A simple theme for any verifiable credential';
+        this.author = 'VC Viewer';
+        this.supportedTypes = ['VerifiableCredential'];
     }
 
     render() {
         const wrapper = document.createElement('div');
         wrapper.className = 'credential-wrapper default-theme';
-        wrapper.innerHTML = this.getBaseHTML();
+        wrapper.innerHTML = this.getContentHTML();
         return wrapper;
     }
 
@@ -28,6 +24,8 @@ class DefaultTheme extends BaseTheme {
     }
 
     getContentHTML() {
+        if (!this.credential) return '';
+        
         const { credentialSubject } = this.credential;
         
         // Convert credential subject to a formatted list of properties
@@ -60,9 +58,10 @@ class DefaultTheme extends BaseTheme {
                     ${subjectProperties}
                 </div>
             </div>
+            ${this.getBaseFooterHTML()}
         `;
     }
 }
 
 // Register the theme
-BaseTheme.register('VerifiableCredential', DefaultTheme); 
+BaseTheme.register(DefaultTheme); 
