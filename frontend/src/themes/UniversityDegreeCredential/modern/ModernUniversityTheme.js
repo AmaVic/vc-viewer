@@ -3,7 +3,7 @@ class ModernUniversityTheme extends BaseTheme {
         super(credential);
         this.id = 'modern';
         this.name = 'Modern University Theme';
-        this.description = 'A modern, clean design for university degree credentials';
+        this.description = 'A sleek and modern design for university degree credentials';
         this.author = 'VC Viewer Team';
         this.supportedTypes = ['UniversityDegreeCredential'];
         
@@ -20,74 +20,118 @@ class ModernUniversityTheme extends BaseTheme {
     }
 
     getThemeTitle() {
-        return this.credential ? `${this.credential.credentialSubject.name}'s Degree` : 'University Degree';
+        return this.credential ? `${this.getIssuerName()}` : 'University Degree';
     }
 
     getContentHTML() {
         if (!this.credential) return '';
         
         const { degree } = this;
+        const recipientId = this.credential.credentialSubject.id || '';
+        const shortId = recipientId.split(':').pop() || recipientId;
+        
         return `
             <div class="credential-banner">
-                <div class="credential-icon">
-                    <i class="fas fa-graduation-cap"></i>
+                <div class="banner-content">
+                    ${this.getThemeIcon()}
+                    <h1>University Degree</h1>
+                    <div class="university-name">${this.getIssuerName()}</div>
                 </div>
-                <div class="university-name">${this.getIssuerName()}</div>
             </div>
             
             <div class="degree-content">
-                <div class="degree-info">
-                    <h2>${degree.name || 'Degree'}</h2>
-                    <h3>Conferred upon</h3>
-                    <div class="recipient-name">${this.credential.credentialSubject.name || 'Unknown Recipient'}</div>
-                    <div class="degree-type">${degree.type || 'Not specified'}</div>
-                </div>
+                <div class="content-card">
+                    <div class="degree-header">
+                        <div class="degree-name">${degree.name || 'Computer Science'}</div>
+                        <div class="degree-type">${degree.type || 'Bachelor of Science'}</div>
+                    </div>
 
-                <div class="info-section">
-                    <h5>Academic Information</h5>
                     <div class="info-grid">
-                        ${degree.graduationDate ? `
+                        <div class="info-item">
+                            <div class="info-label">Name</div>
+                            <div class="info-value">${this.credential.credentialSubject.name}</div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-label">Student ID</div>
+                            <div class="info-value">${shortId}</div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-label">Major</div>
+                            <div class="info-value">${degree.major || degree.name || 'Not specified'}</div>
+                        </div>
+                        
+                        ${degree.minor ? `
                             <div class="info-item">
-                                <strong>Graduated</strong>
-                                <span>${this.formatDate(degree.graduationDate)}</span>
+                                <div class="info-label">Minor</div>
+                                <div class="info-value">${degree.minor}</div>
                             </div>
                         ` : ''}
+                        
+                        <div class="info-item">
+                            <div class="info-label">Graduation Date</div>
+                            <div class="info-value">${this.formatDate(degree.graduationDate)}</div>
+                        </div>
+                        
                         ${degree.gpa ? `
                             <div class="info-item">
-                                <strong>GPA</strong>
-                                <span>${degree.gpa}</span>
+                                <div class="info-label">Grade Point Average</div>
+                                <div class="info-value">${degree.gpa}</div>
                             </div>
                         ` : ''}
                     </div>
-                </div>
 
-                ${degree.honors?.length ? `
-                    <div class="info-section">
-                        <h5>Honors & Achievements</h5>
-                        <div class="honors-list">
-                            ${degree.honors.map(honor => `
-                                <div class="honor-item">${honor}</div>
-                            `).join('')}
+                    ${degree.honors?.length ? `
+                        <div class="honors-section">
+                            <div class="honors-title">Honors & Achievements</div>
+                            <div class="honors-list">
+                                ${degree.honors.map(honor => `
+                                    <div class="honor-item">${honor}</div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div class="credential-footer">
+                        <div class="footer-grid">
+                            <div class="footer-item">
+                                <i class="fas fa-calendar"></i>
+                                <div class="footer-item-content">
+                                    <strong>Issued On</strong>
+                                    <span>${this.formatDate(this.credential.issuanceDate)}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="footer-item">
+                                <i class="fas fa-university"></i>
+                                <div class="footer-item-content">
+                                    <strong>Issuing Institution</strong>
+                                    <span>${this.getIssuerName()}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="footer-item">
+                                <i class="fas fa-fingerprint"></i>
+                                <div class="footer-item-content">
+                                    <strong>Credential ID</strong>
+                                    <span>${this.credential.id.split(':').pop() || this.credential.id}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                ` : ''}
-            </div>
-
-            <div class="credential-footer">
-                <div>
-                    <i class="fas fa-calendar"></i>
-                    Issued on ${this.formatDate(this.credential.issuanceDate)}
                 </div>
-                <div>
-                    <i class="fas fa-university"></i>
-                    ${this.getIssuerName()}
-                </div>
-                <div>
-                    <i class="fas fa-fingerprint"></i>
-                    ${this.credential.id}
+                
+                <div class="credential-links">
+                    <a href="${this.credential.id}" target="_blank" class="credential-link">
+                        <i class="fas fa-external-link-alt"></i>
+                        View Original Credential
+                    </a>
+                    <div class="powered-by">
+                        Powered by <a href="/" target="_blank">VC Viewer</a>
+                    </div>
                 </div>
             </div>
-            ${this.getBaseFooterHTML()}
         `;
     }
 

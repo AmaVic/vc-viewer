@@ -1,168 +1,328 @@
 /* Modern University Theme */
 .modern-university-theme {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
+    --theme-primary: #7C3AED;
+    --theme-primary-light: #A78BFA;
+    --theme-primary-dark: #6D28D9;
+    --theme-accent: #10B981;
+    --theme-text: #111827;
+    --theme-text-light: #6B7280;
+    --theme-border: #E5E7EB;
+    --theme-background: #F9FAFB;
+    
+    font-family: 'Poppins', sans-serif;
+    background: white;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 20px 40px -5px rgba(124, 58, 237, 0.1),
+                0 10px 20px -6px rgba(124, 58, 237, 0.05);
+    color: var(--theme-text);
+    max-width: 900px;
     margin: 0 auto;
+    position: relative;
+}
+
+/* Banner Section */
+.modern-university-theme .credential-banner {
+    background: linear-gradient(135deg, var(--theme-primary-dark), var(--theme-primary));
+    padding: 3.5rem 3rem;
+    color: white;
+    text-align: left;
+    position: relative;
     overflow: hidden;
 }
 
-.modern-university-theme .credential-banner {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-    padding: 2rem;
-    text-align: center;
-    position: relative;
-    color: #fff;
-}
-
-.modern-university-theme .credential-banner::after {
+.modern-university-theme .credential-banner::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h40v40H0z" fill="none"/><path d="M20 0l20 20-20 20L0 20z" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
-    opacity: 0.1;
+    top: -50%;
+    right: -20%;
+    width: 80%;
+    height: 200%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    transform: rotate(-15deg);
 }
 
-.modern-university-theme .credential-icon {
+.modern-university-theme .banner-content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+}
+
+.modern-university-theme .credential-banner i {
     font-size: 2.5rem;
-    color: #fff;
-    margin-bottom: 1rem;
+    color: var(--theme-accent);
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+}
+
+.modern-university-theme .credential-banner h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    background: linear-gradient(to right, #fff, rgba(255,255,255,0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .modern-university-theme .university-name {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 0.5rem;
-}
-
-.modern-university-theme .degree-content {
-    padding: 2rem;
-    background: #fff;
-    text-align: center;
-}
-
-.modern-university-theme .degree-info {
-    margin-bottom: 2rem;
-}
-
-.modern-university-theme .degree-info h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-}
-
-.modern-university-theme .degree-info h3 {
     font-size: 1.25rem;
-    color: #64748b;
-    font-weight: 500;
-    margin-bottom: 1rem;
+    opacity: 0.9;
+    margin-top: 0.5rem;
 }
 
-.modern-university-theme .recipient-name {
-    font-size: 2rem;
-    color: #0f172a;
+/* Main Content */
+.modern-university-theme .degree-content {
+    padding: 3rem;
+}
+
+.modern-university-theme .content-card {
+    background: white;
+    border-radius: 1.25rem;
+    padding: 3rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+                0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.modern-university-theme .degree-header {
+    text-align: left;
+    margin-bottom: 3rem;
+}
+
+.modern-university-theme .degree-name {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--theme-primary);
     margin-bottom: 0.5rem;
-    font-weight: 600;
+    line-height: 1.2;
 }
 
 .modern-university-theme .degree-type {
     font-size: 1.25rem;
-    color: #64748b;
-    margin-bottom: 2rem;
-}
-
-.modern-university-theme .info-section {
-    background: #f8fafc;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    text-align: left;
-}
-
-.modern-university-theme .info-section h5 {
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #64748b;
-    margin-bottom: 1rem;
-    font-weight: 600;
+    color: var(--theme-text-light);
 }
 
 .modern-university-theme .info-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 3rem;
 }
 
 .modern-university-theme .info-item {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--theme-background);
+    border-radius: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.modern-university-theme .info-item strong {
-    font-size: 0.75rem;
+.modern-university-theme .info-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(124, 58, 237, 0.1);
+}
+
+.modern-university-theme .info-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--theme-text-light);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #64748b;
+}
+
+.modern-university-theme .info-value {
+    font-size: 1.25rem;
+    color: var(--theme-text);
     font-weight: 600;
 }
 
-.modern-university-theme .info-item span {
-    font-size: 1rem;
-    color: #0f172a;
-    font-weight: 500;
-    line-height: 1.4;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+/* Honors Section */
+.modern-university-theme .honors-section {
+    background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-primary-dark) 100%);
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    color: white;
+    margin-top: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.modern-university-theme .honors-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(circle at top right, rgba(255,255,255,0.2) 0%, transparent 70%);
+}
+
+.modern-university-theme .honors-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .modern-university-theme .honors-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 1rem;
+    position: relative;
 }
 
 .modern-university-theme .honor-item {
-    background: #fff;
-    color: #1e40af;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    border: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    color: white;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s, background 0.2s;
 }
 
+.modern-university-theme .honor-item:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Footer */
 .modern-university-theme .credential-footer {
-    margin-top: 2rem;
-    padding: 1.5rem 2rem;
-    border-top: 1px solid #e2e8f0;
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 2px solid var(--theme-border);
+}
+
+.modern-university-theme .footer-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    font-size: 0.875rem;
-    color: #64748b;
-    background: #f8fafc;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
 }
 
-.modern-university-theme .credential-footer div {
+.modern-university-theme .footer-item {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--theme-background);
+    border-radius: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.modern-university-theme .credential-footer i {
-    color: #3b82f6;
+.modern-university-theme .footer-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(124, 58, 237, 0.1);
+}
+
+.modern-university-theme .footer-item i {
+    color: var(--theme-accent);
+    font-size: 1.5rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.modern-university-theme .footer-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.modern-university-theme .footer-item-content strong {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--theme-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.modern-university-theme .footer-item-content span {
+    font-size: 1.125rem;
+    color: var(--theme-text);
+    font-weight: 500;
+}
+
+/* Links Section */
+.modern-university-theme .credential-links {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modern-university-theme .credential-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--theme-primary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    background: var(--theme-background);
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+}
+
+.modern-university-theme .credential-link:hover {
+    background: var(--theme-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(124, 58, 237, 0.2);
+}
+
+.modern-university-theme .powered-by {
+    font-size: 0.875rem;
+    color: var(--theme-text-light);
+}
+
+.modern-university-theme .powered-by a {
+    color: var(--theme-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.modern-university-theme .powered-by a:hover {
+    color: var(--theme-primary-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modern-university-theme .credential-banner {
+        padding: 2.5rem 2rem;
+    }
+    
+    .modern-university-theme .credential-banner h1 {
+        font-size: 2.5rem;
+    }
+    
+    .modern-university-theme .degree-content {
+        padding: 2rem;
+    }
+    
+    .modern-university-theme .content-card {
+        padding: 2rem;
+    }
+    
+    .modern-university-theme .degree-name {
+        font-size: 2rem;
+    }
+    
+    .modern-university-theme .info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .modern-university-theme .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
 } 
