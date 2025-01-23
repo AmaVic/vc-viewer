@@ -21,12 +21,9 @@
 }
 
 .modern-driver-license-theme .credential-banner {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-    padding: 1rem;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    padding: 1rem 1.5rem;
     color: #fff;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
 }
 
 .modern-driver-license-theme .credential-banner::after {
@@ -40,13 +37,22 @@
     opacity: 0.1;
 }
 
-.modern-driver-license-theme .banner-content {
-    position: relative;
-    z-index: 1;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+.modern-driver-license-theme .credential-banner .banner-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modern-driver-license-theme .credential-banner i {
+    font-size: 1.25rem;
+    color: #fff;
+}
+
+.modern-driver-license-theme .credential-banner h1 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #fff;
+    margin: 0;
 }
 
 .modern-driver-license-theme .license-header {
@@ -57,9 +63,22 @@
     background: #f8fafc;
 }
 
+.modern-driver-license-theme .holder-info {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.modern-driver-license-theme .photo-section {
+    flex-shrink: 0;
+}
+
 .modern-driver-license-theme .photo-placeholder {
-    width: 110px;
-    height: 130px;
+    width: 120px;
+    height: 150px;
     background: #fff;
     border-radius: 8px;
     display: flex;
@@ -70,79 +89,161 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.modern-driver-license-theme .holder-details {
+.modern-driver-license-theme .personal-info {
     flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    align-content: start;
 }
 
-.modern-driver-license-theme .detail-row {
-    margin-bottom: 0.75rem;
+.modern-driver-license-theme .info-row {
+    background: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.modern-driver-license-theme .detail-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    color: #64748b;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.2rem;
-}
-
-.modern-driver-license-theme .detail-value {
-    font-size: 0.85rem;
-    color: #0f172a;
-    font-weight: 500;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-.modern-driver-license-theme .license-content {
-    padding: 1.25rem;
-}
-
-.modern-driver-license-theme .categories-title {
+.modern-driver-license-theme .info-label {
     font-size: 0.75rem;
     text-transform: uppercase;
     color: #64748b;
     font-weight: 600;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.modern-driver-license-theme .info-value {
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.modern-driver-license-theme .categories-section {
+    margin: 2rem 1.5rem;
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-driver-license-theme .categories-section h3 {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .modern-driver-license-theme .categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
 }
 
 .modern-driver-license-theme .category-item {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 0.5rem;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
     text-align: center;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #64748b;
     transition: all 0.2s ease;
 }
 
 .modern-driver-license-theme .category-item.active {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    border: none;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    background: #f0f9ff;
+    border-color: #3b82f6;
 }
 
-.modern-driver-license-theme .restrictions {
+.modern-driver-license-theme .category-name {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.modern-driver-license-theme .category-validity {
     font-size: 0.8rem;
     color: #64748b;
-    padding: 1rem;
-    background: #f8fafc;
-    border-radius: 8px;
-    margin-bottom: 1.25rem;
     line-height: 1.4;
+}
+
+.modern-driver-license-theme .restrictions-section {
+    margin: 2rem 1.5rem;
+    background: #fff8e1;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.modern-driver-license-theme .restrictions-section h3 {
+    color: #b45309;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.modern-driver-license-theme .restrictions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.modern-driver-license-theme .restrictions-list li {
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modern-driver-license-theme .restrictions-list li::before {
+    content: "⚠️";
+    font-size: 1rem;
+}
+
+.modern-driver-license-theme .address-section {
+    margin: 2rem 1.5rem;
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-driver-license-theme .address-section h3 {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.modern-driver-license-theme .address-content {
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+.modern-driver-license-theme .validity-section {
+    margin: 2rem 1.5rem;
+    background: #f0f9ff;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.modern-driver-license-theme .validity-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    color: #3b82f6;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.modern-driver-license-theme .validity-value {
+    font-size: 1.25rem;
+    color: #1e293b;
+    font-weight: 600;
 }
 
 .modern-driver-license-theme .license-footer {
@@ -249,120 +350,75 @@
     margin-bottom: 0.25rem;
 }
 
-.modern-driver-license-theme .categories-section {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.modern-driver-license-theme .categories-section h3 {
-    color: #2c3e50;
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-}
-
-.modern-driver-license-theme .categories-section i {
-    color: #3498db;
-    margin-right: 0.5rem;
-}
-
-.modern-driver-license-theme .category-card {
+.modern-driver-license-theme .credential-footer {
     background: #f8f9fa;
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+    border-top: 1px solid #e9ecef;
+    padding: 0.5rem 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
 }
 
-.modern-driver-license-theme .category-card.active::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: #2ecc71;
+.modern-driver-license-theme .credential-footer .info-item {
+    margin-bottom: 0;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
 }
 
-.modern-driver-license-theme .category-header {
+.modern-driver-license-theme .credential-footer .info-item strong {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 0.1rem;
+}
+
+.modern-driver-license-theme .credential-footer .info-item span {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    color: #1e3a8a;
+}
+
+.modern-driver-license-theme .credential-links {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
-}
-
-.modern-driver-license-theme .category-code {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-.modern-driver-license-theme .category-validity {
+    padding: 0.75rem 1rem;
+    background: #fff;
+    border-top: 1px solid #e9ecef;
     font-size: 0.8rem;
-    color: #6c757d;
 }
 
-.modern-driver-license-theme .category-validity strong {
-    display: block;
-    color: #2c3e50;
-    margin-top: 0.25rem;
-}
-
-.modern-driver-license-theme .restrictions-section {
-    background: #fff8e1;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.modern-driver-license-theme .restrictions-section h3 {
-    color: #f39c12;
-}
-
-.modern-driver-license-theme .restrictions-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 1rem;
-}
-
-.modern-driver-license-theme .restriction-item {
+.modern-driver-license-theme .credential-links .certificate-link {
+    color: #0a66c2;
+    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    background: white;
-    border-radius: 8px;
+    gap: 0.25rem;
+}
+
+.modern-driver-license-theme .credential-links .certificate-link:hover {
+    text-decoration: underline;
+}
+
+.modern-driver-license-theme .credential-links .certificate-link i {
+    font-size: 0.9rem;
+}
+
+.modern-driver-license-theme .credential-links .powered-by {
     color: #666;
+    font-size: 0.75rem;
 }
 
-.modern-driver-license-theme .restriction-item i {
-    color: #f39c12;
+.modern-driver-license-theme .credential-links .powered-by a {
+    color: #0a66c2;
+    text-decoration: none;
 }
 
-.modern-driver-license-theme .address-section {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 1.5rem;
-}
-
-.modern-driver-license-theme .address-section h3 {
-    color: #2c3e50;
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-}
-
-.modern-driver-license-theme .address-content {
-    color: #495057;
-}
-
-.modern-driver-license-theme .address-content p {
-    margin: 0 0 0.5rem;
-}
-
-.modern-driver-license-theme .address-content p:last-child {
-    margin: 0;
+.modern-driver-license-theme .credential-links .powered-by a:hover {
+    text-decoration: underline;
 } 

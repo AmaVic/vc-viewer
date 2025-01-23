@@ -16,7 +16,7 @@ class ClassicDriverLicenseTheme extends BaseTheme {
     render() {
         const wrapper = document.createElement('div');
         wrapper.className = 'credential-wrapper classic-driver-license-theme';
-        wrapper.innerHTML = this.getBaseHTML();
+        wrapper.innerHTML = this.getContentHTML();
         return wrapper;
     }
 
@@ -28,73 +28,54 @@ class ClassicDriverLicenseTheme extends BaseTheme {
         return 'Driver License';
     }
 
-    getBannerContent() {
-        return `
-            <div class="banner-content">
-                <div class="credential-icon">
-                    ${this.getThemeIcon()}
-                </div>
-                <div class="credential-title">
-                    <div class="license-title">
-                        <h4>Belgian Driver's License</h4>
-                        <div class="subtitle">Permis de conduire · Rijbewijs · Führerschein</div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
     getContentHTML() {
         return `
-            <div class="license-content">
-                <div class="license-header">
-                    <div class="issuer-info">
-                        <img src="/frontend/public/be-logo.png" alt="Belgium" class="country-logo" onerror="this.style.display='none'"/>
-                        <h2>${this.getIssuerName()}</h2>
-                    </div>
-                </div>
+            <div class="credential-banner">
+                ${this.getThemeIcon()}
+                <h1>${this.getThemeTitle()}</h1>
+                <div class="issuer-name">${this.getIssuerName()}</div>
+            </div>
 
+            <div class="license-content">
                 <div class="holder-info">
                     <div class="photo-section">
                         <div class="photo-placeholder">
                             <i class="fas fa-user"></i>
                         </div>
-                        <div class="signature-box">Signature</div>
                     </div>
                     
-                    <div class="personal-details">
+                    <div class="personal-info">
                         <div class="info-row">
-                            <strong>1.</strong>
-                            <span>${this.subject.name}</span>
+                            <div class="info-label">Name</div>
+                            <div class="info-value">${this.subject.name}</div>
                         </div>
                         <div class="info-row">
-                            <strong>2.</strong>
-                            <span>${this.formatDate(this.subject.dateOfBirth)}</span>
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value">${this.formatDate(this.subject.dateOfBirth)}</div>
                         </div>
                         <div class="info-row">
-                            <strong>3.</strong>
-                            <span>${this.subject.placeOfBirth}</span>
+                            <div class="info-label">Place of Birth</div>
+                            <div class="info-value">${this.subject.placeOfBirth}</div>
                         </div>
                         <div class="info-row">
-                            <strong>4a.</strong>
-                            <span>${this.subject.licenseNumber}</span>
+                            <div class="info-label">National Number</div>
+                            <div class="info-value">${this.subject.nationalNumber}</div>
                         </div>
                         <div class="info-row">
-                            <strong>4c.</strong>
-                            <span>Valid until: ${this.formatDate(this.subject.validUntil)}</span>
+                            <div class="info-label">License Number</div>
+                            <div class="info-value">${this.subject.licenseNumber}</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="categories-section">
-                    <h3>Categories</h3>
+                    <h3>Vehicle Categories</h3>
                     <div class="categories-grid">
                         ${this.subject.categories.map(cat => `
                             <div class="category-item ${cat.status}">
-                                <div class="category-code">${cat.code}</div>
+                                <div class="category-name">${cat.code}</div>
                                 <div class="category-validity">
-                                    <small>Valid until</small>
-                                    <span>${this.formatDate(cat.validUntil)}</span>
+                                    Valid until: ${this.formatDate(cat.validUntil)}
                                 </div>
                             </div>
                         `).join('')}
@@ -111,7 +92,24 @@ class ClassicDriverLicenseTheme extends BaseTheme {
                         </ul>
                     </div>
                 ` : ''}
+
+                <div class="address-section">
+                    <h3>Address</h3>
+                    <div class="address-content">
+                        ${this.subject.address.streetAddress}<br>
+                        ${this.subject.address.postalCode} ${this.subject.address.locality}<br>
+                        ${this.subject.address.country}
+                    </div>
+                </div>
+
+                <div class="validity-section">
+                    <div class="validity-info">
+                        <span class="validity-label">Valid Until</span>
+                        <span class="validity-value">${this.formatDate(this.subject.validUntil)}</span>
+                    </div>
+                </div>
             </div>
+            ${this.getBaseFooterHTML()}
         `;
     }
 }

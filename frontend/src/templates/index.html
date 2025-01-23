@@ -33,31 +33,21 @@
                         <h5 class="card-title mb-0">Input</h5>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <label for="jsonInput" class="form-label">Verifiable Credential (JSON)</label>
-                            <div class="editor-container position-relative">
-                                <pre class="mb-0"><code id="jsonInput" class="language-json" contenteditable="true" spellcheck="false"></code></pre>
+                        <div class="form-group mb-3">
+                            <label for="jsonInput">Verifiable Credential (JSON)</label>
+                            <div class="editor-container">
+                                <pre><code class="language-json" id="jsonInput" contenteditable="true" spellcheck="false"></code></pre>
                             </div>
-                            <div class="validation-feedback mt-2 d-none">
-                                <div class="valid-feedback text-success">
-                                    <i class="fas fa-check-circle"></i> Valid Verifiable Credential
-                                </div>
-                                <div class="invalid-feedback text-danger">
-                                    <i class="fas fa-exclamation-circle"></i> <span class="error-message">Invalid JSON</span>
-                                </div>
-                            </div>
+                            <div class="validation-feedback"></div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Load Example</label>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-outline-primary" id="loadUniversityExample">
-                                    University Degree
-                                </button>
-                                <button class="btn btn-outline-primary" id="loadDriverLicenseExample">
-                                    Driver License
-                                </button>
-                            </div>
+
+                        <div class="d-flex gap-2 mb-3">
+                            <button class="btn btn-outline-primary" id="loadUniversityExample">
+                                <i class="fas fa-graduation-cap"></i> Load University Example
+                            </button>
+                            <button class="btn btn-outline-primary" id="loadDriverLicenseExample">
+                                <i class="fas fa-id-card"></i> Load Driver License Example
+                            </button>
                         </div>
 
                         <div class="mb-3">
@@ -71,14 +61,12 @@
                                 <p class="theme-author text-muted small"></p>
                             </div>
                         </div>
-
-                        <button class="btn btn-primary" id="processBtn">Process Credential</button>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-6">
-                <div class="card d-none" id="outputCard">
+                <div id="outputCard" class="card d-none">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Output</h5>
                         <div class="btn-group">
@@ -103,6 +91,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Prism.js and plugins - order matters -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
@@ -122,5 +112,36 @@
     
     <!-- App scripts -->
     <script src="/frontend/src/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const jsonInput = document.getElementById('jsonInput');
+            
+            // Initialize Prism.js
+            Prism.manual = true;
+            
+            // Initialize with empty JSON object
+            jsonInput.textContent = '{\n\n}';
+            Prism.highlightElement(jsonInput);
+
+            // Re-highlight on input
+            jsonInput.addEventListener('input', function() {
+                // Preserve cursor position
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                const start = range.startOffset;
+                const end = range.endOffset;
+                
+                // Highlight code
+                Prism.highlightElement(this);
+                
+                // Restore cursor position
+                const newRange = document.createRange();
+                newRange.setStart(this.firstChild, Math.min(start, this.textContent.length));
+                newRange.setEnd(this.firstChild, Math.min(end, this.textContent.length));
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+            });
+        });
+    </script>
 </body>
 </html> 

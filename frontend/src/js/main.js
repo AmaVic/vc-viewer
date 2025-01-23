@@ -181,6 +181,65 @@ $(document).ready(function() {
         Prism.highlightElement(jsonEditor);
     }
 
+    function processInput() {
+        const jsonInput = jsonEditor.textContent.trim();
+        if (!jsonInput) {
+            showError('Please enter a verifiable credential.');
+            return;
+        }
+
+        try {
+            const credential = JSON.parse(jsonInput);
+            const selectedTheme = $('#themeSelect').val();
+            const outputElement = document.getElementById('output');
+            
+            // Clear previous output
+            outputElement.innerHTML = '';
+            
+            // Get theme and render
+            const ThemeClass = BaseTheme.getTheme(selectedTheme);
+            if (!ThemeClass) {
+                console.error('No theme found for credential type:', credential.type[credential.type.length - 1]);
+                return;
+            }
+            
+            const theme = new ThemeClass(credential);
+            const rendered = theme.render();
+            outputElement.appendChild(rendered);
+            
+            // Show the output card
+            $('#outputCard').removeClass('d-none');
+        } catch (error) {
+            showError('Invalid JSON format: ' + error.message);
+        }
+    }
+
+    // Update input validation to trigger rendering
+    function validateInput() {
+        clearTimeout(validationTimeout);
+        validationTimeout = setTimeout(() => {
+            const jsonInput = jsonEditor.textContent.trim();
+            if (!jsonInput) {
+                showError('Please enter a verifiable credential.');
+                return;
+            }
+
+            try {
+                const credential = JSON.parse(jsonInput);
+                const result = validateVC(jsonInput);
+                updateValidationUI(result);
+                
+                if (result.isValid) {
+                    // Update theme selection and render
+                    updateThemeSelect(credential);
+                    processInput();
+                }
+            } catch (error) {
+                showError('Invalid JSON format: ' + error.message);
+            }
+        }, 500);
+    }
+
     // Handle editor input events
     jsonEditor.addEventListener('input', function() {
         // Clear existing timeout
@@ -194,6 +253,15 @@ $(document).ready(function() {
         validationTimeout = setTimeout(() => {
             const result = validateVC(this.textContent);
             updateValidationUI(result);
+            if (result.isValid) {
+                try {
+                    const credential = JSON.parse(this.textContent);
+                    updateThemeSelect(credential);
+                    processInput();
+                } catch (error) {
+                    console.error('Error processing input:', error);
+                }
+            }
         }, 300);
     });
 
@@ -272,6 +340,11 @@ $(document).ready(function() {
             .find('.theme-author').text(`Created by ${themeInfo.author}`);
     }
 
+    // Add theme select change handler
+    $('#themeSelect').change(function() {
+        processInput();
+    });
+
     function renderCredential(credential, selectedTheme = '') {
         try {
             // Get the most specific credential type
@@ -333,75 +406,18 @@ $(document).ready(function() {
         $('#outputCard').removeClass('d-none');
     }
 
-    // Process button click handler
-    $('#processBtn').click(function() {
-        try {
-            const jsonStr = jsonEditor.textContent;
-            const credential = JSON.parse(jsonStr);
-            
-            // Get the selected theme
-            const selectedTheme = $('#themeSelect').val();
-            logger.debug('Processing credential with selected theme:', selectedTheme);
-            
-            // Clear the output and show the card
-            const output = $('#output');
-            output.empty();
-            $('#outputCard').removeClass('d-none');
-            
-            // Render the credential
-            const rendered = renderCredential(credential, selectedTheme);
-            output.append(rendered);
-            
-            // Update theme selector
-            updateThemeSelect(credential);
-            
-            logger.info('Credential processed successfully');
-        } catch (error) {
-            logger.error('Error processing credential:', error);
-            showError('Error processing credential: ' + error.message);
-        }
-    });
-
-    // Theme selection change handler
-    $('#themeSelect').change(function() {
-        const selectedTheme = $(this).val();
-        try {
-            // Get the current credential
-            const jsonStr = jsonEditor.textContent;
-            const credential = JSON.parse(jsonStr);
-            
-            // Clear the output and show the card
-            const output = $('#output');
-            output.empty();
-            $('#outputCard').removeClass('d-none');
-            
-            // Render with the new theme
-            const rendered = renderCredential(credential, selectedTheme);
-            output.append(rendered);
-            
-            // Update theme info
-            const ThemeClass = BaseTheme.getTheme(selectedTheme);
-            if (ThemeClass) {
-                updateThemeInfo(ThemeClass.info);
-            }
-            
-            logger.info('Theme changed successfully:', selectedTheme);
-        } catch (error) {
-            logger.error('Error changing theme:', error);
-            showError('Error changing theme: ' + error.message);
-        }
-    });
-
     // Update example loading to use new editor
     $('#loadUniversityExample').click(function() {
         logger.debug('Loading university degree example');
         const example = examples['UniversityDegreeCredential'];
         if (example) {
             updateEditor(example);
-            // Trigger validation
-            jsonEditor.dispatchEvent(new Event('input'));
-            // Automatically process the example
-            $('#processBtn').click();
+            const result = validateVC(JSON.stringify(example));
+            updateValidationUI(result);
+            if (result.isValid) {
+                updateThemeSelect(example);
+                processInput();
+            }
         } else {
             logger.error('University degree example not found');
             showError('Failed to load university degree example');
@@ -413,10 +429,12 @@ $(document).ready(function() {
         const example = examples['BelgianDriverLicenseCredential'];
         if (example) {
             updateEditor(example);
-            // Trigger validation
-            jsonEditor.dispatchEvent(new Event('input'));
-            // Automatically process the example
-            $('#processBtn').click();
+            const result = validateVC(JSON.stringify(example));
+            updateValidationUI(result);
+            if (result.isValid) {
+                updateThemeSelect(example);
+                processInput();
+            }
         } else {
             logger.error('Driver license example not found');
             showError('Failed to load driver license example');

@@ -20,51 +20,51 @@ class LinkedInDegreeTheme extends BaseTheme {
     }
 
     render() {
-        return `
-            <div class="credential-wrapper linkedin-degree-theme">
-                <div class="linkedin-card">
-                    <div class="university-banner">
-                        <div class="university-logo">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <h1 class="university-name">${this.getIssuerName()}</h1>
+        const wrapper = document.createElement('div');
+        wrapper.className = 'credential-wrapper linkedin-degree-theme';
+        wrapper.innerHTML = `
+            <div class="linkedin-card">
+                <div class="university-banner">
+                    <div class="university-logo">
+                        <i class="fas fa-university"></i>
                     </div>
-                    
-                    <div class="degree-content">
-                        <div class="recipient-info">
-                            <p class="conferred-text">has conferred upon</p>
-                            <h2 class="recipient-name">${this.degree.name}</h2>
-                            <p class="degree-details">${this.degree.type} in ${this.degree.degreeName}</p>
-                        </div>
-
-                        ${this.degree.honors ? `
-                            <div class="honors">
-                                <p class="honors-text">${this.degree.honors}</p>
-                            </div>
-                        ` : ''}
+                    <h1 class="university-name">${this.getIssuerName()}</h1>
+                </div>
+                
+                <div class="degree-content">
+                    <div class="recipient-info">
+                        <p class="conferred-text">has conferred upon</p>
+                        <h2 class="recipient-name">${this.degree.name}</h2>
+                        <p class="degree-details">${this.degree.type} in ${this.degree.degreeName}</p>
                     </div>
 
-                    <div class="credential-footer">
-                        <div class="issue-date">
-                            ${this.degree.graduationDate ? `Graduated ${new Date(this.degree.graduationDate).toLocaleDateString()}` : 
-                            `Issued ${new Date(this.credential.issuanceDate).toLocaleDateString()}`}
+                    ${this.degree.honors ? `
+                        <div class="honors">
+                            <p class="honors-text">${this.degree.honors}</p>
                         </div>
-                        <div class="credential-verify">
-                            <i class="fas fa-shield-check"></i> Verified Credential
-                        </div>
-                    </div>
+                    ` : ''}
+                </div>
 
-                    <div class="credential-links">
-                        <a href="${this.credential.id}" class="certificate-link" target="_blank">
-                            <i class="fas fa-external-link-alt"></i> View Certificate
-                        </a>
-                        <div class="powered-by">
-                            Created with <a href="https://github.com/spruceid/vc-viewer" target="_blank">VC Viewer</a>
-                        </div>
+                <div class="credential-footer">
+                    <div class="issue-date">
+                        Issued ${new Date(this.credential.issuanceDate).toLocaleDateString()}
+                    </div>
+                    <div class="credential-verify">
+                        <i class="fas fa-shield-check"></i> Verified Credential
+                    </div>
+                </div>
+
+                <div class="credential-links">
+                    <a href="${this.credential.id}" class="certificate-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> View Certificate
+                    </a>
+                    <div class="powered-by">
+                        Created with <a href="https://github.com/spruceid/vc-viewer" target="_blank">VC Viewer</a>
                     </div>
                 </div>
             </div>
         `;
+        return wrapper;
     }
 
     getThemeIcon() {
