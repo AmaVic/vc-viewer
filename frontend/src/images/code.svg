@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="40" cy="40" r="40" fill="#5850EC" fill-opacity="0.1"/>
+    
+    <!-- Code Brackets and Symbols -->
+    <path d="M32 26L20 40L32 54" stroke="#5850EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M48 26L60 40L48 54" stroke="#5850EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M44 20L36 60" stroke="#5850EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg> 

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Documentation for VC Viewer - Learn how to use and customize the viewer">
+    <title>VC Viewer - Documentation</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
+    <link href="/frontend/src/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-id-card me-2"></i>
+                VC Viewer
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/viewer">Viewer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/themes">Themes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/docs">Documentation</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <a href="https://github.com/yourusername/vc-viewer" class="btn btn-outline-primary" target="_blank">
+                        <i class="fab fa-github me-2"></i>GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1>Documentation</h1>
+                    <p class="lead">
+                        Learn how to use VC Viewer and create your own custom themes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Documentation Content -->
+    <div class="container py-5">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3">
+                <nav class="docs-nav" id="docsNav">
+                    <div class="nav flex-column">
+                        <a class="nav-link active" href="#getting-started">Getting Started</a>
+                        <a class="nav-link" href="#credential-format">Credential Format</a>
+                        <a class="nav-link" href="#using-themes">Using Themes</a>
+                        <a class="nav-link" href="#custom-themes">Creating Custom Themes</a>
+                        <a class="nav-link" href="#api-reference">API Reference</a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <div class="docs-content">
+                    <!-- Getting Started -->
+                    <section id="getting-started" class="mb-5">
+                        <h2>Getting Started</h2>
+                        <p>VC Viewer is a web-based tool for visualizing W3C Verifiable Credentials. Follow these steps to get started:</p>
+                        <ol>
+                            <li>Navigate to the <a href="/viewer">Viewer</a> page</li>
+                            <li>Paste your W3C Verifiable Credential in JSON format</li>
+                            <li>Choose a theme that matches your credential type</li>
+                            <li>Export the visualization as an image or PDF</li>
+                        </ol>
+                    </section>
+
+                    <!-- Credential Format -->
+                    <section id="credential-format" class="mb-5">
+                        <h2>Credential Format</h2>
+                        <p>VC Viewer supports standard W3C Verifiable Credentials in JSON format. Here's an example:</p>
+                        <pre><code class="language-json">{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:123",
+  "issuanceDate": "2023-01-01T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:456",
+    "name": "John Doe"
+  }
+}</code></pre>
+                    </section>
+
+                    <!-- Using Themes -->
+                    <section id="using-themes" class="mb-5">
+                        <h2>Using Themes</h2>
+                        <p>Themes are automatically selected based on your credential type. Available themes include:</p>
+                        <ul>
+                            <li>University Degree (Classic, Modern, LinkedIn)</li>
+                            <li>Driver License (Classic, Modern)</li>
+                            <li>Default theme for other credential types</li>
+                        </ul>
+                    </section>
+
+                    <!-- Creating Custom Themes -->
+                    <section id="custom-themes" class="mb-5">
+                        <h2>Creating Custom Themes</h2>
+                        <p>You can create custom themes by extending the BaseTheme class:</p>
+                        <pre><code class="language-javascript">class CustomTheme extends BaseTheme {
+    constructor() {
+        super();
+        this.id = "custom-theme";
+        this.name = "Custom Theme";
+        this.description = "My custom theme";
+        this.author = "Your Name";
+        this.supportedTypes = ["CustomCredential"];
+    }
+
+    render(credential) {
+        // Your custom rendering logic
+    }
+}</code></pre>
+                    </section>
+
+                    <!-- API Reference -->
+                    <section id="api-reference" class="mb-5">
+                        <h2>API Reference</h2>
+                        <p>VC Viewer provides two main API endpoints:</p>
+                        <ul>
+                            <li><code>/process-credential</code> - Process a single credential</li>
+                            <li><code>/process-presentation</code> - Process a verifiable presentation</li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="mb-3">VC Viewer</h5>
+                    <p class="mb-0">An open-source tool for visualizing W3C Verifiable Credentials.</p>
+                    <p class="mb-0">No tracking. No ads. Just code.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="footer-links">
+                        <a href="https://github.com/yourusername/vc-viewer" target="_blank">GitHub</a>
+                        <a href="https://www.w3.org/TR/vc-data-model/" target="_blank">W3C VC Spec</a>
+                        <a href="https://learnblockchain.be" target="_blank">LearnBlockchain.be</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+</body>
+</html> 

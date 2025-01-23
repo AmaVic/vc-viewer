@@ -505,7 +505,7 @@ $(document).ready(function() {
             showBrowserCompatibilityError();
             return;
         }
-
+        
         const $output = $('#output');
         const $credential = $output.find('.credential-wrapper').first();
         

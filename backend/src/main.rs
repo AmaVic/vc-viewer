@@ -49,6 +49,27 @@ async fn index() -> Result<HttpResponse> {
         .body(include_str!("../../frontend/src/templates/index.html")))
 }
 
+async fn viewer() -> Result<HttpResponse> {
+    debug!("Serving viewer page");
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(include_str!("../../frontend/src/templates/viewer.html")))
+}
+
+async fn themes() -> Result<HttpResponse> {
+    debug!("Serving themes page");
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(include_str!("../../frontend/src/templates/themes.html")))
+}
+
+async fn docs() -> Result<HttpResponse> {
+    debug!("Serving documentation page");
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(include_str!("../../frontend/src/templates/docs.html")))
+}
+
 async fn process_credential(credential: web::Json<VerifiableCredential>) -> Result<HttpResponse> {
     info!("Processing credential: {:?}", credential);
     
@@ -113,8 +134,14 @@ async fn main() -> std::io::Result<()> {
             .service(fs::Files::new("/frontend/src/themes", "../frontend/src/themes").show_files_listing())
             .service(fs::Files::new("/frontend/src/js", "../frontend/src/js").show_files_listing())
             .service(fs::Files::new("/frontend/src/css", "../frontend/src/css").show_files_listing())
+            .service(fs::Files::new("/frontend/src/images", "../frontend/src/images").show_files_listing())
             .service(fs::Files::new("/frontend/public", "../frontend/public").show_files_listing())
+            // Main routes
             .route("/", web::get().to(index))
+            .route("/viewer", web::get().to(viewer))
+            .route("/themes", web::get().to(themes))
+            .route("/docs", web::get().to(docs))
+            // API routes
             .route("/process-credential", web::post().to(process_credential))
             .route("/process-presentation", web::post().to(process_presentation))
     })

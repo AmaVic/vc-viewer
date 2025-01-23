@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="40" cy="40" r="40" fill="#5850EC" fill-opacity="0.1"/>
+    
+    <!-- Gift Box -->
+    <rect x="24" y="36" width="32" height="24" rx="4" stroke="#5850EC" stroke-width="4" stroke-linecap="round"/>
+    <path d="M40 28V60" stroke="#5850EC" stroke-width="4" stroke-linecap="round"/>
+    <path d="M40 28C40 28 44 20 34 20C24 20 34 28 40 28Z" stroke="#5850EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 28C40 28 36 20 46 20C56 20 46 28 40 28Z" stroke="#5850EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg> 

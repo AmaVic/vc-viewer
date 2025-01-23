@@ -1,494 +1,304 @@
+/* Base styles */
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --primary-light: #818cf8;
+    --text-white: #FFFFFF;
+    --text-muted: #6B7280;
+    --bg-white: #FFFFFF;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 body {
-    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
 }
 
+/* Navbar */
 .navbar {
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    background: var(--bg-white);
+    padding: 1rem 0;
+    box-shadow: var(--shadow-sm);
 }
 
-.card {
-    box-shadow: 0 2px 4px rgba(0,0,0,.05);
-    border: none;
-    transition: transform 0.2s ease;
-}
-
-.credential-card {
-    border-left: 4px solid #007bff;
-}
-
-.credential-card:hover {
-    transform: translateY(-2px);
-}
-
-.card-header {
-    background-color: #fff;
-    border-bottom: 1px solid rgba(0,0,0,.125);
-}
-
-.card-container {
-    max-height: 80vh;
-    overflow-y: auto;
-    padding-right: 10px;
-}
-
-#jsonInput {
-    font-family: monospace;
-    font-size: 0.9rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-#jsonInput.is-valid {
-    border-color: #198754;
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.1);
-}
-
-#jsonInput.is-invalid {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1);
-}
-
-.validation-feedback {
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-}
-
-.validation-feedback .valid-feedback,
-.validation-feedback .invalid-feedback {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-top: 0.25rem;
-}
-
-.validation-feedback .valid-feedback {
-    background-color: rgba(25, 135, 84, 0.1);
-    color: #198754;
-}
-
-.validation-feedback .invalid-feedback {
-    background-color: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
-}
-
-.validation-feedback i {
-    font-size: 1rem;
-    margin-top: 0.25rem;
-}
-
-.validation-details {
-    list-style: none;
-    padding-left: 0;
-    font-size: 0.85rem;
-    opacity: 0.9;
-}
-
-.validation-details li {
-    position: relative;
-    padding-left: 1rem;
-    margin-bottom: 0.25rem;
-}
-
-.validation-details li:last-child {
-    margin-bottom: 0;
-}
-
-.validation-details li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    opacity: 0.7;
-}
-
-.btn-primary {
-    padding: 0.5rem 2rem;
-}
-
-/* University Degree Credential Styles */
-.degree-credential-card {
-    border: none;
-    background: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.degree-credential-card .degree-header {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: white;
-    padding: 2rem 1rem;
-    position: relative;
-    text-align: center;
-}
-
-.degree-credential-card .university-seal {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
+.navbar-brand {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.degree-credential-card .university-seal i {
-    font-size: 2.5rem;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.degree-credential-card .degree-title {
-    font-size: 2rem;
+    gap: 0.75rem;
     font-weight: 600;
-    color: #2a5298;
-    margin-bottom: 0.5rem;
-    font-family: 'Georgia', serif;
+    color: var(--primary);
 }
 
-.degree-credential-card .degree-type {
-    font-size: 1.2rem;
-    color: #6c757d;
-    margin-bottom: 1.5rem;
+.navbar-brand img {
+    width: 32px;
+    height: 32px;
 }
 
-.degree-credential-card .degree-content {
-    padding: 2rem;
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
-.degree-credential-card .degree-details {
-    background: #f8f9fa;
-    padding: 2rem;
-    border-radius: 8px;
-    margin: 1.5rem 0;
-    border: 1px solid rgba(0,0,0,0.05);
+.nav-link:hover {
+    color: var(--primary) !important;
 }
 
-.degree-credential-card .degree-details .row {
-    align-items: center;
-}
-
-.degree-credential-card .degree-details .row strong {
-    color: #495057;
-}
-
-.degree-credential-card .credential-id {
-    font-family: monospace;
-    font-size: 0.8rem;
-    color: #6c757d;
-    padding: 0.5rem;
-    background: #f8f9fa;
-    border-radius: 4px;
-    display: inline-block;
-}
-
-.degree-credential-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-}
-
-.degree-credential-card .degree-footer {
-    border-top: 1px solid rgba(0,0,0,0.05);
-    padding-top: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-/* Honors styling */
-.degree-credential-card .honors {
-    color: #856404;
-    background-color: #fff3cd;
-    border: 1px solid #ffeeba;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    margin-top: 0.5rem;
-}
-
-/* Custom scrollbar */
-.card-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.card-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.card-container::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-.card-container::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-/* Belgian Driver's License Styles */
-.driver-license-card {
-    border: none;
-    background: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.driver-license-card .license-header {
-    background: linear-gradient(135deg, #000000 0%, #2b2b2b 100%);
-    color: white;
-    padding: 1.5rem;
+/* Hero Section */
+.hero {
     position: relative;
+    padding: 8rem 0 12rem;
+    background: linear-gradient(135deg, 
+        #4338ca 0%, 
+        #6366f1 30%, 
+        #7c3aed 60%, 
+        #8b5cf6 80%, 
+        #a78bfa 100%
+    );
+    overflow: hidden;
+    z-index: 1;
 }
 
-.driver-license-card .license-header::before {
+.hero::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
-    opacity: 0.1;
+    background: radial-gradient(
+        circle at top right,
+        rgba(192, 132, 252, 0.3) 0%,
+        rgba(139, 92, 246, 0.2) 30%,
+        rgba(124, 58, 237, 0.1) 60%,
+        transparent 80%
+    );
+    z-index: 0;
 }
 
-.driver-license-card .license-logo {
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.hero .container {
+    position: relative;
+    z-index: 2;
 }
 
-.driver-license-card .license-content {
-    padding: 2rem;
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #FFFFFF;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
-.driver-license-card .photo-placeholder {
-    background: #f8f9fa;
-    border: 2px dashed #dee2e6;
-    border-radius: 8px;
-    width: 100%;
-    aspect-ratio: 3/4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #adb5bd;
+.hero .lead {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 2rem;
+    opacity: 0.95;
 }
 
-.driver-license-card .holder-details {
-    font-size: 0.95rem;
-}
-
-.driver-license-card .holder-details .row {
-    margin-bottom: 0.5rem;
-}
-
-.driver-license-card .holder-details strong {
-    color: #495057;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.driver-license-card .categories-title {
-    font-size: 1rem;
-    color: #495057;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.driver-license-card .categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 0.5rem;
-}
-
-.driver-license-card .category-item {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    padding: 0.5rem;
-    text-align: center;
-}
-
-.driver-license-card .category-item.active {
-    background: #e8f5e9;
-    border-color: #c8e6c9;
-    color: #2e7d32;
-}
-
-.driver-license-card .category-name {
+.btn-light {
+    background: #FFFFFF;
+    color: var(--primary);
+    border: none;
     font-weight: 600;
-    font-size: 1.1rem;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.driver-license-card .category-date {
-    font-size: 0.75rem;
-    color: #6c757d;
-}
-
-.driver-license-card .license-footer {
-    border-top: 1px solid #dee2e6;
-    padding-top: 1.5rem;
-}
-
-.driver-license-card .issuer-name {
-    font-weight: 500;
-    color: #212529;
-}
-
-.driver-license-card .valid-until {
-    font-weight: 500;
-    color: #212529;
-}
-
-.driver-license-card:hover {
+.btn-light:hover {
+    background: #FFFFFF;
+    color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
 }
 
-/* Process button states */
-#processBtn:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
+.btn-outline-light {
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    transition: transform 0.2s, background 0.2s;
 }
 
-#processBtn:not(:disabled) {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+    transform: translateY(-2px);
 }
 
-#processBtn:not(:disabled):hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.editor-container {
+/* Preview Window */
+.preview-container {
+    perspective: 1000px;
+    padding: 2rem;
     position: relative;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    background: #f8f9fa;
-    min-height: 200px;
+    z-index: 2;
 }
 
-.editor-container pre {
-    margin: 0;
+.preview-window {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    margin: 2rem 0;
+}
+
+.preview-header {
+    background: #f8fafc;
     padding: 0.75rem;
-    background: transparent;
-    min-height: 200px;
-    max-height: 400px;
-    overflow-y: auto;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.editor-container code {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    tab-size: 4;
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-.editor-container code:focus {
-    outline: none;
-}
-
-/* Editor validation states */
-.editor-container.is-valid {
-    border-color: #198754;
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
-}
-
-.editor-container.is-invalid {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
-}
-
-/* Prism.js theme overrides */
-.token.property {
-    color: #e83e8c;
-}
-
-.token.string {
-    color: #28a745;
-}
-
-.token.number {
-    color: #fd7e14;
-}
-
-.token.boolean {
-    color: #007bff;
-}
-
-.token.null {
-    color: #6c757d;
-}
-
-.token.punctuation {
-    color: #495057;
-}
-
-.token.operator {
-    color: #6f42c1;
-}
-
-/* Validation feedback styles */
-.validation-feedback {
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-}
-
-.validation-feedback .valid-feedback,
-.validation-feedback .invalid-feedback {
+.preview-dots {
     display: flex;
-    align-items: flex-start;
     gap: 0.5rem;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-top: 0.25rem;
 }
 
-.validation-feedback .valid-feedback {
-    background-color: rgba(25, 135, 84, 0.1);
-    color: #198754;
+.preview-dots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #e2e8f0;
 }
 
-.validation-feedback .invalid-feedback {
-    background-color: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
+.preview-dots span:nth-child(1) { background: #ef4444; }
+.preview-dots span:nth-child(2) { background: #f59e0b; }
+.preview-dots span:nth-child(3) { background: #10b981; }
+
+.preview-content {
+    padding: 1.5rem;
+    background: white;
 }
 
-.validation-feedback i {
-    font-size: 1rem;
-    margin-top: 0.25rem;
+.preview-content pre {
+    margin: 0;
+    background: transparent !important;
 }
 
-.validation-details {
-    list-style: none;
-    padding-left: 0;
-    font-size: 0.85rem;
-    opacity: 0.9;
+.preview-content code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
 }
 
-.validation-details li {
+/* Features Section */
+.features {
     position: relative;
-    padding-left: 1rem;
-    margin-bottom: 0.25rem;
+    background: var(--bg-white);
+    padding: 6rem 0;
+    margin-top: -8rem;
+    z-index: 2;
 }
 
-.validation-details li:last-child {
-    margin-bottom: 0;
-}
-
-.validation-details li::before {
-    content: "•";
+.features::before {
+    content: '';
     position: absolute;
+    top: -200px;
     left: 0;
-    opacity: 0.7;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(to bottom, 
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 30%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0.8) 70%,
+        var(--bg-white) 100%
+    );
+    pointer-events: none;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+}
+
+.feature-card h3 {
+    color: var(--primary);
+    font-weight: 500;
+    font-size: 1.5rem;
+    position: relative;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.feature-card p {
+    margin-bottom: 0;
+    color: var(--text-muted);
+    position: relative;
+    flex-grow: 1;
+}
+
+/* Footer */
+.footer {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--text-white);
+    padding: 4rem 0;
+}
+
+.footer h5 {
+    font-weight: 600;
+}
+
+.footer a {
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.footer a:hover {
+    opacity: 1 !important;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .hero {
+        padding: 6rem 0 4rem;
+    }
+    
+    .preview-container {
+        margin-top: 3rem;
+    }
+    
+    .preview-window {
+        transform: none;
+    }
+    
+    .footer .d-flex {
+        justify-content: flex-start !important;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .features {
+        padding: 4rem 0;
+    }
 } 
