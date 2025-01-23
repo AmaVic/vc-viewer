@@ -56,9 +56,9 @@ body {
 .validation-feedback .valid-feedback,
 .validation-feedback .invalid-feedback {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem;
     border-radius: 4px;
     margin-top: 0.25rem;
 }
@@ -75,6 +75,31 @@ body {
 
 .validation-feedback i {
     font-size: 1rem;
+    margin-top: 0.25rem;
+}
+
+.validation-details {
+    list-style: none;
+    padding-left: 0;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.validation-details li {
+    position: relative;
+    padding-left: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.validation-details li:last-child {
+    margin-bottom: 0;
+}
+
+.validation-details li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    opacity: 0.7;
 }
 
 .btn-primary {

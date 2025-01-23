@@ -22,28 +22,91 @@ $(document).ready(function() {
                 return { isValid: false, error: 'Input is empty' };
             }
 
-            const credential = JSON.parse(jsonStr);
-            
-            // Basic VC validation
-            if (!credential['@context'] || !credential['@context'].includes('https://www.w3.org/2018/credentials/v1')) {
-                return { isValid: false, error: 'Missing or invalid @context' };
-            }
-            
-            if (!credential.type || !credential.type.includes('VerifiableCredential')) {
-                return { isValid: false, error: 'Missing or invalid type' };
-            }
-            
-            if (!credential.issuer) {
-                return { isValid: false, error: 'Missing issuer' };
-            }
-            
-            if (!credential.credentialSubject) {
-                return { isValid: false, error: 'Missing credentialSubject' };
+            let credential;
+            try {
+                credential = JSON.parse(jsonStr);
+            } catch (e) {
+                return { 
+                    isValid: false, 
+                    error: 'Invalid JSON format',
+                    details: e.message
+                };
             }
 
-            return { isValid: true };
+            const errors = [];
+            
+            // Context validation
+            if (!credential['@context']) {
+                errors.push('Missing @context field');
+            } else if (!Array.isArray(credential['@context'])) {
+                errors.push('@context must be an array');
+            } else if (!credential['@context'].includes('https://www.w3.org/2018/credentials/v1')) {
+                errors.push('@context must include "https://www.w3.org/2018/credentials/v1"');
+            }
+            
+            // Type validation
+            if (!credential.type) {
+                errors.push('Missing type field');
+            } else if (!Array.isArray(credential.type)) {
+                errors.push('type must be an array');
+            } else {
+                if (!credential.type.includes('VerifiableCredential')) {
+                    errors.push('type must include "VerifiableCredential"');
+                }
+                if (credential.type.length < 2) {
+                    errors.push('type should include at least one specific credential type');
+                }
+            }
+            
+            // Issuer validation
+            if (!credential.issuer) {
+                errors.push('Missing issuer field');
+            } else if (typeof credential.issuer !== 'object' && typeof credential.issuer !== 'string') {
+                errors.push('issuer must be an object or string');
+            } else if (typeof credential.issuer === 'object' && !credential.issuer.id) {
+                errors.push('issuer object must have an id field');
+            }
+            
+            // Issuance date validation
+            if (!credential.issuanceDate) {
+                errors.push('Missing issuanceDate field');
+            } else {
+                try {
+                    new Date(credential.issuanceDate).toISOString();
+                } catch (e) {
+                    errors.push('issuanceDate must be a valid ISO 8601 date');
+                }
+            }
+            
+            // Credential subject validation
+            if (!credential.credentialSubject) {
+                errors.push('Missing credentialSubject field');
+            } else if (typeof credential.credentialSubject !== 'object') {
+                errors.push('credentialSubject must be an object');
+            }
+
+            if (errors.length > 0) {
+                return {
+                    isValid: false,
+                    error: 'Invalid Verifiable Credential',
+                    details: errors
+                };
+            }
+
+            return { 
+                isValid: true,
+                details: [
+                    `Valid credential type: ${credential.type[credential.type.length - 1]}`,
+                    `Issued by: ${typeof credential.issuer === 'string' ? credential.issuer : credential.issuer.name || credential.issuer.id}`,
+                    `Issued on: ${new Date(credential.issuanceDate).toLocaleDateString()}`
+                ]
+            };
         } catch (e) {
-            return { isValid: false, error: 'Invalid JSON format' };
+            return { 
+                isValid: false, 
+                error: 'Validation error',
+                details: e.message
+            };
         }
     }
 
@@ -52,7 +115,6 @@ $(document).ready(function() {
         const $feedback = $('.validation-feedback');
         const $validFeedback = $('.valid-feedback');
         const $invalidFeedback = $('.invalid-feedback');
-        const $errorMessage = $('.error-message');
         const $processBtn = $('#processBtn');
         
         // Remove existing validation states
@@ -64,12 +126,39 @@ $(document).ready(function() {
             $validFeedback.removeClass('d-none');
             $invalidFeedback.addClass('d-none');
             $processBtn.prop('disabled', false);
+            
+            // Simple success message
+            $validFeedback.html(`
+                <i class="fas fa-check-circle"></i>
+                <div>Valid Verifiable Credential</div>
+            `);
         } else {
             $input.addClass('is-invalid');
             $validFeedback.addClass('d-none');
             $invalidFeedback.removeClass('d-none');
-            $errorMessage.text(validationResult.error);
             $processBtn.prop('disabled', true);
+            
+            // Show error details if available
+            if (validationResult.details) {
+                const detailsHtml = Array.isArray(validationResult.details)
+                    ? `<ul class="validation-details mb-0 mt-1">
+                        ${validationResult.details.map(detail => `<li>${detail}</li>`).join('')}
+                       </ul>`
+                    : `<div class="mt-1">${validationResult.details}</div>`;
+                
+                $invalidFeedback.html(`
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
+                        <div>${validationResult.error}</div>
+                        ${detailsHtml}
+                    </div>
+                `);
+            } else {
+                $invalidFeedback.html(`
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>${validationResult.error}</div>
+                `);
+            }
         }
     }
 
