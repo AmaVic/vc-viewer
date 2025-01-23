@@ -146,6 +146,7 @@ async fn main() -> std::io::Result<()> {
             .route("/process-presentation", web::post().to(process_presentation))
     })
     .bind("127.0.0.1:8080")?
+    .workers(2)
     .run()
     .await
 } 

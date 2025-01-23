@@ -9,6 +9,8 @@
     position: relative;
     height: 500px;
     overflow: auto;
+    border: 1px solid #E2E8F0;
+    transition: border-color 0.2s ease;
 }
 
 .editor-container pre {
@@ -106,4 +108,93 @@
 .editor-container::-webkit-scrollbar-thumb:hover,
 .preview-container::-webkit-scrollbar-thumb:hover {
     background: #94A3B8;
+}
+
+/* Validation Feedback Styles */
+.validation-feedback {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: none; /* Hidden by default */
+    position: relative;
+    z-index: 10;
+}
+
+/* Only show when explicitly requested */
+.validation-feedback.show {
+    display: block;
+}
+
+.validation-feedback i {
+    margin-right: 0.5rem;
+    font-size: 1.1em;
+}
+
+.validation-details {
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    font-size: 0.9em;
+    list-style: none;
+}
+
+.validation-details li {
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.validation-details li::before {
+    content: "•";
+    margin-right: 0.5rem;
+    color: currentColor;
+}
+
+.valid-feedback,
+.invalid-feedback {
+    display: none;
+}
+
+.valid-feedback {
+    color: #10B981;
+    display: flex;
+    align-items: flex-start;
+}
+
+.invalid-feedback {
+    color: #EF4444;
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Only show the active feedback when parent is shown */
+.validation-feedback.show.is-valid .valid-feedback {
+    display: flex !important;
+}
+
+.validation-feedback.show.is-valid .invalid-feedback {
+    display: none !important;
+}
+
+.validation-feedback.show.is-invalid .valid-feedback {
+    display: none !important;
+}
+
+.validation-feedback.show.is-invalid .invalid-feedback {
+    display: flex !important;
+}
+
+.editor-container.is-valid {
+    border-color: #10B981;
+}
+
+.editor-container.is-invalid {
+    border-color: #EF4444;
+}
+
+/* Card body padding adjustment */
+.card-body {
+    padding-bottom: 1rem !important;
 } 

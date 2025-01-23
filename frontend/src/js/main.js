@@ -1,6 +1,7 @@
 $(document).ready(function() {
     // Validation timeout for debouncing
     let validationTimeout;
+    let hasUserInput = false; // Track if user has interacted with the editor
 
     // Setup console logging with timestamp
     window.logger = {
@@ -114,66 +115,36 @@ $(document).ready(function() {
     }
 
     function updateValidationUI(validationResult, hasUserInput = false) {
-        const $container = $('.editor-container');
         const $feedback = $('.validation-feedback');
-        const $validFeedback = $('.valid-feedback');
-        const $invalidFeedback = $('.invalid-feedback');
-        const $processBtn = $('#processBtn');
         
         // Remove existing validation states
-        $container.removeClass('is-valid is-invalid');
-        $feedback.addClass('d-none');
+        $feedback.removeClass('is-valid is-invalid show');
         
         // Only show validation feedback if there's user input
         if (!hasUserInput) {
-            $processBtn.prop('disabled', true);
             return;
         }
         
-        $feedback.removeClass('d-none');
+        // Show the feedback container and add appropriate state
+        $feedback.addClass('show');
         
         if (validationResult.isValid) {
-            $container.addClass('is-valid');
-            $validFeedback.removeClass('d-none');
-            $invalidFeedback.addClass('d-none');
-            $processBtn.prop('disabled', false);
-            
-            $validFeedback.html(`
-                <i class="fas fa-check-circle text-success"></i>
-                <div class="text-success">
-                    <strong>Valid Verifiable Credential</strong>
-                    ${validationResult.details ? `
-                        <ul class="validation-details mb-0 mt-1">
-                            ${validationResult.details.map(detail => `<li>${detail}</li>`).join('')}
-                        </ul>
-                    ` : ''}
-                </div>
-            `);
+            $feedback.addClass('is-valid');
         } else {
-            $container.addClass('is-invalid');
-            $validFeedback.addClass('d-none');
-            $invalidFeedback.removeClass('d-none');
-            $processBtn.prop('disabled', true);
+            $feedback.addClass('is-invalid');
             
             if (validationResult.details) {
                 const detailsHtml = Array.isArray(validationResult.details)
-                    ? `<ul class="validation-details mb-0 mt-1">
+                    ? `<ul class="validation-details">
                         ${validationResult.details.map(detail => `<li>${detail}</li>`).join('')}
                        </ul>`
                     : `<div class="mt-1">${validationResult.details}</div>`;
                 
-                $invalidFeedback.html(`
-                    <i class="fas fa-exclamation-circle text-danger"></i>
-                    <div class="text-danger">
+                $('.invalid-feedback').html(`
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
                         <strong>${validationResult.error}</strong>
                         ${detailsHtml}
-                    </div>
-                `);
-            } else {
-                $invalidFeedback.html(`
-                    <i class="fas fa-exclamation-circle text-danger"></i>
-                    <div class="text-danger">
-                        <strong>${validationResult.error}</strong>
                     </div>
                 `);
             }
@@ -201,12 +172,24 @@ $(document).ready(function() {
     function processInput() {
         const jsonInput = jsonEditor.textContent.trim();
         if (!jsonInput) {
-            showError('Please enter a verifiable credential.');
+            updateValidationUI({ isValid: false, error: 'Input is empty' }, true);
+            document.getElementById('previewContainer').innerHTML = '';
             return;
         }
 
         try {
             const credential = JSON.parse(jsonInput);
+            
+            // Validate the credential
+            const validationResult = validateVC(jsonInput);
+            updateValidationUI(validationResult, true);
+            
+            if (!validationResult.isValid) {
+                // Clear only the preview if validation fails
+                document.getElementById('previewContainer').innerHTML = '';
+                return;
+            }
+            
             const selectedTheme = $('#themeSelect').val();
             const outputElement = document.getElementById('previewContainer');
             
@@ -216,7 +199,11 @@ $(document).ready(function() {
             // Get theme and render
             const ThemeClass = BaseTheme.getTheme(selectedTheme);
             if (!ThemeClass) {
-                console.error('No theme found for credential type:', credential.type[credential.type.length - 1]);
+                updateValidationUI({
+                    isValid: false,
+                    error: 'Theme Error',
+                    details: `No theme found for credential type: ${credential.type[credential.type.length - 1]}`
+                }, true);
                 return;
             }
             
@@ -224,55 +211,94 @@ $(document).ready(function() {
             const rendered = theme.render();
             outputElement.appendChild(rendered);
             
-            // Show the output card
-            $('#outputCard').removeClass('d-none');
         } catch (error) {
-            showError('Invalid JSON format: ' + error.message);
+            // Update validation UI with error but don't clear it
+            updateValidationUI({
+                isValid: false,
+                error: 'Invalid JSON format',
+                details: error.message
+            }, true);
+            // Clear only the preview on error
+            document.getElementById('previewContainer').innerHTML = '';
         }
     }
 
     // Handle editor input events
-    let hasUserInput = false;
     jsonEditor.addEventListener('input', function() {
-        hasUserInput = true;
+        hasUserInput = true; // Set flag when user types
         
         // Clear existing timeout
         clearTimeout(validationTimeout);
         
-        // Remove validation states while typing
-        $('.editor-container').removeClass('is-valid is-invalid');
-        $('.validation-feedback').addClass('d-none');
-        
         // Set new timeout for validation
         validationTimeout = setTimeout(() => {
             const jsonInput = jsonEditor.textContent.trim();
-            if (!jsonInput) {
-                updateValidationUI({ isValid: false, error: 'Input is empty' }, hasUserInput);
-                return;
-            }
-
-            try {
-                const credential = JSON.parse(jsonInput);
-                const result = validateVC(jsonInput);
-                updateValidationUI(result, hasUserInput);
+            
+            // Only validate if user has interacted
+            if (hasUserInput) {
+                const validationResult = validateVC(jsonInput);
+                updateValidationUI(validationResult, true);
                 
-                if (result.isValid) {
-                    // Update theme selection and render
-                    updateThemeSelect(credential);
+                // Only attempt to process and render if validation passes
+                if (validationResult.isValid) {
                     processInput();
+                } else {
+                    // Just clear the preview, leaving validation messages visible
+                    document.getElementById('previewContainer').innerHTML = '';
                 }
-            } catch (error) {
-                updateValidationUI({
-                    isValid: false,
-                    error: 'Invalid JSON format',
-                    details: error.message
-                }, hasUserInput);
             }
         }, 500);
     });
 
+    // Update validation feedback elements if they don't exist
+    if (!$('.validation-feedback').length) {
+        $('.card').after(`
+            <div class="validation-feedback">
+                <div class="valid-feedback">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Valid Verifiable Credential</strong>
+                    </div>
+                </div>
+                <div class="invalid-feedback"></div>
+            </div>
+        `);
+    }
+
+    // Style the validation feedback
+    $('<style>')
+        .text(`
+            .editor-container { position: relative; }
+            .validation-feedback {
+                padding: 0.75rem;
+                border-radius: 0.5rem;
+                margin-top: 1.5rem;
+                background: white;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                display: none;
+            }
+            .validation-feedback.show {
+                display: block;
+            }
+            .validation-feedback i {
+                margin-right: 0.5rem;
+                font-size: 1.1em;
+            }
+            .validation-details {
+                padding-left: 1.5rem;
+                margin-top: 0.5rem;
+                font-size: 0.9em;
+            }
+            .validation-feedback.is-valid .valid-feedback { display: flex !important; }
+            .validation-feedback.is-valid .invalid-feedback { display: none !important; }
+            .validation-feedback.is-invalid .valid-feedback { display: none !important; }
+            .validation-feedback.is-invalid .invalid-feedback { display: flex !important; }
+        `)
+        .appendTo('head');
+
     // Handle example buttons
     $('#universityExample').on('click', function() {
+        hasUserInput = true; // Set flag when example is loaded
         const example = window.examples['UniversityDegreeCredential'];
         updateEditor(example);
         const result = validateVC(JSON.stringify(example));
@@ -284,6 +310,7 @@ $(document).ready(function() {
     });
 
     $('#driverLicenseExample').on('click', function() {
+        hasUserInput = true; // Set flag when example is loaded
         const example = window.examples['BelgianDriverLicenseCredential'];
         updateEditor(example);
         const result = validateVC(JSON.stringify(example));
@@ -608,23 +635,6 @@ $(document).ready(function() {
         }
     });
 
-    // Initial validation if there's content
-    if (jsonEditor.textContent.trim()) {
-        const jsonInput = jsonEditor.textContent.trim();
-        try {
-            const credential = JSON.parse(jsonInput);
-            const result = validateVC(jsonInput);
-            updateValidationUI(result, true);
-            if (result.isValid) {
-                updateThemeSelect(credential);
-                processInput();
-            }
-        } catch (error) {
-            updateValidationUI({
-                isValid: false,
-                error: 'Invalid JSON format',
-                details: error.message
-            }, true);
-        }
-    }
+    // Initial state - don't show validation feedback
+    $('.validation-feedback').removeClass('show');
 }); 
