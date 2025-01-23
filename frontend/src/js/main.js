@@ -379,4 +379,142 @@ $(document).ready(function() {
             showError('Failed to load driver license example');
         }
     });
+
+    // Browser compatibility check for export features
+    function isChromiumBased() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        return /chrome/.test(userAgent) || /chromium/.test(userAgent) || /brave/.test(userAgent);
+    }
+
+    function showBrowserCompatibilityError() {
+        showError(`
+            Export features require a Chromium-based browser. Please use either:
+            <div class="mt-2">
+                <a href="https://brave.com" target="_blank" class="text-decoration-none me-3">
+                    <i class="fa-brands fa-brave"></i> Brave Browser
+                </a>
+                <a href="https://www.google.com/chrome" target="_blank" class="text-decoration-none">
+                    <i class="fa-brands fa-chrome"></i> Google Chrome
+                </a>
+            </div>
+        `);
+    }
+
+    // Export functionality
+    $('#exportImage').click(async function() {
+        if (!isChromiumBased()) {
+            showBrowserCompatibilityError();
+            return;
+        }
+
+        const $output = $('#output');
+        const $credential = $output.find('.credential-wrapper').first();
+        
+        try {
+            // Show loading state
+            const $btn = $(this);
+            const originalText = $btn.html();
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Exporting...');
+            
+            // Create canvas from the credential
+            const canvas = await html2canvas($credential[0], {
+                scale: 2, // Higher quality
+                backgroundColor: '#ffffff',
+                logging: false
+            });
+            
+            // Convert to image and download
+            const link = document.createElement('a');
+            link.download = 'credential.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            // Reset button state
+            $btn.prop('disabled', false).html(originalText);
+            
+            logger.info('Credential exported as image');
+        } catch (error) {
+            logger.error('Error exporting credential as image:', error);
+            showError('Failed to export image. Please try again.');
+        }
+    });
+
+    $('#exportPDF').click(async function() {
+        if (!isChromiumBased()) {
+            showBrowserCompatibilityError();
+            return;
+        }
+
+        const $output = $('#output');
+        const $credential = $output.find('.credential-wrapper').first();
+        
+        try {
+            // Show loading state
+            const $btn = $(this);
+            const originalText = $btn.html();
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Exporting...');
+            
+            // Create canvas from the credential
+            const canvas = await html2canvas($credential[0], {
+                scale: 2, // Higher quality
+                backgroundColor: '#ffffff',
+                logging: false
+            });
+            
+            // Initialize PDF with A4 format
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            // A4 dimensions in mm
+            const pageWidth = 210;
+            const pageHeight = 297;
+            
+            // Calculate scaling to fit the page with margins
+            const margins = 20; // 20mm margins
+            const maxWidth = pageWidth - (margins * 2);
+            const maxHeight = pageHeight - (margins * 2);
+            
+            // Convert canvas dimensions from px to mm (assuming 96 DPI)
+            const pxToMm = 0.264583333;
+            const imageWidth = canvas.width * pxToMm;
+            const imageHeight = canvas.height * pxToMm;
+            
+            // Calculate scale to fit within margins while maintaining aspect ratio
+            const scale = Math.min(
+                maxWidth / imageWidth,
+                maxHeight / imageHeight
+            );
+            
+            // Calculate centered position
+            const scaledWidth = imageWidth * scale;
+            const scaledHeight = imageHeight * scale;
+            const x = (pageWidth - scaledWidth) / 2;
+            const y = (pageHeight - scaledHeight) / 2;
+            
+            // Add the image to PDF
+            pdf.addImage(
+                canvas.toDataURL('image/png'),
+                'PNG',
+                x,
+                y,
+                scaledWidth,
+                scaledHeight
+            );
+            
+            // Save the PDF
+            pdf.save('credential.pdf');
+            
+            // Reset button state
+            $btn.prop('disabled', false).html(originalText);
+            
+            logger.info('Credential exported as PDF');
+        } catch (error) {
+            logger.error('Error exporting credential as PDF:', error);
+            showError('Failed to export PDF. Please try again.');
+        }
+    });
 }); 
