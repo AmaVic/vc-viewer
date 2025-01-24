@@ -44,10 +44,18 @@ async fn index(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
         .body(rendered))
 }
 
-async fn viewer(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+async fn viewer(
+    tmpl: web::Data<Tera>,
+    query: web::Query<std::collections::HashMap<String, String>>
+) -> Result<HttpResponse> {
     debug!("Serving viewer page");
     let mut ctx = tera::Context::new();
     ctx.insert("current_page", "viewer");
+    
+    if let Some(theme) = query.get("theme") {
+        debug!("Theme parameter provided: {}", theme);
+        ctx.insert("selected_theme", theme);
+    }
     
     let rendered = tmpl.render("pages/viewer.html", &ctx)
         .map_err(|e| {

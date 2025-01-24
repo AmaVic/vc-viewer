@@ -3,6 +3,24 @@ $(document).ready(function() {
     let validationTimeout;
     let hasUserInput = false; // Track if user has interacted with the editor
 
+    // Initialize JSON editor first
+    const jsonEditor = document.getElementById('jsonInput');
+    
+    // Function to update editor content with proper formatting
+    function updateEditor(json) {
+        let formatted;
+        try {
+            // If json is a string, parse it first
+            const obj = typeof json === 'string' ? JSON.parse(json) : json;
+            formatted = JSON.stringify(obj, null, 2);
+        } catch (e) {
+            formatted = json || '';
+        }
+        
+        jsonEditor.textContent = formatted;
+        Prism.highlightElement(jsonEditor);
+    }
+
     // Setup console logging with timestamp
     window.logger = {
         info: (msg, data) => {
@@ -18,6 +36,33 @@ $(document).ready(function() {
             console.debug(`[${time}] DEBUG: ${msg}`, data || '');
         }
     };
+
+    // Function to handle URL parameters and initialize theme
+    function initializeFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const themeParam = params.get('theme');
+        
+        if (themeParam) {
+            const [credentialType, themeVariant] = themeParam.split(':');
+            if (window.examples[credentialType]) {
+                hasUserInput = true;
+                const example = window.examples[credentialType];
+                updateEditor(example);
+                const result = validateVC(JSON.stringify(example));
+                updateValidationUI(result, true);
+                if (result.isValid) {
+                    // Update theme selector first
+                    updateThemeSelector(credentialType);
+                    // Then set the selected theme
+                    $('#themeSelect').val(themeParam);
+                    processInput();
+                }
+            }
+        }
+    }
+
+    // Call initialization after everything is set up
+    setTimeout(initializeFromUrl, 100); // Increased timeout to ensure DOM is ready
 
     // Real-time validation
     function validateVC(jsonStr) {
@@ -151,24 +196,6 @@ $(document).ready(function() {
         }
     }
 
-    // Initialize JSON editor
-    const jsonEditor = document.getElementById('jsonInput');
-    
-    // Function to update editor content with proper formatting
-    function updateEditor(json) {
-        let formatted;
-        try {
-            // If json is a string, parse it first
-            const obj = typeof json === 'string' ? JSON.parse(json) : json;
-            formatted = JSON.stringify(obj, null, 2);
-        } catch (e) {
-            formatted = json || '';
-        }
-        
-        jsonEditor.textContent = formatted;
-        Prism.highlightElement(jsonEditor);
-    }
-
     function updateThemeSelector(credentialType) {
         const $themeSelect = $('#themeSelect');
         $themeSelect.empty();
@@ -176,10 +203,11 @@ $(document).ready(function() {
         const themes = BaseTheme.getThemesByType(credentialType);
         if (themes && themes.length > 0) {
             themes.forEach(theme => {
-                $themeSelect.append(`<option value="${theme.id}">${theme.name}</option>`);
+                const themeId = `${credentialType}:${theme.id}`;
+                $themeSelect.append(`<option value="${themeId}">${theme.name}</option>`);
             });
             // Select the first theme by default
-            $themeSelect.val(themes[0].id);
+            $themeSelect.val(`${credentialType}:${themes[0].id}`);
         } else {
             $themeSelect.append('<option value="" disabled>No themes available</option>');
         }
@@ -217,9 +245,15 @@ $(document).ready(function() {
             const credentialType = credential.type[credential.type.length - 1];
             window.logger.debug(`Getting themes for credential type: ${credentialType}`);
             
-            // Update theme selector if credential type has changed
-            if ($('#themeSelect option').length === 0 || !$('#themeSelect').val()) {
+            // Get URL theme parameter
+            const urlTheme = new URLSearchParams(window.location.search).get('theme');
+            
+            // Update theme selector if needed
+            if ($('#themeSelect option').length === 0) {
                 updateThemeSelector(credentialType);
+                if (urlTheme) {
+                    $('#themeSelect').val(urlTheme);
+                }
             }
             
             // Get available themes
@@ -234,7 +268,7 @@ $(document).ready(function() {
             }
             
             // Get selected theme
-            const selectedThemeId = $('#themeSelect').val() || `${credentialType}:classic`;
+            let selectedThemeId = urlTheme || $('#themeSelect').val() || `${credentialType}:${themes[0].id}`;
             const ThemeClass = BaseTheme.getTheme(selectedThemeId);
             
             if (!ThemeClass) {
