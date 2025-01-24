@@ -46,6 +46,10 @@
     overflow: auto;
     background: #F8FAFC;
     padding: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 /* Card Styles */
@@ -207,4 +211,12 @@
 
 .editor-container.is-invalid {
     border-color: #EF4444;
+}
+
+#previewContainer {
+    padding: 1.5rem 0;
+}
+
+#previewContainer > div {
+    margin: 0 auto;
 } 

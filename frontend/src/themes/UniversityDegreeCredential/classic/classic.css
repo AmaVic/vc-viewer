@@ -5,134 +5,149 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     overflow: hidden;
     width: 100%;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
 /* Banner Section */
 .classic-university-theme .credential-banner {
     background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
-    padding: 2rem;
+    padding: 1.25rem;
     text-align: center;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .classic-university-theme .credential-banner i {
-    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    margin: 0;
 }
 
 .classic-university-theme .credential-banner h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
 }
 
 .classic-university-theme .university-name {
-    font-size: 1.25rem;
+    font-size: 1rem;
     opacity: 0.9;
 }
 
 /* Main Content */
 .classic-university-theme .degree-content {
-    padding: 2rem;
+    padding: 1.25rem;
 }
 
 .classic-university-theme .content-card {
     background: white;
     border-radius: 0.75rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
 }
 
 .classic-university-theme .degree-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .classic-university-theme .degree-name {
-    font-size: 1.75rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     color: #1f2937;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .classic-university-theme .degree-type {
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: #6b7280;
 }
 
 .classic-university-theme .info-grid {
     display: grid;
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
 }
 
 .classic-university-theme .info-item {
     background: #f9fafb;
     border-radius: 0.5rem;
-    padding: 1rem;
+    padding: 0.75rem;
 }
 
 .classic-university-theme .info-label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 0.025em;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .classic-university-theme .info-value {
-    font-size: 1.125rem;
+    font-size: 0.875rem;
     color: #1f2937;
     font-weight: 500;
 }
 
 /* Honors Section */
 .classic-university-theme .honors-section {
-    background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
-    border-radius: 1rem;
-    padding: 2.5rem;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 2px solid var(--theme-border);
+    background: #fef3c7;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .classic-university-theme .honors-title {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
-    color: var(--theme-text);
-    margin-bottom: 1rem;
+    color: #92400e;
+    margin-bottom: 0.75rem;
 }
 
 .classic-university-theme .honors-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .classic-university-theme .honor-item {
-    background: var(--theme-background);
-    padding: 0.5rem 1rem;
+    background: #fffbeb;
+    padding: 0.5rem 0.75rem;
     border-radius: 0.5rem;
     font-size: 0.875rem;
-    color: var(--theme-text);
+    color: #92400e;
+    border: 1px solid #fcd34d;
 }
 
 /* Footer */
 .classic-university-theme .credential-footer {
     background: #f9fafb;
     border-top: 1px solid #e5e7eb;
-    padding: 1.5rem 2rem;
-    font-size: 0.875rem;
-    color: #6b7280;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 }
 
 .classic-university-theme .credential-footer > div {
-    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #6b7280;
 }
 
-.classic-university-theme .credential-footer > div:last-child {
-    margin-bottom: 0;
+.classic-university-theme .credential-footer i {
+    color: #4f46e5;
+    font-size: 0.875rem;
 }
 
 /* Links Section */
@@ -175,40 +190,13 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .classic-university-theme .credential-banner {
-        padding: 3rem 2rem 5rem;
-    }
-    
-    .classic-university-theme .credential-banner h1 {
-        font-size: 2.5rem;
-    }
-    
-    .classic-university-theme .degree-content {
-        padding: 0 1.5rem 1.5rem;
-    }
-    
-    .classic-university-theme .content-card {
-        padding: 1.5rem;
-    }
-    
+@media (max-width: 640px) {
     .classic-university-theme .info-grid {
         grid-template-columns: 1fr;
     }
     
-    .classic-university-theme .footer-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .classic-university-theme .credential-links {
+    .classic-university-theme .credential-footer {
         flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-        padding: 1.5rem;
-    }
-    
-    .classic-university-theme .credential-link {
-        width: 100%;
-        justify-content: center;
+        align-items: flex-start;
     }
 } 

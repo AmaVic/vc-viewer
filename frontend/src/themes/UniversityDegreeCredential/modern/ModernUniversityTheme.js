@@ -82,6 +82,7 @@ class ModernUniversityTheme extends BaseTheme {
                         ` : ''}
                     </div>
 
+                    <!--
                     ${degree.honors?.length ? `
                         <div class="honors-section">
                             <div class="honors-title">Honors & Achievements</div>
@@ -92,6 +93,7 @@ class ModernUniversityTheme extends BaseTheme {
                             </div>
                         </div>
                     ` : ''}
+                    -->
 
                     <div class="credential-footer">
                         <div class="footer-grid">
