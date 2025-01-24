@@ -31,7 +31,64 @@
                             </div>
                         </div>
                         <div class="preview-content">
-                            <img src="/frontend/src/images/preview.svg" alt="Credential Preview">
+                            <div class="preview-split">
+                                <div class="preview-input">
+                                    <pre><code class="language-json">{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "UniversityDegreeCredential"
+  ],
+  "issuer": {
+    "name": "Example University"
+  },
+  "credentialSubject": {
+    "name": "Jane Marie Smith",
+    "degree": {
+      "type": "Bachelor of Science",
+      "name": "Computer Science",
+      "gpa": "3.95",
+      "honors": "Summa Cum Laude"
+    }
+  }
+}</code></pre>
+                                </div>
+                                <div class="preview-output">
+                                    <div class="classic-university-theme">
+                                        <div class="credential-banner">
+                                            <div class="banner-content">
+                                                <i class="fas fa-university fa-3x"></i>
+                                                <h1>University Degree</h1>
+                                                <div class="university-name">Example University</div>
+                                            </div>
+                                        </div>
+                                        <div class="degree-content">
+                                            <div class="content-card">
+                                                <div class="degree-header">
+                                                    <div class="degree-name">Computer Science</div>
+                                                    <div class="degree-type">Bachelor of Science</div>
+                                                </div>
+                                                <div class="info-grid">
+                                                    <div class="info-item">
+                                                        <div class="info-label">Name</div>
+                                                        <div class="info-value">Jane Marie Smith</div>
+                                                    </div>
+                                                    <div class="info-item">
+                                                        <div class="info-label">Grade Point Average</div>
+                                                        <div class="info-value">3.95</div>
+                                                    </div>
+                                                    <div class="info-item">
+                                                        <div class="info-label">Honors</div>
+                                                        <div class="info-value">Summa Cum Laude</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,5 +199,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
+    <script>
+        // Initialize Prism.js
+        document.addEventListener('DOMContentLoaded', (event) => {
+            Prism.highlightAll();
+        });
+    </script>
 </body>
 </html> 
