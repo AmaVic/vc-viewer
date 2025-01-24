@@ -133,33 +133,28 @@ body {
     transform: translateY(-2px);
 }
 
-/* Preview Window */
-.preview-container {
-    perspective: 1000px;
-    padding: 2rem;
-    position: relative;
-    z-index: 2;
-}
-
 .preview-window {
-    background: white;
+    background: transparent;
     border-radius: 0.75rem;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    margin: 2rem 0;
-    transform: rotateY(-0.4deg) rotateX(1deg);
+    transform: rotateY(-2deg) rotateX(2deg);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
 
 .preview-window:hover {
     transform: rotateY(0) rotateX(0);
-    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2), 0 10px 15px -6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.2), 0 12px 20px -6px rgba(0, 0, 0, 0.15);
 }
 
 .preview-header {
     background: #f8fafc;
     padding: 0.75rem;
     border-bottom: 1px solid #e2e8f0;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
 }
 
 .preview-dots {
@@ -179,8 +174,21 @@ body {
 .preview-dots span:nth-child(3) { background: #10b981; }
 
 .preview-content {
-    padding: 1.5rem;
-    background: white;
+    padding: 0;
+    background: #ffffff;
+    line-height: 0;
+    border-radius: 0;
+}
+
+.preview-content > div {
+    border-radius: 0;
+    background: #ffffff;
+}
+
+.preview-content img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 .preview-content pre {
@@ -192,6 +200,59 @@ body {
     font-family: 'Fira Code', monospace;
     font-size: 0.875rem;
     line-height: 1.5;
+}
+
+.credential-preview {
+    background: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    text-align: center;
+}
+
+.credential-header {
+    margin-bottom: 2rem;
+}
+
+.credential-logo {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+}
+
+.credential-header h2 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.credential-body {
+    color: #1f2937;
+}
+
+.credential-body h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.credential-body p {
+    color: #4b5563;
+    margin-bottom: 2rem;
+}
+
+.credential-recipient {
+    margin-top: 3rem;
+}
+
+.credential-recipient h4 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin: 1rem 0;
+}
+
+.credential-recipient p {
+    color: #6b7280;
+    margin-bottom: 0.5rem;
 }
 
 /* Features Section */
