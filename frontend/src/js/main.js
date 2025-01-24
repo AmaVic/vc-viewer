@@ -169,6 +169,23 @@ $(document).ready(function() {
         Prism.highlightElement(jsonEditor);
     }
 
+    function updateThemeSelector(credentialType) {
+        const $themeSelect = $('#themeSelect');
+        $themeSelect.empty();
+        
+        const themes = BaseTheme.getThemesByType(credentialType);
+        if (themes && themes.length > 0) {
+            themes.forEach(theme => {
+                $themeSelect.append(`<option value="${theme.id}">${theme.name}</option>`);
+            });
+            // Select the first theme by default
+            $themeSelect.val(themes[0].id);
+        } else {
+            $themeSelect.append('<option value="" disabled>No themes available</option>');
+        }
+    }
+
+    // Update the processInput function to handle theme selection
     function processInput() {
         const jsonInput = jsonEditor.textContent.trim();
         
@@ -191,15 +208,19 @@ $(document).ready(function() {
                 return;
             }
             
-            const selectedTheme = $('#themeSelect').val();
             const outputElement = document.getElementById('previewContainer');
             
             // Clear previous output
             outputElement.innerHTML = '';
             
-            // Get credential type
+            // Get credential type and update theme selector
             const credentialType = credential.type[credential.type.length - 1];
             window.logger.debug(`Getting themes for credential type: ${credentialType}`);
+            
+            // Update theme selector if credential type has changed
+            if ($('#themeSelect option').length === 0 || !$('#themeSelect').val()) {
+                updateThemeSelector(credentialType);
+            }
             
             // Get available themes
             const themes = BaseTheme.getThemesByType(credentialType);
