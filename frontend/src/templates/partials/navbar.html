@@ -1,0 +1,31 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container">
+        <a href="/" class="navbar-brand">
+            <img src="/frontend/src/images/logo.svg" alt="VC Viewer" width="32" height="32">
+            <span>VC Viewer</span>
+            <span class="version-tag">v0.0.1</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'viewer' %}active{% endif %}" href="/viewer">Viewer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'themes' %}active{% endif %}" href="/themes">Themes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_page == 'docs' %}active{% endif %}" href="/docs">Documentation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/your-username/vc-viewer" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav> 

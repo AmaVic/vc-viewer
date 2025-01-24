@@ -1,42 +1,108 @@
 use actix_files as fs;
 use actix_web::{web, App, HttpResponse, Result, middleware::Logger, HttpServer};
-use log::{info, debug};
+use log::{info, debug, error};
+use tera::Tera;
+use std::path::PathBuf;
 
-async fn index() -> Result<HttpResponse> {
+// Initialize Tera with templates
+fn init_templates() -> Tera {
+    let template_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("frontend/src/templates/**/*.html");
+    
+    info!("Loading templates from: {:?}", template_path);
+    
+    let tera = match Tera::new(template_path.to_str().unwrap()) {
+        Ok(t) => {
+            info!("Successfully loaded templates");
+            debug!("Available templates: {:?}", t.get_template_names().collect::<Vec<_>>());
+            t
+        },
+        Err(e) => {
+            error!("Template parsing error(s): {}", e);
+            ::std::process::exit(1);
+        }
+    };
+    tera
+}
+
+// Page handlers with template rendering
+async fn index(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
     debug!("Serving index page");
+    let mut ctx = tera::Context::new();
+    ctx.insert("current_page", "home");
+    
+    let rendered = tmpl.render("pages/index.html", &ctx)
+        .map_err(|e| {
+            error!("Template error: {}", e);
+            actix_web::error::ErrorInternalServerError("Template error")
+        })?;
+    
     Ok(HttpResponse::Ok()
         .content_type("text/html")
-        .body(include_str!("../../frontend/src/templates/index.html")))
+        .body(rendered))
 }
 
-async fn viewer() -> Result<HttpResponse> {
+async fn viewer(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
     debug!("Serving viewer page");
+    let mut ctx = tera::Context::new();
+    ctx.insert("current_page", "viewer");
+    
+    let rendered = tmpl.render("pages/viewer.html", &ctx)
+        .map_err(|e| {
+            error!("Template error: {}", e);
+            actix_web::error::ErrorInternalServerError("Template error")
+        })?;
+    
     Ok(HttpResponse::Ok()
         .content_type("text/html")
-        .body(include_str!("../../frontend/src/templates/viewer.html")))
+        .body(rendered))
 }
 
-async fn themes() -> Result<HttpResponse> {
+async fn themes(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
     debug!("Serving themes page");
+    let mut ctx = tera::Context::new();
+    ctx.insert("current_page", "themes");
+    
+    let rendered = tmpl.render("pages/themes.html", &ctx)
+        .map_err(|e| {
+            error!("Template error: {}", e);
+            actix_web::error::ErrorInternalServerError("Template error")
+        })?;
+    
     Ok(HttpResponse::Ok()
         .content_type("text/html")
-        .body(include_str!("../../frontend/src/templates/themes.html")))
+        .body(rendered))
 }
 
-async fn docs() -> Result<HttpResponse> {
+async fn docs(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
     debug!("Serving documentation page");
+    let mut ctx = tera::Context::new();
+    ctx.insert("current_page", "docs");
+    
+    let rendered = tmpl.render("pages/docs.html", &ctx)
+        .map_err(|e| {
+            error!("Template error: {}", e);
+            actix_web::error::ErrorInternalServerError("Template error")
+        })?;
+    
     Ok(HttpResponse::Ok()
         .content_type("text/html")
-        .body(include_str!("../../frontend/src/templates/docs.html")))
+        .body(rendered))
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
     info!("Starting server at http://127.0.0.1:8080");
 
-    HttpServer::new(|| {
+    // Initialize templates
+    let tera = web::Data::new(init_templates());
+
+    HttpServer::new(move || {
         App::new()
+            .app_data(tera.clone())
             .wrap(Logger::default())
             .wrap(Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T"))
             // Serve static files from the frontend directory

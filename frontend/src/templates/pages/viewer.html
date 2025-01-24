@@ -1,27 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include "partials/head.html" %}
     <meta name="description" content="Visualize and customize your W3C Verifiable Credentials">
     <title>VC Viewer - Credential Viewer</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/frontend/src/images/logo.svg">
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/frontend/src/css/styles.css" rel="stylesheet">
-    <link href="/frontend/src/css/viewer.css" rel="stylesheet">
-    
-    <!-- Prism.js -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet">
 
     <!-- Theme CSS -->
     <link rel="stylesheet" href="/frontend/src/themes/VerifiableCredential/default/default.css">
@@ -32,36 +14,7 @@
     <link rel="stylesheet" href="/frontend/src/themes/BelgianDriverLicenseCredential/modern/modern.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
-        <div class="container">
-            <a href="/" class="navbar-brand">
-                <img src="/frontend/src/images/logo.svg" alt="VC Viewer" width="32" height="32">
-                <span>VC Viewer</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/viewer">Viewer</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/themes">Themes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/docs">Documentation</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://github.com/your-username/vc-viewer" target="_blank">
-                            <i class="fab fa-github"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {% include "partials/navbar.html" %}
 
     <!-- Main Content -->
     <main class="viewer-content py-4">
@@ -111,25 +64,18 @@
                         <div class="card-header bg-white py-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">Preview</h5>
-                                <div class="d-flex gap-2">
-                                    <select class="form-select form-select-sm w-auto" id="themeSelect">
-                                        <option value="">Select Theme...</option>
-                                    </select>
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary btn-sm" id="exportImage">
-                                            <i class="fas fa-image me-2"></i>Image
-                                        </button>
-                                        <button class="btn btn-primary btn-sm" id="exportPDF">
-                                            <i class="fas fa-file-pdf me-2"></i>PDF
-                                        </button>
-                                    </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-primary btn-sm" id="exportImage">
+                                        <i class="fas fa-image me-2"></i>Export Image
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="exportPDF">
+                                        <i class="fas fa-file-pdf me-2"></i>Export PDF
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body p-0">
-                            <div id="previewContainer" class="preview-container">
-                                <!-- Preview content will be rendered here -->
-                            </div>
+                        <div class="card-body">
+                            <div id="previewContainer"></div>
                         </div>
                     </div>
                 </div>
@@ -137,13 +83,13 @@
         </div>
     </main>
 
-    <!-- Scripts -->
+    {% include "partials/footer.html" %}
+
+    <!-- Page Specific Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
     <!-- Theme Scripts -->
     <script src="/frontend/src/themes/base/BaseTheme.js"></script>
     <script src="/frontend/src/themes/VerifiableCredential/default/DefaultTheme.js"></script>
@@ -152,6 +98,7 @@
     <script src="/frontend/src/themes/UniversityDegreeCredential/linkedin/LinkedInDegreeTheme.js"></script>
     <script src="/frontend/src/themes/BelgianDriverLicenseCredential/classic/ClassicDriverLicenseTheme.js"></script>
     <script src="/frontend/src/themes/BelgianDriverLicenseCredential/modern/ModernDriverLicenseTheme.js"></script>
+    
     <!-- App Scripts -->
     <script src="/frontend/src/js/main.js"></script>
     <script src="/frontend/src/js/examples.js"></script>
