@@ -100,6 +100,54 @@ async fn docs(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
         .body(rendered))
 }
 
+async fn create_theme(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+    debug!("Serving theme creation documentation page");
+    let mut ctx = tera::Context::new();
+    ctx.insert("current_page", "docs");
+    
+    let rendered = tmpl.render("pages/create-theme.html", &ctx)
+        .map_err(|e| {
+            error!("Template error: {}", e);
+            actix_web::error::ErrorInternalServerError("Template error")
+        })?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(rendered))
+}
+
+async fn privacy(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+    debug!("Serving privacy policy page");
+    let mut ctx = tera::Context::new();
+    ctx.insert("current_page", "privacy");
+    
+    let rendered = tmpl.render("pages/privacy.html", &ctx)
+        .map_err(|e| {
+            error!("Template error: {}", e);
+            actix_web::error::ErrorInternalServerError("Template error")
+        })?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(rendered))
+}
+
+async fn cookies(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+    debug!("Serving cookie policy page");
+    let mut ctx = tera::Context::new();
+    ctx.insert("current_page", "cookies");
+    
+    let rendered = tmpl.render("pages/cookies.html", &ctx)
+        .map_err(|e| {
+            error!("Template error: {}", e);
+            actix_web::error::ErrorInternalServerError("Template error")
+        })?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(rendered))
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
@@ -123,6 +171,9 @@ async fn main() -> std::io::Result<()> {
             .route("/viewer", web::get().to(viewer))
             .route("/themes", web::get().to(themes))
             .route("/docs", web::get().to(docs))
+            .route("/docs/create-theme", web::get().to(create_theme))
+            .route("/privacy", web::get().to(privacy))
+            .route("/cookies", web::get().to(cookies))
     })
     .bind("127.0.0.1:8080")?
     .workers(2)

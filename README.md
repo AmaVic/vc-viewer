@@ -43,7 +43,7 @@ vc-viewer/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/vc-viewer.git
+git clone https://github.com/AmaVic/vc-viewer.git
 cd vc-viewer
 ```
 

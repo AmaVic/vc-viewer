@@ -4,13 +4,14 @@
     {% include 'partials/head.html' %}
     <meta name="description" content="Documentation for VC Viewer - Learn how to use and customize the viewer">
     <title>VC Viewer - Documentation</title>
+    <link href="/frontend/src/css/docs.css" rel="stylesheet">
 </head>
-<body>
+<body data-bs-spy="scroll" data-bs-target="#docsNav" data-bs-offset="100" tabindex="0">
     <!-- Navigation -->
     {% include 'partials/navbar.html' %}
 
     <!-- Header -->
-    <header class="hero">
+    <header class="docs-hero">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8 mx-auto text-center">
@@ -31,10 +32,11 @@
                 <nav class="docs-nav" id="docsNav">
                     <div class="nav flex-column">
                         <a class="nav-link active" href="#getting-started">Getting Started</a>
+                        <a class="nav-link" href="#installation">Local Installation</a>
                         <a class="nav-link" href="#credential-format">Credential Format</a>
                         <a class="nav-link" href="#using-themes">Using Themes</a>
-                        <a class="nav-link" href="#custom-themes">Creating Custom Themes</a>
-                        <a class="nav-link" href="#api-reference">API Reference</a>
+                        <a class="nav-link" href="/docs/create-theme">Creating Themes</a>
+                        <a class="nav-link" href="#contributing">Contributing</a>
                     </div>
                 </nav>
             </div>
@@ -54,63 +56,101 @@
                         </ol>
                     </section>
 
+                    <!-- Local Installation -->
+                    <section id="installation" class="mb-5">
+                        <h2>Local Installation</h2>
+                        <p>To run VC Viewer locally, follow these steps:</p>
+                        
+                        <h3>Prerequisites</h3>
+                        <ul>
+                            <li>Rust (version 1.75.0 or higher)</li>
+                            <li>Cargo (version 1.75.0 or higher)</li>
+                        </ul>
+
+                        <h3>Installation Steps</h3>
+                        <ol>
+                            <li>Clone the repository:
+                                <pre><code class="language-bash">git clone https://github.com/AmaVic/vc-viewer.git
+cd vc-viewer</code></pre>
+                            </li>
+                            <li>Build and run the application:
+                                <pre><code class="language-bash">cargo build
+cargo run</code></pre>
+                            </li>
+                        </ol>
+                        <p>The application will be available at <code>http://localhost:8080</code></p>
+                    </section>
+
                     <!-- Credential Format -->
                     <section id="credential-format" class="mb-5">
                         <h2>Credential Format</h2>
-                        <p>VC Viewer supports standard W3C Verifiable Credentials in JSON format. Here's an example:</p>
-                        <pre><code class="language-json">{
+                        <p>VC Viewer supports standard W3C Verifiable Credentials in JSON format. Your credential must include:</p>
+                        <ul>
+                            <li>A valid <code>@context</code> array including <code>https://www.w3.org/2018/credentials/v1</code></li>
+                            <li>A <code>type</code> array with at least one specific credential type</li>
+                            <li>An <code>issuer</code> field (string or object with <code>id</code>)</li>
+                            <li>An <code>issuanceDate</code> in ISO 8601 format</li>
+                            <li>A <code>credentialSubject</code> object with the credential data</li>
+                        </ul>
+                        <div class="note">
+                            <strong>Example:</strong>
+                            <pre><code class="language-json">{
   "@context": [
-    "https://www.w3.org/2018/credentials/v1"
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
   ],
-  "type": ["VerifiableCredential"],
-  "issuer": "did:example:123",
+  "type": ["VerifiableCredential", "UniversityDegreeCredential"],
+  "issuer": {
+    "id": "did:example:123",
+    "name": "Example University"
+  },
   "issuanceDate": "2023-01-01T00:00:00Z",
   "credentialSubject": {
     "id": "did:example:456",
-    "name": "John Doe"
+    "degree": {
+      "type": "BachelorDegree",
+      "name": "Bachelor of Science"
+    }
   }
 }</code></pre>
+                        </div>
                     </section>
 
                     <!-- Using Themes -->
                     <section id="using-themes" class="mb-5">
                         <h2>Using Themes</h2>
-                        <p>Themes are automatically selected based on your credential type. Available themes include:</p>
+                        <p>Themes are automatically selected based on your credential type. Currently available themes include:</p>
                         <ul>
-                            <li>University Degree (Classic, Modern, LinkedIn)</li>
-                            <li>Driver License (Classic, Modern)</li>
-                            <li>Default theme for other credential types</li>
+                            <li><strong>University Degree Themes</strong>
+                                <ul>
+                                    <li>Classic - Traditional academic design</li>
+                                    <li>Modern - Contemporary minimalist design</li>
+                                    <li>LinkedIn - Professional certification style</li>
+                                </ul>
+                            </li>
+                            <li><strong>Driver License Themes</strong>
+                                <ul>
+                                    <li>Classic - Traditional ID card layout</li>
+                                    <li>Modern - Enhanced visual design</li>
+                                </ul>
+                            </li>
+                            <li><strong>Generic Theme</strong> - Default theme for other credential types</li>
                         </ul>
+                        <p>Visit our <a href="/themes">Themes Gallery</a> to preview all available themes.</p>
                     </section>
 
-                    <!-- Creating Custom Themes -->
-                    <section id="custom-themes" class="mb-5">
-                        <h2>Creating Custom Themes</h2>
-                        <p>You can create custom themes by extending the BaseTheme class:</p>
-                        <pre><code class="language-javascript">class CustomTheme extends BaseTheme {
-    constructor() {
-        super();
-        this.id = "custom-theme";
-        this.name = "Custom Theme";
-        this.description = "My custom theme";
-        this.author = "Your Name";
-        this.supportedTypes = ["CustomCredential"];
-    }
-
-    render(credential) {
-        // Your custom rendering logic
-    }
-}</code></pre>
-                    </section>
-
-                    <!-- API Reference -->
-                    <section id="api-reference" class="mb-5">
-                        <h2>API Reference</h2>
-                        <p>VC Viewer provides two main API endpoints:</p>
-                        <ul>
-                            <li><code>/process-credential</code> - Process a single credential</li>
-                            <li><code>/process-presentation</code> - Process a verifiable presentation</li>
-                        </ul>
+                    <!-- Contributing -->
+                    <section id="contributing" class="mb-5">
+                        <h2>Contributing</h2>
+                        <p>While direct community theme uploads are not yet supported in the app, we welcome contributions through pull requests! Here's how you can contribute:</p>
+                        <ol>
+                            <li>Fork the repository</li>
+                            <li>Create your theme following our <a href="/docs/create-theme">theme creation guide</a></li>
+                            <li>Submit a pull request with your theme</li>
+                        </ol>
+                        <div class="note">
+                            <strong>Note:</strong> Make sure to follow our theme creation guidelines and include appropriate documentation for your theme.
+                        </div>
                     </section>
                 </div>
             </div>
@@ -125,5 +165,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    
+    <!-- Scroll Spy -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.docs-content section');
+            const navLinks = document.querySelectorAll('.docs-nav .nav-link');
+            
+            function updateActiveLink() {
+                let currentSection = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.scrollY >= (sectionTop - 100)) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').slice(1) === currentSection) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+        });
+    </script>
 </body>
 </html> 

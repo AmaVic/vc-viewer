@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'partials/head.html' %}
+    <meta name="description" content="Learn how to create custom themes for VC Viewer">
+    <title>VC Viewer - Creating Themes</title>
+    <link href="/frontend/src/css/docs.css" rel="stylesheet">
+</head>
+<body data-bs-spy="scroll" data-bs-target="#docsNav" data-bs-offset="100" tabindex="0">
+    <!-- Navigation -->
+    {% include 'partials/navbar.html' %}
+
+    <!-- Header -->
+    <header class="docs-hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1>Creating Themes</h1>
+                    <p class="lead">
+                        Learn how to create custom themes for VC Viewer with a step-by-step guide.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Documentation Content -->
+    <div class="container py-5">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3">
+                <nav class="docs-nav" id="docsNav">
+                    <div class="nav flex-column">
+                        <a class="nav-link active" href="#overview">Overview</a>
+                        <a class="nav-link" href="#structure">Theme Structure</a>
+                        <a class="nav-link" href="#base-theme">Base Theme</a>
+                        <a class="nav-link" href="#example">Modern University Example</a>
+                        <a class="nav-link" href="#styling">Theme Styling</a>
+                        <a class="nav-link" href="#registration">Theme Registration</a>
+                        <a class="nav-link" href="#testing">Testing Your Theme</a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <div class="docs-content">
+                    <!-- Overview -->
+                    <section id="overview" class="mb-5">
+                        <h2>Overview</h2>
+                        <p>Creating a theme for VC Viewer involves three main components:</p>
+                        <ol>
+                            <li>A JavaScript class that extends <code>BaseTheme</code></li>
+                            <li>A CSS file for styling</li>
+                            <li>Theme registration in the application</li>
+                        </ol>
+                    </section>
+
+                    <!-- Theme Structure -->
+                    <section id="structure" class="mb-5">
+                        <h2>Theme Structure</h2>
+                        <p>Themes are organized in the following directory structure:</p>
+                        <pre><code class="language-text">frontend/src/themes/
+├── base/
+│   ├── BaseTheme.js
+│   └── GenericTheme.js
+└── [CredentialType]/
+    ├── classic/
+    │   ├── ClassicTheme.js
+    │   └── classic.css
+    └── modern/
+        ├── ModernTheme.js
+        └── modern.css</code></pre>
+                        <p>For example, the Modern University theme is located at:</p>
+                        <pre><code class="language-text">frontend/src/themes/UniversityDegreeCredential/modern/
+├── ModernUniversityTheme.js
+└── modern.css</code></pre>
+                    </section>
+
+                    <!-- Base Theme -->
+                    <section id="base-theme" class="mb-5">
+                        <h2>Base Theme</h2>
+                        <p>All themes extend the <code>BaseTheme</code> class, which provides common functionality:</p>
+                        <pre><code class="language-javascript">class BaseTheme {
+    constructor(credential) {
+        this.credential = credential;
+    }
+
+    // Required methods to implement
+    getThemeIcon() { }
+    getThemeTitle() { }
+    render() { }
+
+    // Helper methods available
+    formatDate(isoDate) { }
+    getIssuerName() { }
+    getBaseFooterHTML() { }
+}</code></pre>
+                    </section>
+
+                    <!-- Modern University Example -->
+                    <section id="example" class="mb-5">
+                        <h2>Modern University Example</h2>
+                        <p>Let's look at how the Modern University theme is implemented:</p>
+
+                        <h3>1. Theme Class</h3>
+                        <p>Create <span class="file-path">frontend/src/themes/UniversityDegreeCredential/modern/ModernUniversityTheme.js</span>:</p>
+                        <pre><code class="language-javascript">import BaseTheme from '../../base/BaseTheme.js';
+
+class ModernUniversityTheme extends BaseTheme {
+    static info = {
+        id: 'modern',
+        name: 'Modern University',
+        description: 'Contemporary design with clean lines',
+        author: 'VC Viewer'
+    };
+    static supportedTypes = ['UniversityDegreeCredential'];
+
+    getThemeIcon() {
+        return '<i class="fas fa-university"></i>';
+    }
+
+    getThemeTitle() {
+        return this.credential.credentialSubject.degree.type;
+    }
+
+    render() {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'modern-university-theme';
+        wrapper.innerHTML = `
+            <div class="credential-banner">
+                ${this.getThemeIcon()}
+                <h1>${this.getThemeTitle()}</h1>
+                <div class="university-name">${this.getIssuerName()}</div>
+            </div>
+            <div class="credential-content">
+                <div class="content-card">
+                    <div class="degree-header">
+                        <div class="degree-name">${this.credential.credentialSubject.degree.name}</div>
+                        <div class="degree-type">${this.credential.credentialSubject.degree.type}</div>
+                    </div>
+                    <div class="info-grid">${this.renderInfoItems()}</div>
+                </div>
+            </div>
+            ${this.getBaseFooterHTML()}`;
+        return wrapper;
+    }
+
+    renderInfoItems() {
+        const { degree } = this.credential.credentialSubject;
+        const items = [
+            { label: 'Major', value: degree.major },
+            { label: 'Minor', value: degree.minor },
+            { label: 'GPA', value: degree.gpa },
+            { label: 'Graduation Date', value: this.formatDate(degree.graduationDate) }
+        ];
+        return items.map(item => `
+            <div class="info-item">
+                <div class="info-label">${item.label}</div>
+                <div class="info-value">${item.value || '-'}</div>
+            </div>`).join('');
+    }
+}
+
+export default ModernUniversityTheme;</code></pre>
+
+                        <h3>2. Theme Styling</h3>
+                        <p>Create <span class="file-path">frontend/src/themes/UniversityDegreeCredential/modern/modern.css</span>:</p>
+                        <pre><code class="language-css">.modern-university-theme {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+.modern-university-theme .credential-banner {
+    background: linear-gradient(135deg, #4338ca, #6366f1);
+    padding: 1.25rem;
+    text-align: center;
+    color: white;
+}
+.modern-university-theme .credential-banner h1 {
+    font-size: 1.75rem;
+    margin: 0.5rem 0;
+}
+.modern-university-theme .credential-content {
+    padding: 1.25rem;
+}
+.modern-university-theme .content-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+}
+.modern-university-theme .degree-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.modern-university-theme .degree-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+.modern-university-theme .degree-type {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+.modern-university-theme .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+.modern-university-theme .info-item {
+    background: #f9fafb;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+}
+.modern-university-theme .info-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+.modern-university-theme .info-value {
+    font-size: 1rem;
+    color: #111827;
+    margin-top: 0.25rem;
+}</code></pre>
+                    </section>
+
+                    <!-- Theme Registration -->
+                    <section id="registration" class="mb-5">
+                        <h2>Theme Registration</h2>
+                        <p>To register your theme, you need to:</p>
+                        
+                        <h3>1. Add Theme Files</h3>
+                        <ol>
+                            <li>Create a directory for your credential type if it doesn't exist</li>
+                            <li>Add your theme files in a subdirectory (e.g., 'modern' or 'classic')</li>
+                            <li>Include both the JavaScript and CSS files</li>
+                        </ol>
+
+                        <h3>2. Update HTML Template</h3>
+                        <p>Add your theme's CSS to <span class="file-path">frontend/src/templates/pages/viewer.html</span>:</p>
+                        <pre><code class="language-html">&lt;!-- Theme CSS --&gt;
+&lt;link rel="stylesheet" href="/frontend/src/themes/YourCredentialType/your-theme/style.css"&gt;</code></pre>
+
+                        <h3>3. Add Theme Script</h3>
+                        <p>Add your theme's JavaScript to <span class="file-path">frontend/src/templates/pages/viewer.html</span>:</p>
+                        <pre><code class="language-html">&lt;!-- Theme Scripts --&gt;
+&lt;script src="/frontend/src/themes/YourCredentialType/your-theme/YourTheme.js"&gt;&lt;/script&gt;</code></pre>
+
+                        <h3>4. Add Theme to Gallery</h3>
+                        <p>To display your theme in the themes gallery, add it to <span class="file-path">frontend/src/templates/pages/themes.html</span>:</p>
+                        <pre><code class="language-html">&lt;div class="theme-card"&gt;
+    &lt;div class="theme-preview"&gt;
+        &lt;img src="/frontend/src/images/themes/your-theme-preview.png" alt="Your Theme Preview"&gt;
+    &lt;/div&gt;
+    &lt;div class="theme-info"&gt;
+        &lt;h3&gt;Your Theme Name&lt;/h3&gt;
+        &lt;p&gt;Your theme description&lt;/p&gt;
+        &lt;div class="theme-metadata"&gt;
+            &lt;span class="theme-type"&gt;Credential Type&lt;/span&gt;
+            &lt;span class="theme-author"&gt;Author Name&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        <div class="note">
+                            <strong>Note:</strong> Make sure to add a preview image of your theme in the images directory and update the image path accordingly.
+                        </div>
+                    </section>
+
+                    <!-- Testing -->
+                    <section id="testing" class="mb-5">
+                        <h2>Testing Your Theme</h2>
+                        <p>To test your theme:</p>
+                        <ol>
+                            <li>Ensure all files are in the correct locations</li>
+                            <li>Restart the development server</li>
+                            <li>Visit the viewer page</li>
+                            <li>Use an example credential of your theme's type</li>
+                            <li>Select your theme from the dropdown</li>
+                        </ol>
+                        <div class="note">
+                            <strong>Tip:</strong> Use browser developer tools to inspect and debug your theme's HTML structure and CSS styles.
+                        </div>
+                    </section>
+
+                    <!-- Navigation -->
+                    <div class="step-nav">
+                        <a href="/docs" class="prev">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Documentation
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+</body>
+</html> 

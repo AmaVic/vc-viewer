@@ -1,0 +1,115 @@
+/* Documentation specific styles */
+body {
+    position: relative;
+}
+
+.docs-hero {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, 
+        #4338ca 0%, 
+        #6366f1 30%, 
+        #7c3aed 60%, 
+        #8b5cf6 80%, 
+        #a78bfa 100%
+    );
+    color: white;
+}
+
+.docs-nav {
+    position: sticky;
+    top: 2rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: white;
+    box-shadow: var(--shadow-sm);
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+}
+
+.docs-nav .nav-link {
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.docs-nav .nav-link:hover {
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.docs-nav .nav-link.active {
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+    font-weight: 500;
+}
+
+.docs-content {
+    padding: 1rem;
+}
+
+.docs-content h2 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+}
+
+.docs-content h3 {
+    color: #1f2937;
+    margin: 2rem 0 1rem;
+}
+
+.docs-content pre {
+    background: #1e1e1e;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.docs-content code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.875rem;
+}
+
+.docs-content .file-path {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.875rem;
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.docs-content .note {
+    background: rgba(99, 102, 241, 0.1);
+    border-left: 4px solid var(--primary);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+}
+
+/* Steps navigation */
+.step-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.step-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.step-nav a:hover {
+    background: rgba(99, 102, 241, 0.1);
+} 

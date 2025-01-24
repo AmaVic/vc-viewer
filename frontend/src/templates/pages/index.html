@@ -3,7 +3,7 @@
 <head>
     {% include "partials/head.html" %}
     <meta name="description" content="Open-source tool for visualizing W3C Verifiable Credentials with customizable themes">
-    <title>VC Viewer - Verifiable Credentials Visualization Tool</title>
+    <title>Verifiable Credentials Viewer</title>
 </head>
 <body>
     <!-- Navigation -->
@@ -15,7 +15,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <h1 class="display-4 fw-bold text-white mb-4">Visualize Verifiable Credentials with Style</h1>
-                    <p class="lead text-white opacity-90 mb-5">Create beautiful, customizable views for your W3C Verifiable Credentials. Open-source, privacy-first, and developer-friendly.</p>
+                    <p class="lead text-white opacity-90 mb-5">Create beautiful, customizable views for your W3C Verifiable Credentials. Open-source, free and respectful of your privacy.</p>
                     <div class="d-flex gap-3">
                         <a href="/viewer" class="btn btn-light btn-lg px-4">Try it Now</a>
                         <a href="/docs" class="btn btn-outline-light btn-lg px-4">Documentation</a>
@@ -99,29 +99,22 @@
     <!-- Features Section -->
     <section class="features py-5">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-md-3">
+            <div class="row g-3">
+                <div class="col-md-4">
                     <div class="feature-card">
                         <img src="/frontend/src/images/privacy.svg" alt="Privacy First" class="feature-icon">
                         <h3>Privacy First</h3>
                         <p>Your credentials never leave your browser. All processing is done client-side, ensuring maximum privacy and security. We collect no data, period.</p>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="feature-card">
                         <img src="/frontend/src/images/theme.svg" alt="Custom Themes" class="feature-icon">
                         <h3>Custom Themes</h3>
                         <p>Choose from a variety of pre-built themes or create your own to match your brand's identity.</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <img src="/frontend/src/images/code.svg" alt="Developer Friendly" class="feature-icon">
-                        <h3>Developer Friendly</h3>
-                        <p>Built with developers in mind. Easy to integrate, customize, and extend with comprehensive documentation.</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="feature-card">
                         <img src="/frontend/src/images/free.svg" alt="Free and Ad-Free" class="feature-icon">
                         <h3>Free and Ad-Free</h3>
@@ -168,28 +161,9 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h5 class="text-white mb-3">VC Viewer</h5>
-                    <p class="text-white opacity-75">An open-source tool for visualizing W3C Verifiable Credentials with customizable themes.</p>
-                </div>
-                <div class="col-lg-6">
-                    <div class="d-flex justify-content-lg-end">
-                        <a href="https://github.com/your-username/vc-viewer" class="text-white opacity-75 me-4">GitHub</a>
-                        <a href="https://www.w3.org/TR/vc-data-model/" class="text-white opacity-75 me-4">W3C VC Spec</a>
-                        <a href="https://learnblockchain.be" class="text-white opacity-75">LearnBlockchain.be</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    {% include 'partials/footer.html' %}
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
     <script>
         // Initialize Prism.js
         document.addEventListener('DOMContentLoaded', (event) => {
