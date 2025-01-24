@@ -171,6 +171,7 @@ $(document).ready(function() {
 
     function processInput() {
         const jsonInput = jsonEditor.textContent.trim();
+        
         if (!jsonInput) {
             updateValidationUI({ isValid: false, error: 'Input is empty' }, true);
             document.getElementById('previewContainer').innerHTML = '';
@@ -207,10 +208,19 @@ $(document).ready(function() {
                 return;
             }
             
-            const theme = new ThemeClass(credential);
-            const rendered = theme.render();
-            outputElement.appendChild(rendered);
-            
+            try {
+                const theme = new ThemeClass(credential);
+                const rendered = theme.render();
+                if (rendered && rendered instanceof Element) {
+                    outputElement.appendChild(rendered);
+                } else {
+                    console.error('Theme render() did not return a valid Element');
+                    outputElement.innerHTML = '<div class="alert alert-danger">Error rendering credential</div>';
+                }
+            } catch (error) {
+                console.error('Error rendering theme:', error);
+                outputElement.innerHTML = '<div class="alert alert-danger">Error rendering credential</div>';
+            }
         } catch (error) {
             // Update validation UI with error but don't clear it
             updateValidationUI({

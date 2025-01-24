@@ -20,7 +20,12 @@ class BaseTheme {
                 console.log('Successfully registered theme:', key);
             } else {
                 // New format: register(class)
-                const tempInstance = new typeOrClass(null);
+                const tempInstance = new typeOrClass({
+                    type: ['VerifiableCredential'],
+                    issuer: 'Example Issuer',
+                    issuanceDate: new Date().toISOString(),
+                    credentialSubject: {}
+                });
                 const key = `${tempInstance.supportedTypes[0]}:${tempInstance.id}`;
                 BaseTheme.themes[key] = typeOrClass;
                 console.log('Successfully registered theme:', key);
@@ -132,7 +137,10 @@ class BaseTheme {
     }
 
     render() {
-        return this.getBaseHTML();
+        const wrapper = document.createElement('div');
+        wrapper.className = 'credential-wrapper';
+        wrapper.innerHTML = this.getContentHTML();
+        return wrapper;
     }
 
     // Helper methods
