@@ -618,4 +618,10 @@ body {
 /* Theme page specific styles */
 .section-padding {
     padding: 4rem 0;
+}
+
+/* Create your own theme card */
+.themes-section .card.bg-light {
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
 } 
