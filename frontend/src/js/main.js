@@ -197,13 +197,30 @@ $(document).ready(function() {
             // Clear previous output
             outputElement.innerHTML = '';
             
-            // Get theme and render
-            const ThemeClass = BaseTheme.getTheme(selectedTheme);
+            // Get credential type
+            const credentialType = credential.type[credential.type.length - 1];
+            window.logger.debug(`Getting themes for credential type: ${credentialType}`);
+            
+            // Get available themes
+            const themes = BaseTheme.getThemesByType(credentialType);
+            if (!themes || themes.length === 0) {
+                updateValidationUI({
+                    isValid: false,
+                    error: 'Theme Error',
+                    details: `No theme found for credential type: ${credentialType}`
+                }, true);
+                return;
+            }
+            
+            // Get selected theme
+            const selectedThemeId = $('#themeSelect').val() || `${credentialType}:classic`;
+            const ThemeClass = BaseTheme.getTheme(selectedThemeId);
+            
             if (!ThemeClass) {
                 updateValidationUI({
                     isValid: false,
                     error: 'Theme Error',
-                    details: `No theme found for credential type: ${credential.type[credential.type.length - 1]}`
+                    details: `Selected theme not found: ${selectedThemeId}`
                 }, true);
                 return;
             }
@@ -211,7 +228,9 @@ $(document).ready(function() {
             try {
                 const theme = new ThemeClass(credential);
                 const rendered = theme.render();
+                
                 if (rendered && rendered instanceof Element) {
+                    outputElement.innerHTML = '';
                     outputElement.appendChild(rendered);
                 } else {
                     console.error('Theme render() did not return a valid Element');

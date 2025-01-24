@@ -9,15 +9,18 @@ class BaseTheme {
 
     // Abstract methods that must be implemented by child classes
     render() {
-        throw new Error('render() must be implemented by child class');
+        const wrapper = document.createElement('div');
+        wrapper.className = `credential-wrapper ${this.constructor.info.id || this.constructor.name.toLowerCase()}-theme`;
+        wrapper.innerHTML = this.getContentHTML();
+        return wrapper;
     }
 
     getThemeIcon() {
-        throw new Error('getThemeIcon() must be implemented by child class');
+        return '<i class="fas fa-certificate"></i>';
     }
 
     getThemeTitle() {
-        throw new Error('getThemeTitle() must be implemented by child class');
+        return '<h1>Verifiable Credential</h1>';
     }
 
     // Utility methods
@@ -41,7 +44,7 @@ class BaseTheme {
     }
 
     // Static methods for theme registration and discovery
-    static register(credentialType, ThemeClass) {
+    static async register(credentialType, ThemeClass) {
         if (!ThemeClass.info) {
             throw new Error('Theme must provide static info object');
         }
@@ -58,6 +61,7 @@ class BaseTheme {
         ThemeClass.supportedTypes.forEach(type => {
             const themeId = `${type}:${ThemeClass.info.id || ThemeClass.name.toLowerCase()}`;
             this.#themes.set(themeId, ThemeClass);
+            this.logger.debug(`Successfully registered theme: ${themeId}`);
         });
 
         // Register example if provided
@@ -71,7 +75,12 @@ class BaseTheme {
     }
 
     static getTheme(themeId) {
-        return this.#themes.get(themeId);
+        const theme = this.#themes.get(themeId);
+        if (!theme) {
+            this.logger.error(`Theme not found: ${themeId}`);
+            return null;
+        }
+        return theme;
     }
 
     static getAllThemes() {
@@ -79,12 +88,18 @@ class BaseTheme {
     }
 
     static getThemesByType(credentialType) {
-        return Array.from(this.#themes.entries())
+        const themes = Array.from(this.#themes.entries())
             .filter(([id]) => id.startsWith(credentialType + ':'))
             .map(([id, ThemeClass]) => ({
                 id,
                 ...ThemeClass.info
             }));
+        
+        if (themes.length === 0) {
+            this.logger.debug(`No themes found for credential type: ${credentialType}`);
+        }
+        
+        return themes;
     }
 
     static getExample(credentialType) {
@@ -95,24 +110,43 @@ class BaseTheme {
         return Object.fromEntries(this.#examples);
     }
 
-    // Helper method to get base HTML structure
-    getBaseHTML() {
+    // Helper method to get content HTML
+    getContentHTML() {
         return `
-            <div class="credential-wrapper ${this.constructor.info.id || this.constructor.name.toLowerCase()}-theme">
+            <div class="credential-content">
                 <div class="credential-banner">
                     ${this.getThemeIcon()}
                     <div class="banner-content">
                         ${this.getThemeTitle()}
                     </div>
                 </div>
-                <div class="credential-content">
-                    ${this.getContentHTML()}
+                <div class="credential-body">
+                    ${this.renderCredentialContent()}
                 </div>
                 <div class="credential-footer">
                     <div class="issuer">Issued by: ${this.getIssuerName()}</div>
                     <div class="issue-date">Date: ${this.formatDate(this.credential.issuanceDate)}</div>
-                    <div class="credential-id">ID: ${this.credential.id}</div>
+                    ${this.credential.id ? `<div class="credential-id">ID: ${this.credential.id}</div>` : ''}
                 </div>
+            </div>
+        `;
+    }
+
+    // Default implementation for credential content
+    renderCredentialContent() {
+        return `
+            <div class="credential-subject">
+                ${Object.entries(this.credential.credentialSubject)
+                    .map(([key, value]) => `
+                        <div class="credential-field">
+                            <div class="field-label">${key}</div>
+                            <div class="field-value">${
+                                typeof value === 'object' 
+                                    ? JSON.stringify(value, null, 2) 
+                                    : value
+                            }</div>
+                        </div>
+                    `).join('')}
             </div>
         `;
     }
