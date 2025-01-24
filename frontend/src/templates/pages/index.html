@@ -133,12 +133,12 @@
     </section>
 
     <!-- Getting Started Section -->
-    <section class="getting-started bg-light py-5">
+    <section class="getting-started bg-light">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6">
+                <div class="col-lg-5">
                     <h2>Get Started in Seconds</h2>
-                    <p class="lead mb-4">
+                    <p class="lead">
                         Start visualizing your Verifiable Credentials with just a few clicks.
                     </p>
                     <ol class="getting-started-steps">
@@ -146,30 +146,21 @@
                         <li>Choose from available themes</li>
                         <li>Export as image or PDF</li>
                     </ol>
-                    <a href="/viewer" class="btn btn-primary mt-3">
+                    <a href="/viewer" class="btn btn-primary">
                         Try the Viewer
                     </a>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6 offset-lg-1">
                     <div class="editor-preview">
-                        <div class="editor-container">
-                            <div class="editor-header">
-                                <div class="d-flex align-items-center">
-                                    <div class="editor-dots">
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-                                    <span class="ms-3">Example Credential</span>
-                                </div>
-                            </div>
-                            <pre class="editor-content p-3 m-0 bg-white"><code class="language-json">{
+                        <div class="editor-header">
+                            <span>Example Credential</span>
+                        </div>
+                        <pre class="editor-content"><code class="language-json">{
   "@context": ["https://www.w3.org/2018/credentials/v1"],
   "type": ["VerifiableCredential"],
   "issuer": "did:example:123",
   "issuanceDate": "2023-01-01T00:00:00Z"
 }</code></pre>
-                        </div>
                     </div>
                 </div>
             </div>

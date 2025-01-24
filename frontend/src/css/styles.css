@@ -495,4 +495,120 @@ body {
     .features {
         padding: 4rem 0;
     }
+}
+
+/* Getting Started Section */
+.getting-started {
+    background: var(--bg-white);
+    padding: 4rem 0;
+    position: relative;
+}
+
+.getting-started h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.getting-started .lead {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.getting-started-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    counter-reset: step;
+}
+
+.getting-started-steps li {
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: 1rem;
+    counter-increment: step;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.getting-started-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2rem;
+    height: 2rem;
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.editor-preview {
+    background: #1e1e1e;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+}
+
+.editor-header {
+    background: #2d2d2d;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.editor-header span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.editor-content {
+    margin: 0;
+    padding: 1.25rem !important;
+    background: transparent !important;
+    height: 180px;
+    overflow: auto;
+}
+
+.editor-content code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: #e5e7eb;
+    background: transparent !important;
+}
+
+/* Prism.js theme overrides */
+.token.property,
+.token.key {
+    color: #9cdcfe !important;
+}
+
+.token.string {
+    color: #ce9178 !important;
+}
+
+.token.punctuation {
+    color: #d4d4d4 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .editor-preview {
+        margin: 2rem auto 0;
+    }
 } 
