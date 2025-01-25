@@ -2,10 +2,13 @@
 
 {% block head %}
     <!-- About-specific meta -->
-    <meta name="description" content="Learn about VC Viewer, an open-source tool for visualizing W3C Verifiable Credentials. Discover our mission, features, and the team behind the project.">
-    <meta property="og:description" content="Discover VC Viewer: An open-source tool for visualizing W3C Verifiable Credentials. Learn about our mission and features.">
-    <meta name="twitter:description" content="Discover VC Viewer: An open-source tool for visualizing W3C Verifiable Credentials. Learn about our mission and features.">
+    <meta name="description" content="Learn about VC Viewer and its creator, an open-source tool for visualizing W3C Verifiable Credentials. Discover our mission, features, and research interests.">
+    <meta property="og:description" content="Discover VC Viewer and its creator: An open-source tool for visualizing W3C Verifiable Credentials. Learn about our mission and research.">
+    <meta name="twitter:description" content="Discover VC Viewer and its creator: An open-source tool for visualizing W3C Verifiable Credentials. Learn about our mission and research.">
     <title>About VC Viewer - Open Source Verifiable Credentials Visualization</title>
+
+    <!-- About-specific styles -->
+    <link href="/frontend/src/css/docs.css" rel="stylesheet">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -13,7 +16,7 @@
         "@context": "https://schema.org",
         "@type": "AboutPage",
         "name": "About VC Viewer",
-        "description": "Learn about VC Viewer, an open-source tool for visualizing W3C Verifiable Credentials",
+        "description": "Learn about VC Viewer and its creator, an open-source tool for visualizing W3C Verifiable Credentials",
         "url": "https://vc-viewer.vamaralds.be/about",
         "mainEntity": {
             "@type": "SoftwareApplication",
@@ -31,17 +34,30 @@
 {% endblock %}
 
 {% block content %}
-    <main class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
+    <main class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3 col-xl-2 docs-sidebar">
+                <nav class="nav flex-column">
+                    <h5 class="sidebar-heading">About</h5>
+                    <a class="nav-link" href="#mission">Our Mission</a>
+                    <a class="nav-link" href="#features">Key Features</a>
+                    <a class="nav-link" href="#author">About the Author</a>
+                    <a class="nav-link" href="#opensource">Open Source</a>
+                    <a class="nav-link" href="#contact">Contact</a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-xl-10 docs-content">
                 <h1 class="mb-4">About VC Viewer</h1>
                 
-                <section class="mb-5">
+                <section id="mission" class="mb-5">
                     <h2>Our Mission</h2>
                     <p>VC Viewer is an open-source tool designed to make W3C Verifiable Credentials more accessible and visually appealing. Our mission is to provide a simple, secure, and beautiful way to visualize digital credentials.</p>
                 </section>
 
-                <section class="mb-5">
+                <section id="features" class="mb-5">
                     <h2>Key Features</h2>
                     <div class="row g-4">
                         <div class="col-md-6">
@@ -83,7 +99,26 @@
                     </div>
                 </section>
 
-                <section class="mb-5">
+                <section id="author" class="mb-5">
+                    <h2>About the Author</h2>
+                    <p>VC Viewer is developed by Amaury Vanderborght, a researcher and software engineer passionate about decentralized identity, privacy, and web technologies. His research interests include:</p>
+                    <ul>
+                        <li>Decentralized Identity and Self-Sovereign Identity (SSI)</li>
+                        <li>Privacy-Preserving Technologies</li>
+                        <li>Web3 and Blockchain Technologies</li>
+                        <li>Zero-Knowledge Proofs</li>
+                    </ul>
+                    <div class="social-links mt-3">
+                        <a href="https://www.linkedin.com/in/amaury-vanderborght/" class="btn btn-outline-primary me-2" target="_blank" rel="noopener">
+                            <i class="fab fa-linkedin me-2"></i>LinkedIn
+                        </a>
+                        <a href="https://scholar.google.com/citations?user=YOUR_ID" class="btn btn-outline-primary me-2" target="_blank" rel="noopener">
+                            <i class="fas fa-graduation-cap me-2"></i>Google Scholar
+                        </a>
+                    </div>
+                </section>
+
+                <section id="opensource" class="mb-5">
                     <h2>Open Source</h2>
                     <p>VC Viewer is open source and available on GitHub. We welcome contributions from the community!</p>
                     <a href="https://github.com/AmaVic/vc-viewer" class="btn btn-primary" target="_blank" rel="noopener">
@@ -91,15 +126,52 @@
                     </a>
                 </section>
 
-                <section class="mb-5">
+                <section id="contact" class="mb-5">
                     <h2>Contact</h2>
                     <p>Have questions or suggestions? Feel free to:</p>
                     <ul>
                         <li>Open an issue on <a href="https://github.com/AmaVic/vc-viewer/issues">GitHub</a></li>
                         <li>Contact us through our <a href="https://github.com/AmaVic/vc-viewer/discussions">GitHub Discussions</a></li>
+                        <li>Connect with me on <a href="https://www.linkedin.com/in/amaury-vanderborght/">LinkedIn</a></li>
                     </ul>
                 </section>
             </div>
         </div>
     </main>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Highlight active section in sidebar
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, {
+            rootMargin: '-20% 0px -80% 0px'
+        });
+
+        document.querySelectorAll('section[id]').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
 {% endblock %} 
