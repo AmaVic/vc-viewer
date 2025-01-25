@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["init_templates","new_context"],"struct":["BASE_CONTEXT","TEMPLATES"]};
+window.SIDEBAR_ITEMS = {"fn":["new_context"],"struct":["BASE_CONTEXT","TEMPLATES"]};
