@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["about","cookies","create_theme","docs","index","privacy","themes","viewer"]};
+window.SIDEBAR_ITEMS = {"fn":["render_index"],"struct":["about","cookies","create_theme","docs","index_route","privacy","themes","viewer"]};

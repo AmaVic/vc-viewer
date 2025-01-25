@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["AppError"],"mod":["pages"]};
+window.SIDEBAR_ITEMS = {"enum":["AppError"],"mod":["health","pages"]};

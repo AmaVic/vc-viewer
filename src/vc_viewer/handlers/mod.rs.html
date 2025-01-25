@@ -14,16 +14,20 @@
 <a href="#13" id="13">13</a>
 <a href="#14" id="14">14</a>
 <a href="#15" id="15">15</a>
-<a href="#16" id="16">16</a></pre></div><pre class="rust"><code><span class="doccomment">//! HTTP route handlers
+<a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a>
+<a href="#18" id="18">18</a></pre></div><pre class="rust"><code><span class="doccomment">//! HTTP route handlers
 //! 
 //! This module contains all the route handlers for the web application,
 //! organized by functionality.
 
 </span><span class="kw">pub mod </span>pages;
+<span class="kw">pub mod </span>health;
 <span class="kw">mod </span>errors;
 
 <span class="kw">pub use </span>pages::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>errors::<span class="kw-2">*</span>;
+<span class="kw">pub use </span>health::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Common error handling for template rendering
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>handle_template_error(e: tera::Error) -&gt; actix_web::Error {
