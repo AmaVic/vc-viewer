@@ -5,7 +5,7 @@
 
 use actix_files as fs;
 use actix_web::{
-    middleware::{Logger, Compress, DefaultHeaders},
+    middleware::{Logger, Compress, DefaultHeaders, NormalizePath, TrailingSlash},
     App, HttpServer, web,
 };
 
@@ -40,6 +40,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(logger)
             .wrap(CompressionMonitor)
             .wrap(Compress::default())
+            .wrap(NormalizePath::new(TrailingSlash::Trim))
             .wrap(
                 DefaultHeaders::new()
                     .add(("Cache-Control", "public, max-age=31536000"))
@@ -57,12 +58,14 @@ async fn main() -> std::io::Result<()> {
                     .use_last_modified(true)
                     .use_etag(true)
                     .disable_content_disposition()
+                    .show_files_listing()
             )
             .service(
                 fs::Files::new("/static", "../frontend/src/static")
                     .prefer_utf8(true)
                     .use_last_modified(true)
                     .use_etag(true)
+                    .show_files_listing()
             )
             // Route handlers
             .service(index_route)
