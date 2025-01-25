@@ -22,7 +22,9 @@ async fn main() -> std::io::Result<()> {
     setup_logging();
 
     // Create server configuration
-    let config = Config::new();
+    let config = Config::new()
+        .with_workers(2);
+
     log::info!("Starting server at http://{}", config.get_bind_addr());
 
     // Create and run HTTP server
