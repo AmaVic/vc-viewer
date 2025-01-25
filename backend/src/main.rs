@@ -6,12 +6,13 @@
 use actix_files as fs;
 use actix_web::{
     middleware::{Logger, Compress, DefaultHeaders},
-    App, HttpServer,
+    App, HttpServer, web,
 };
 
 use vc_viewer::{
     config::Config,
-    handlers::pages::{index, viewer, themes, docs, create_theme, privacy, cookies, about},
+    handlers::pages::{index_route, render_index, viewer, themes, docs, create_theme, privacy, cookies, about},
+    handlers::health::health_check,
     middleware::CompressionMonitor,
     utils::setup_logging,
 };
@@ -47,6 +48,8 @@ async fn main() -> std::io::Result<()> {
                     .add(("X-XSS-Protection", "1; mode=block"))
                     .add(("Vary", "Accept-Encoding"))
             )
+            // Health check endpoint
+            .service(health_check)
             // Serve static files with optimized settings
             .service(
                 fs::Files::new("/frontend", "../frontend")
@@ -55,8 +58,14 @@ async fn main() -> std::io::Result<()> {
                     .use_etag(true)
                     .disable_content_disposition()
             )
+            .service(
+                fs::Files::new("/static", "../frontend/src/static")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+            )
             // Route handlers
-            .service(index)
+            .service(index_route)
             .service(viewer)
             .service(themes)
             .service(docs)
@@ -64,6 +73,10 @@ async fn main() -> std::io::Result<()> {
             .service(privacy)
             .service(cookies)
             .service(about)
+            // Catch-all route to handle SPA routing
+            .service(
+                web::resource("/{tail:.*}").route(web::get().to(render_index))
+            )
     })
     .workers(config.workers)
     .client_request_timeout(config.request_timeout)

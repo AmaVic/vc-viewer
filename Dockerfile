@@ -15,6 +15,7 @@ FROM ubuntu:22.04
 # Install minimal dependencies and clean up
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Create app directory structure
@@ -23,13 +24,17 @@ WORKDIR /app/backend
 # Copy only the backend binary
 COPY --from=builder /usr/src/app/backend/target/release/vc-viewer .
 
-# Copy the entire frontend directory to match the server's expected path
+# Copy frontend files maintaining the exact structure
 COPY frontend /app/frontend
 
 # Environment variables for proper binding and logging
 ENV RUST_LOG=debug
 ENV HOST=0.0.0.0
 ENV PORT=8080
+
+# Health check configuration
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/_health || exit 1
 
 EXPOSE 8080
 CMD ["./vc-viewer"] 

@@ -2,15 +2,20 @@
 //! 
 //! This module contains handlers for rendering the main pages of the application.
 
-use actix_web::{web, HttpResponse, Result};
+use actix_web::{web, HttpResponse, Result, get};
 use crate::templates::{TEMPLATES, new_context};
 use super::handle_template_error;
 
 /// Handler for the index page
 /// 
 /// Renders the home page with basic context information.
-#[actix_web::get("/")]
-pub async fn index() -> Result<HttpResponse> {
+#[get("/")]
+pub async fn index_route() -> Result<HttpResponse> {
+    render_index().await
+}
+
+/// Generic index handler that can be used for both direct and catch-all routes
+pub async fn render_index() -> Result<HttpResponse> {
     let mut ctx = new_context();
     ctx.insert("current_page", "home");
     
@@ -138,7 +143,7 @@ mod tests {
     #[actix_web::test]
     async fn test_index_handler() {
         let app = test::init_service(
-            actix_web::App::new().service(index)
+            actix_web::App::new().service(index_route)
         ).await;
         
         let req = test::TestRequest::get().uri("/").to_request();
