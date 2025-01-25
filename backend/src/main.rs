@@ -210,6 +210,22 @@ async fn cookies(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
         .body(rendered))
 }
 
+async fn about(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+    debug!("Serving about page");
+    let mut ctx = tera::Context::new();
+    ctx.insert("current_page", "about");
+    
+    let rendered = tmpl.render("pages/about.html", &ctx)
+        .map_err(|e| {
+            error!("Template error: {}", e);
+            actix_web::error::ErrorInternalServerError("Template error")
+        })?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(rendered))
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     init_logger();
@@ -241,6 +257,7 @@ async fn main() -> std::io::Result<()> {
             .route("/docs/create-theme", web::get().to(create_theme))
             .route("/privacy", web::get().to(privacy))
             .route("/cookies", web::get().to(cookies))
+            .route("/about", web::get().to(about))
     })
     .bind("127.0.0.1:8080")?
     .workers(2)
