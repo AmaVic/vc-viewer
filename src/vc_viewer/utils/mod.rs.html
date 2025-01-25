@@ -97,11 +97,17 @@
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
 <a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a></pre></div><pre class="rust"><code><span class="doccomment">//! Utility functions
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a></pre></div><pre class="rust"><code><span class="doccomment">//! Utility functions
 //! 
 //! This module contains various utility functions used throughout the application.
 
-</span><span class="kw">use </span>std::fs::OpenOptions;
+</span><span class="kw">use </span>std::fs::{OpenOptions, create_dir_all};
 <span class="kw">use </span>std::io::Write;
 <span class="kw">use </span>chrono::Local;
 <span class="kw">use </span>log::LevelFilter;
@@ -135,13 +141,16 @@
 
 <span class="doccomment">/// Setup logging based on the environment
 </span><span class="kw">pub fn </span>setup_logging() {
+    <span class="comment">// Create logs directory if it doesn't exist
+    </span>create_dir_all(<span class="string">"logs"</span>).expect(<span class="string">"Failed to create logs directory"</span>);
+
     <span class="kw">if </span><span class="macro">cfg!</span>(debug_assertions) {
         <span class="comment">// Development logging - more verbose with timestamps
         </span><span class="kw">let </span>log_file = OpenOptions::new()
             .create(<span class="bool-val">true</span>)
             .append(<span class="bool-val">true</span>)
-            .open(<span class="string">"debug.log"</span>)
-            .expect(<span class="string">"Failed to open log file"</span>);
+            .open(<span class="string">"logs/debug.log"</span>)
+            .expect(<span class="string">"Failed to open debug log file"</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>builder = env_logger::Builder::new();
         builder.filter_level(LevelFilter::Debug);
@@ -158,11 +167,18 @@
         builder.init();
     } <span class="kw">else </span>{
         <span class="comment">// Production logging - minimal overhead
-        </span>env_logger::Builder::new()
-            .filter_level(LevelFilter::Info)
-            .format_timestamp(<span class="prelude-val">None</span>)
-            .format_target(<span class="bool-val">false</span>)
-            .init();
+        </span><span class="kw">let </span>log_file = OpenOptions::new()
+            .create(<span class="bool-val">true</span>)
+            .append(<span class="bool-val">true</span>)
+            .open(<span class="string">"logs/release.log"</span>)
+            .expect(<span class="string">"Failed to open release log file"</span>);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>builder = env_logger::Builder::new();
+        builder.filter_level(LevelFilter::Info);
+        builder.format_timestamp(<span class="prelude-val">None</span>);
+        builder.format_target(<span class="bool-val">false</span>);
+        builder.target(env_logger::Target::Pipe(Box::new(MultiOutput::new(log_file))));
+        builder.init();
     }
 }
 
@@ -177,11 +193,7 @@
         unit_index += <span class="number">1</span>;
     }
 
-    <span class="kw">if </span>unit_index == <span class="number">0 </span>{
-        <span class="macro">format!</span>(<span class="string">"{} {}"</span>, size <span class="kw">as </span>u64, UNITS[unit_index])
-    } <span class="kw">else </span>{
-        <span class="macro">format!</span>(<span class="string">"{:.2} {}"</span>, size, UNITS[unit_index])
-    }
+    <span class="macro">format!</span>(<span class="string">"{:.2} {}"</span>, size, UNITS[unit_index])
 }
 
 <span class="attr">#[cfg(test)]

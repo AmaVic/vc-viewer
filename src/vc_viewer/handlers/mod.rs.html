@@ -31,7 +31,7 @@
 
 <span class="doccomment">/// Common error handling for template rendering
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>handle_template_error(e: tera::Error) -&gt; actix_web::Error {
-    <span class="macro">log::error!</span>(<span class="string">"Template error: {}"</span>, e);
-    actix_web::error::ErrorInternalServerError(<span class="string">"Template error"</span>)
+    <span class="macro">log::error!</span>(<span class="string">"Template error: {:?}"</span>, e);
+    actix_web::error::ErrorInternalServerError(<span class="macro">format!</span>(<span class="string">"Template error: {:?}"</span>, e))
 }
 </code></pre></div></section></main></body></html>

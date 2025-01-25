@@ -117,7 +117,11 @@
 <a href="#116" id="116">116</a>
 <a href="#117" id="117">117</a>
 <a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a></pre></div><pre class="rust"><code><span class="doccomment">//! Template management and rendering
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a></pre></div><pre class="rust"><code><span class="doccomment">//! Template management and rendering
 //! 
 //! This module handles the initialization and caching of Tera templates,
 //! providing a global template instance that can be used throughout the application.
@@ -141,10 +145,14 @@
 
 <span class="doccomment">/// Initialize the template engine with all templates in the templates directory
 </span><span class="kw">fn </span>init_templates() -&gt; Tera {
+    <span class="macro">log::debug!</span>(<span class="string">"Initializing templates from path: {}"</span>, <span class="string">"../frontend/src/templates/**/*.html"</span>);
     <span class="kw">let </span><span class="kw-2">mut </span>tera = <span class="kw">match </span>Tera::new(<span class="string">"../frontend/src/templates/**/*.html"</span>) {
-        <span class="prelude-val">Ok</span>(t) =&gt; t,
+        <span class="prelude-val">Ok</span>(t) =&gt; {
+            <span class="macro">log::debug!</span>(<span class="string">"Successfully loaded templates: {:?}"</span>, t.get_template_names().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;());
+            t
+        },
         <span class="prelude-val">Err</span>(e) =&gt; {
-            <span class="macro">error!</span>(<span class="string">"Template parsing error(s): {}"</span>, e);
+            <span class="macro">error!</span>(<span class="string">"Template parsing error(s): {:?}"</span>, e);
             ::std::process::exit(<span class="number">1</span>);
         }
     };

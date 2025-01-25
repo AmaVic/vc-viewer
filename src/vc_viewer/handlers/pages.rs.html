@@ -273,7 +273,44 @@
 <a href="#272" id="272">272</a>
 <a href="#273" id="273">273</a>
 <a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a></pre></div><pre class="rust"><code><span class="doccomment">//! Page handlers
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a></pre></div><pre class="rust"><code><span class="doccomment">//! Page handlers
 //! 
 //! This module contains handlers for rendering the main pages of the application.
 
@@ -292,7 +329,11 @@
 <span class="doccomment">/// Generic index handler that can be used for both direct and catch-all routes
 </span><span class="kw">pub async fn </span>render_index() -&gt; <span class="prelude-ty">Result</span>&lt;HttpResponse&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ctx = new_context();
-    ctx.insert(<span class="string">"current_page"</span>, <span class="string">"home"</span>);
+    
+    <span class="comment">// Add request path for canonical URLs
+    </span>ctx.insert(<span class="string">"request"</span>, <span class="kw-2">&amp;</span>tera::to_value(RequestContext {
+        path: <span class="string">"/"</span>.to_string()
+    }).unwrap());
     
     <span class="kw">let </span>rendered = TEMPLATES.render(<span class="string">"pages/index.html"</span>, <span class="kw-2">&amp;</span>ctx)
         .map_err(handle_template_error)<span class="question-mark">?</span>;
@@ -300,6 +341,11 @@
     <span class="prelude-val">Ok</span>(HttpResponse::Ok()
         .content_type(<span class="string">"text/html; charset=utf-8"</span>)
         .body(rendered))
+}
+
+<span class="attr">#[derive(serde::Serialize)]
+</span><span class="kw">struct </span>RequestContext {
+    path: String,
 }
 
 <span class="doccomment">/// Handler for the viewer page
@@ -314,6 +360,10 @@
         <span class="macro">log::debug!</span>(<span class="string">"Theme parameter provided: {}"</span>, theme);
         ctx.insert(<span class="string">"selected_theme"</span>, theme);
     }
+    
+    ctx.insert(<span class="string">"request"</span>, <span class="kw-2">&amp;</span>tera::to_value(RequestContext {
+        path: <span class="string">"/viewer"</span>.to_string()
+    }).unwrap());
     
     <span class="kw">let </span>rendered = TEMPLATES.render(<span class="string">"pages/viewer.html"</span>, <span class="kw-2">&amp;</span>ctx)
         .map_err(handle_template_error)<span class="question-mark">?</span>;
@@ -331,6 +381,10 @@
     <span class="kw">let </span><span class="kw-2">mut </span>ctx = new_context();
     ctx.insert(<span class="string">"current_page"</span>, <span class="string">"themes"</span>);
     
+    ctx.insert(<span class="string">"request"</span>, <span class="kw-2">&amp;</span>tera::to_value(RequestContext {
+        path: <span class="string">"/themes"</span>.to_string()
+    }).unwrap());
+    
     <span class="kw">let </span>rendered = TEMPLATES.render(<span class="string">"pages/themes.html"</span>, <span class="kw-2">&amp;</span>ctx)
         .map_err(handle_template_error)<span class="question-mark">?</span>;
     
@@ -344,6 +398,10 @@
 </span><span class="kw">pub async fn </span>docs() -&gt; <span class="prelude-ty">Result</span>&lt;HttpResponse&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ctx = new_context();
     ctx.insert(<span class="string">"current_page"</span>, <span class="string">"docs"</span>);
+    
+    ctx.insert(<span class="string">"request"</span>, <span class="kw-2">&amp;</span>tera::to_value(RequestContext {
+        path: <span class="string">"/docs"</span>.to_string()
+    }).unwrap());
     
     <span class="kw">let </span>rendered = TEMPLATES.render(<span class="string">"pages/docs.html"</span>, <span class="kw-2">&amp;</span>ctx)
         .map_err(handle_template_error)<span class="question-mark">?</span>;
@@ -359,6 +417,10 @@
     <span class="kw">let </span><span class="kw-2">mut </span>ctx = new_context();
     ctx.insert(<span class="string">"current_page"</span>, <span class="string">"docs"</span>);
     
+    ctx.insert(<span class="string">"request"</span>, <span class="kw-2">&amp;</span>tera::to_value(RequestContext {
+        path: <span class="string">"/docs/create-theme"</span>.to_string()
+    }).unwrap());
+    
     <span class="kw">let </span>rendered = TEMPLATES.render(<span class="string">"pages/create-theme.html"</span>, <span class="kw-2">&amp;</span>ctx)
         .map_err(handle_template_error)<span class="question-mark">?</span>;
     
@@ -372,6 +434,10 @@
 </span><span class="kw">pub async fn </span>privacy() -&gt; <span class="prelude-ty">Result</span>&lt;HttpResponse&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ctx = new_context();
     ctx.insert(<span class="string">"current_page"</span>, <span class="string">"privacy"</span>);
+    
+    ctx.insert(<span class="string">"request"</span>, <span class="kw-2">&amp;</span>tera::to_value(RequestContext {
+        path: <span class="string">"/privacy"</span>.to_string()
+    }).unwrap());
     
     <span class="kw">let </span>rendered = TEMPLATES.render(<span class="string">"pages/privacy.html"</span>, <span class="kw-2">&amp;</span>ctx)
         .map_err(handle_template_error)<span class="question-mark">?</span>;
@@ -387,6 +453,10 @@
     <span class="kw">let </span><span class="kw-2">mut </span>ctx = new_context();
     ctx.insert(<span class="string">"current_page"</span>, <span class="string">"cookies"</span>);
     
+    ctx.insert(<span class="string">"request"</span>, <span class="kw-2">&amp;</span>tera::to_value(RequestContext {
+        path: <span class="string">"/cookies"</span>.to_string()
+    }).unwrap());
+    
     <span class="kw">let </span>rendered = TEMPLATES.render(<span class="string">"pages/cookies.html"</span>, <span class="kw-2">&amp;</span>ctx)
         .map_err(handle_template_error)<span class="question-mark">?</span>;
     
@@ -400,6 +470,10 @@
 </span><span class="kw">pub async fn </span>about() -&gt; <span class="prelude-ty">Result</span>&lt;HttpResponse&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>ctx = new_context();
     ctx.insert(<span class="string">"current_page"</span>, <span class="string">"about"</span>);
+    
+    ctx.insert(<span class="string">"request"</span>, <span class="kw-2">&amp;</span>tera::to_value(RequestContext {
+        path: <span class="string">"/about"</span>.to_string()
+    }).unwrap());
     
     <span class="kw">let </span>rendered = TEMPLATES.render(<span class="string">"pages/about.html"</span>, <span class="kw-2">&amp;</span>ctx)
         .map_err(handle_template_error)<span class="question-mark">?</span>;
