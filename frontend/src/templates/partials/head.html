@@ -5,17 +5,22 @@
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/frontend/src/images/logo.svg">
 
-<!-- Fonts -->
+<!-- Preload Critical Assets -->
+<link rel="preload" href="/frontend/src/css/styles.css" as="style">
+<link rel="preload" href="/frontend/src/js/main.js" as="script">
+<link rel="preload" href="/frontend/src/themes/base/BaseTheme.js" as="script">
+
+<!-- Fonts with display=swap -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- Styles -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <!-- Prism.js Theme -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <!-- Theme Styles -->
 <link href="/frontend/src/themes/UniversityDegreeCredential/classic/classic.css" rel="stylesheet">
@@ -23,4 +28,38 @@
 
 <!-- App Styles -->
 <link href="/frontend/src/css/styles.css" rel="stylesheet">
-<link href="/frontend/src/css/viewer.css" rel="stylesheet"> 
+<link href="/frontend/src/css/viewer.css" rel="stylesheet">
+
+<!-- Service Worker Registration -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/frontend/src/js/sw.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful');
+            })
+            .catch(err => {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+    });
+}
+</script>
+
+<!-- Performance Monitoring -->
+<script>
+// Simple performance monitoring
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const timing = window.performance.timing;
+        const interactive = timing.domInteractive - timing.navigationStart;
+        const dcl = timing.domContentLoadedEventEnd - timing.navigationStart;
+        const complete = timing.loadEventEnd - timing.navigationStart;
+        
+        console.log(`
+            Time to interactive: ${interactive}ms
+            DOM Content Loaded: ${dcl}ms
+            Load Complete: ${complete}ms
+        `);
+    }, 0);
+});
+</script> 

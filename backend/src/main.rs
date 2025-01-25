@@ -1,11 +1,40 @@
 use actix_files as fs;
-use actix_web::{web, App, HttpResponse, Result, middleware::Logger, HttpServer};
+use actix_web::{
+    web, App, HttpResponse, Result,
+    middleware::{Logger, Compress, DefaultHeaders},
+    HttpServer,
+    dev::{Service, ServiceResponse, Transform},
+};
+use futures_util::future::LocalBoxFuture;
 use log::{info, debug, error};
 use tera::Tera;
 use std::path::PathBuf;
 use chrono::Local;
 use std::fs::OpenOptions;
 use std::io::Write;
+use lazy_static::lazy_static;
+use std::sync::Arc;
+use std::time::Duration;
+use num_cpus;
+use std::task::{Context, Poll};
+use pin_project_lite::pin_project;
+use std::future::Future;
+use std::pin::Pin;
+use actix_web::dev::ServiceRequest;
+use actix_web::body::MessageBody;
+use futures_util::future::ready;
+use futures_util::future::Ready;
+use actix_web::Error;
+
+// Cached templates
+lazy_static! {
+    static ref TEMPLATES: Arc<Tera> = Arc::new(init_templates());
+    static ref BASE_CONTEXT: tera::Context = {
+        let mut ctx = tera::Context::new();
+        ctx.insert("version", "v0.0.1");
+        ctx
+    };
+}
 
 // Custom writer that writes to both file and stderr
 struct MultiOutput {
@@ -40,7 +69,7 @@ fn init_templates() -> Tera {
     
     info!("Loading templates from: {:?}", template_path);
     
-    let tera = match Tera::new(template_path.to_str().unwrap()) {
+    match Tera::new(template_path.to_str().unwrap()) {
         Ok(t) => {
             info!("Successfully loaded templates");
             debug!("Available templates: {:?}", t.get_template_names().collect::<Vec<_>>());
@@ -50,68 +79,64 @@ fn init_templates() -> Tera {
             error!("Template parsing error(s): {}", e);
             ::std::process::exit(1);
         }
-    };
-    tera
+    }
 }
 
-// Initialize logger with custom format based on build profile
+// Initialize logger with optimized settings
 fn init_logger() {
-    // Create logs directory if it doesn't exist
-    std::fs::create_dir_all("logs").expect("Failed to create logs directory");
-    
-    let log_file = format!("logs/vc-viewer-{}.log", Local::now().format("%Y-%m-%d_%H-%M-%S"));
-    let file = OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(&log_file)
-        .unwrap();
+    if cfg!(debug_assertions) {
+        // Development logging
+        std::fs::create_dir_all("logs").expect("Failed to create logs directory");
+        let log_file = format!("logs/vc-viewer-{}.log", Local::now().format("%Y-%m-%d_%H-%M-%S"));
+        let file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&log_file)
+            .unwrap();
 
-    let mut builder = env_logger::Builder::new();
-    
-    // Set default level to Info
-    builder.filter_level(log::LevelFilter::Info);
-    
-    // Set format for all modes
-    builder.format(|buf, record| {
-        writeln!(
-            buf,
-            "{} [{}] {}",
-            Local::now().format("%Y-%m-%d %H:%M:%S"),
-            record.level(),
-            record.args(),
-        )
-    });
-
-    // Write to both file and stderr
-    builder.target(env_logger::Target::Pipe(Box::new(MultiOutput::new(file))));
-    
-    // Initialize the logger
-    builder.init();
+        let mut builder = env_logger::Builder::new();
+        builder.filter_level(log::LevelFilter::Debug);
+        builder.format(|buf, record| {
+            writeln!(
+                buf,
+                "{} [{}] {}",
+                Local::now().format("%Y-%m-%d %H:%M:%S"),
+                record.level(),
+                record.args(),
+            )
+        });
+        builder.target(env_logger::Target::Pipe(Box::new(MultiOutput::new(file))));
+        builder.init();
+    } else {
+        // Production logging - minimal overhead
+        env_logger::Builder::new()
+            .filter_level(log::LevelFilter::Info)
+            .format_timestamp(None)
+            .format_target(false)
+            .init();
+    }
 }
 
-// Page handlers with template rendering
-async fn index(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+// Optimized page handlers
+async fn index() -> Result<HttpResponse> {
     debug!("Serving index page");
-    let mut ctx = tera::Context::new();
+    let mut ctx = BASE_CONTEXT.clone();
     ctx.insert("current_page", "home");
     
-    let rendered = tmpl.render("pages/index.html", &ctx)
+    let rendered = TEMPLATES.render("pages/index.html", &ctx)
         .map_err(|e| {
             error!("Template error: {}", e);
             actix_web::error::ErrorInternalServerError("Template error")
         })?;
     
     Ok(HttpResponse::Ok()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(rendered))
 }
 
-async fn viewer(
-    tmpl: web::Data<Tera>,
-    query: web::Query<std::collections::HashMap<String, String>>
-) -> Result<HttpResponse> {
+async fn viewer(query: web::Query<std::collections::HashMap<String, String>>) -> Result<HttpResponse> {
     debug!("Serving viewer page");
-    let mut ctx = tera::Context::new();
+    let mut ctx = BASE_CONTEXT.clone();
     ctx.insert("current_page", "viewer");
     
     if let Some(theme) = query.get("theme") {
@@ -119,120 +144,174 @@ async fn viewer(
         ctx.insert("selected_theme", theme);
     }
     
-    let rendered = tmpl.render("pages/viewer.html", &ctx)
+    let rendered = TEMPLATES.render("pages/viewer.html", &ctx)
         .map_err(|e| {
             error!("Template error: {}", e);
             actix_web::error::ErrorInternalServerError("Template error")
         })?;
     
     Ok(HttpResponse::Ok()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(rendered))
 }
 
-async fn themes(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+async fn themes() -> Result<HttpResponse> {
     debug!("Serving themes page");
-    let mut ctx = tera::Context::new();
+    let mut ctx = BASE_CONTEXT.clone();
     ctx.insert("current_page", "themes");
     
-    let rendered = tmpl.render("pages/themes.html", &ctx)
+    let rendered = TEMPLATES.render("pages/themes.html", &ctx)
         .map_err(|e| {
             error!("Template error: {}", e);
             actix_web::error::ErrorInternalServerError("Template error")
         })?;
     
     Ok(HttpResponse::Ok()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(rendered))
 }
 
-async fn docs(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+async fn docs() -> Result<HttpResponse> {
     debug!("Serving documentation page");
-    let mut ctx = tera::Context::new();
+    let mut ctx = BASE_CONTEXT.clone();
     ctx.insert("current_page", "docs");
     
-    let rendered = tmpl.render("pages/docs.html", &ctx)
+    let rendered = TEMPLATES.render("pages/docs.html", &ctx)
         .map_err(|e| {
             error!("Template error: {}", e);
             actix_web::error::ErrorInternalServerError("Template error")
         })?;
     
     Ok(HttpResponse::Ok()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(rendered))
 }
 
-async fn create_theme(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+async fn create_theme() -> Result<HttpResponse> {
     debug!("Serving theme creation documentation page");
-    let mut ctx = tera::Context::new();
+    let mut ctx = BASE_CONTEXT.clone();
     ctx.insert("current_page", "docs");
     
-    let rendered = tmpl.render("pages/create-theme.html", &ctx)
+    let rendered = TEMPLATES.render("pages/create-theme.html", &ctx)
         .map_err(|e| {
             error!("Template error: {}", e);
             actix_web::error::ErrorInternalServerError("Template error")
         })?;
     
     Ok(HttpResponse::Ok()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(rendered))
 }
 
-async fn privacy(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+async fn privacy() -> Result<HttpResponse> {
     debug!("Serving privacy policy page");
-    let mut ctx = tera::Context::new();
+    let mut ctx = BASE_CONTEXT.clone();
     ctx.insert("current_page", "privacy");
     
-    let rendered = tmpl.render("pages/privacy.html", &ctx)
+    let rendered = TEMPLATES.render("pages/privacy.html", &ctx)
         .map_err(|e| {
             error!("Template error: {}", e);
             actix_web::error::ErrorInternalServerError("Template error")
         })?;
     
     Ok(HttpResponse::Ok()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(rendered))
 }
 
-async fn cookies(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+async fn cookies() -> Result<HttpResponse> {
     debug!("Serving cookie policy page");
-    let mut ctx = tera::Context::new();
+    let mut ctx = BASE_CONTEXT.clone();
     ctx.insert("current_page", "cookies");
     
-    let rendered = tmpl.render("pages/cookies.html", &ctx)
+    let rendered = TEMPLATES.render("pages/cookies.html", &ctx)
         .map_err(|e| {
             error!("Template error: {}", e);
             actix_web::error::ErrorInternalServerError("Template error")
         })?;
     
     Ok(HttpResponse::Ok()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(rendered))
 }
 
-async fn about(tmpl: web::Data<Tera>) -> Result<HttpResponse> {
+async fn about() -> Result<HttpResponse> {
     debug!("Serving about page");
-    let mut ctx = tera::Context::new();
+    let mut ctx = BASE_CONTEXT.clone();
     ctx.insert("current_page", "about");
     
-    let rendered = tmpl.render("pages/about.html", &ctx)
+    let rendered = TEMPLATES.render("pages/about.html", &ctx)
         .map_err(|e| {
             error!("Template error: {}", e);
             actix_web::error::ErrorInternalServerError("Template error")
         })?;
     
     Ok(HttpResponse::Ok()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(rendered))
+}
+
+// Add compression monitoring middleware
+struct CompressionMonitor;
+
+impl<S, B> Transform<S, ServiceRequest> for CompressionMonitor
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error> + 'static,
+    B: MessageBody + 'static,
+    S::Future: 'static,
+{
+    type Response = ServiceResponse<B>;
+    type Error = Error;
+    type Transform = CompressionMonitorMiddleware<S>;
+    type InitError = ();
+    type Future = Ready<Result<Self::Transform, Self::InitError>>;
+
+    fn new_transform(&self, service: S) -> Self::Future {
+        ready(Ok(CompressionMonitorMiddleware { service }))
+    }
+}
+
+struct CompressionMonitorMiddleware<S> {
+    service: S,
+}
+
+impl<S, B> Service<ServiceRequest> for CompressionMonitorMiddleware<S>
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    B: MessageBody,
+    S::Future: 'static,
+{
+    type Response = ServiceResponse<B>;
+    type Error = Error;
+    type Future = LocalBoxFuture<'static, Result<Self::Response, Self::Error>>;
+
+    fn poll_ready(&self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.service.poll_ready(cx)
+    }
+
+    fn call(&self, req: ServiceRequest) -> Self::Future {
+        let fut = self.service.call(req);
+        Box::pin(async move {
+            let res = fut.await?;
+            if let Some(encoding) = res.headers().get("content-encoding") {
+                info!(
+                    "Compressed response: {} - {} using {}",
+                    res.request().path(),
+                    res.headers()
+                        .get("content-length")
+                        .map_or("unknown size", |v| v.to_str().unwrap_or("invalid")),
+                    encoding.to_str().unwrap_or("unknown")
+                );
+            }
+            Ok(res)
+        })
+    }
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     init_logger();
     info!("Starting server at http://127.0.0.1:8080");
-
-    // Initialize templates
-    let tera = web::Data::new(init_templates());
 
     HttpServer::new(move || {
         let logger = if cfg!(debug_assertions) {
@@ -242,14 +321,50 @@ async fn main() -> std::io::Result<()> {
         };
 
         App::new()
-            .app_data(tera.clone())
             .wrap(logger)
-            // Serve static files from the frontend directory
-            .service(fs::Files::new("/frontend/src/themes", "../frontend/src/themes").show_files_listing())
-            .service(fs::Files::new("/frontend/src/js", "../frontend/src/js").show_files_listing())
-            .service(fs::Files::new("/frontend/src/css", "../frontend/src/css").show_files_listing())
-            .service(fs::Files::new("/frontend/src/images", "../frontend/src/images").show_files_listing())
-            // Main routes
+            .wrap(CompressionMonitor)
+            .wrap(Compress::default())
+            .wrap(
+                DefaultHeaders::new()
+                    .add(("Cache-Control", "public, max-age=31536000"))
+                    .add(("X-Content-Type-Options", "nosniff"))
+                    .add(("X-Frame-Options", "DENY"))
+                    .add(("X-XSS-Protection", "1; mode=block"))
+                    .add(("Vary", "Accept-Encoding"))
+            )
+            // Serve static files with optimized settings
+            .service(
+                fs::Files::new("/frontend/src/themes", "../frontend/src/themes")
+                    .show_files_listing()
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+                    .disable_content_disposition()
+            )
+            .service(
+                fs::Files::new("/frontend/src/js", "../frontend/src/js")
+                    .show_files_listing()
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+                    .disable_content_disposition()
+            )
+            .service(
+                fs::Files::new("/frontend/src/css", "../frontend/src/css")
+                    .show_files_listing()
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+                    .disable_content_disposition()
+            )
+            .service(
+                fs::Files::new("/frontend/src/images", "../frontend/src/images")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+                    .disable_content_disposition()
+            )
+            // Route handlers
             .route("/", web::get().to(index))
             .route("/viewer", web::get().to(viewer))
             .route("/themes", web::get().to(themes))
@@ -259,8 +374,11 @@ async fn main() -> std::io::Result<()> {
             .route("/cookies", web::get().to(cookies))
             .route("/about", web::get().to(about))
     })
+    .workers(num_cpus::get())
+    .backlog(1024)
+    .client_request_timeout(Duration::from_secs(60))
+    .client_disconnect_timeout(Duration::from_secs(5))
     .bind("127.0.0.1:8080")?
-    .workers(2)
     .run()
     .await
 } 
