@@ -25,6 +25,9 @@ jobs:
         run: cargo doc --no-deps --verbose
         working-directory: ./backend
 
+      - name: Create Root Index
+        run: echo '<meta http-equiv="refresh" content="0; url=vc_viewer/index.html">' > ./backend/target/doc/index.html
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
