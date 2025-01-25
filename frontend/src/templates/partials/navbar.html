@@ -12,16 +12,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link {% if current_page == 'viewer' %}active{% endif %}" href="/viewer">Viewer</a>
+                    <a class="nav-link {% if current_page | default(value="") == 'viewer' %}active{% endif %}" href="/viewer">Viewer</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if current_page == 'themes' %}active{% endif %}" href="/themes">Themes</a>
+                    <a class="nav-link {% if current_page | default(value="") == 'themes' %}active{% endif %}" href="/themes">Themes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if current_page == 'docs' %}active{% endif %}" href="/docs">Documentation</a>
+                    <a class="nav-link {% if current_page | default(value="") == 'docs' %}active{% endif %}" href="/docs">Documentation</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if current_page == 'about' %}active{% endif %}" href="/about">About</a>
+                    <a class="nav-link {% if current_page | default(value="") == 'about' %}active{% endif %}" href="/about">About</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="https://github.com/AmaVic/vc-viewer" target="_blank">

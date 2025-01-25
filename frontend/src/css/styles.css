@@ -21,6 +21,9 @@ body {
     background: var(--bg-white);
     padding: 1rem 0;
     box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .navbar-brand {
@@ -44,6 +47,21 @@ body {
 
 .nav-link:hover {
     color: var(--primary) !important;
+}
+
+.nav-link.active {
+    color: var(--primary) !important;
+    font-weight: 600;
+}
+
+.version-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--primary-light);
+    color: var(--text-white);
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+    font-weight: 500;
 }
 
 /* Hero Section */

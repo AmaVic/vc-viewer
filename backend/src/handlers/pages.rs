@@ -17,7 +17,6 @@ pub async fn index_route() -> Result<HttpResponse> {
 /// Generic index handler that can be used for both direct and catch-all routes
 pub async fn render_index() -> Result<HttpResponse> {
     let mut ctx = new_context();
-    ctx.insert("current_page", "home");
     
     // Add request path for canonical URLs
     ctx.insert("request", &tera::to_value(RequestContext {
