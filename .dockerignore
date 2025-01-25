@@ -1,0 +1,10 @@
+target/
+.git/
+.gitignore
+.env
+**/*.rs.bk
+Dockerfile
+docker-compose.yml
+.dockerignore
+README.md
+.specstory/ 

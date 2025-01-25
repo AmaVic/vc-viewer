@@ -3,6 +3,8 @@
 //! This module handles application configuration, including server settings
 //! and environment-specific configurations.
 
+pub mod env;
+
 use std::time::Duration;
 
 /// Server configuration settings
@@ -23,8 +25,8 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            bind_address: "127.0.0.1".to_string(),
-            port: 8080,
+            bind_address: env::get_host(),
+            port: env::get_port(),
             workers: num_cpus::get(),
             request_timeout: Duration::from_secs(60),
             disconnect_timeout: Duration::from_secs(5),
@@ -91,8 +93,8 @@ mod tests {
     #[test]
     fn test_default_config() {
         let config = Config::default();
-        assert_eq!(config.port, 8080);
-        assert_eq!(config.bind_address, "127.0.0.1");
+        assert_eq!(config.port, env::get_port());
+        assert_eq!(config.bind_address, env::get_host());
     }
 
     #[test]
