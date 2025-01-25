@@ -1,4 +1,5 @@
 # VC Viewer 🎨
+[![Build](https://github.com/AmaVic/vc-viewer/actions/workflows/build.yml/badge.svg)](https://github.com/AmaVic/vc-viewer/actions/workflows/build.yml) [![Test](https://github.com/AmaVic/vc-viewer/actions/workflows/test.yml/badge.svg)](https://github.com/AmaVic/vc-viewer/actions/workflows/test.yml) [![Docs](https://github.com/AmaVic/vc-viewer/actions/workflows/docs.yml/badge.svg)](https://github.com/AmaVic/vc-viewer/actions/workflows/docs.yml)
 
 A beautiful, open-source tool for visualizing W3C Verifiable Credentials with customizable themes.
 
