@@ -3,4 +3,3 @@ logs/
 *.log
 .specstory/
 .idea/
-backend/Cargo.lock

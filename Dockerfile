@@ -3,7 +3,9 @@ FROM rust:1.84 AS builder
 WORKDIR /usr/src/app
 
 # Copy only the backend files needed for building
-COPY backend/Cargo.toml backend/Cargo.lock backend/
+COPY backend/Cargo.toml backend/
+# Copy Cargo.lock if it exists, otherwise it will be generated
+COPY backend/Cargo.lock* backend/
 COPY backend/src backend/src
 
 # Build the backend
