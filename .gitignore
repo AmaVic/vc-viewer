@@ -1,2 +1,5 @@
 backend/Cargo.lock
 backend/target/
+# Logs
+logs/
+*.log

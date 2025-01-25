@@ -58,27 +58,27 @@
 
                     <!-- Local Installation -->
                     <section id="installation" class="mb-5">
-                        <h2>Local Installation</h2>
-                        <p>To run VC Viewer locally, follow these steps:</p>
-                        
+                        <h2>Installation</h2>
                         <h3>Prerequisites</h3>
                         <ul>
                             <li>Rust (version 1.75.0 or higher)</li>
                             <li>Cargo (version 1.75.0 or higher)</li>
                         </ul>
 
-                        <h3>Installation Steps</h3>
+                        <h3>Steps</h3>
                         <ol>
                             <li>Clone the repository:
                                 <pre><code class="language-bash">git clone https://github.com/AmaVic/vc-viewer.git
 cd vc-viewer</code></pre>
                             </li>
-                            <li>Build and run the application:
-                                <pre><code class="language-bash">cargo build
-cargo run</code></pre>
+                            <li>Build and run in release mode:
+                                <pre><code class="language-bash">cargo run --release</code></pre>
                             </li>
                         </ol>
-                        <p>The application will be available at <code>http://localhost:8080</code></p>
+                        
+                        <div class="note">
+                            <strong>Important:</strong> Always run the application in release mode (<code>--release</code>) for production use. Debug mode includes additional logging of IP addresses and browser information, which are excluded in release mode to protect user privacy. For more information about our privacy practices, see our <a href="/privacy">Privacy Policy</a>.
+                        </div>
                     </section>
 
                     <!-- Credential Format -->
