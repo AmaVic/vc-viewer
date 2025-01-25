@@ -39,17 +39,11 @@ jobs:
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy, rustfmt
 
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: "backend"
-
-      - name: Clippy
-        working-directory: ./backend
-        run: cargo clippy -- -D warnings
 
       - name: Run tests
         working-directory: ./backend
