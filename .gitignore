@@ -1,6 +1,6 @@
-backend/Cargo.lock
 backend/target/
-# Logs
 logs/
 *.log
 .specstory/
+.idea/
+backend/Cargo.lock
