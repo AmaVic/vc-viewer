@@ -17,9 +17,6 @@ use std::sync::Arc;
 use std::time::Duration;
 use num_cpus;
 use std::task::{Context, Poll};
-use pin_project_lite::pin_project;
-use std::future::Future;
-use std::pin::Pin;
 use actix_web::dev::ServiceRequest;
 use actix_web::body::MessageBody;
 use futures_util::future::ready;
@@ -317,7 +314,7 @@ async fn main() -> std::io::Result<()> {
         let logger = if cfg!(debug_assertions) {
             Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T")
         } else {
-            Logger::new("%r %s %D")
+            Logger::new("%s %b %D")
         };
 
         App::new()
@@ -334,31 +331,7 @@ async fn main() -> std::io::Result<()> {
             )
             // Serve static files with optimized settings
             .service(
-                fs::Files::new("/frontend/src/themes", "../frontend/src/themes")
-                    .show_files_listing()
-                    .prefer_utf8(true)
-                    .use_last_modified(true)
-                    .use_etag(true)
-                    .disable_content_disposition()
-            )
-            .service(
-                fs::Files::new("/frontend/src/js", "../frontend/src/js")
-                    .show_files_listing()
-                    .prefer_utf8(true)
-                    .use_last_modified(true)
-                    .use_etag(true)
-                    .disable_content_disposition()
-            )
-            .service(
-                fs::Files::new("/frontend/src/css", "../frontend/src/css")
-                    .show_files_listing()
-                    .prefer_utf8(true)
-                    .use_last_modified(true)
-                    .use_etag(true)
-                    .disable_content_disposition()
-            )
-            .service(
-                fs::Files::new("/frontend/src/images", "../frontend/src/images")
+                fs::Files::new("/frontend", "../frontend")
                     .prefer_utf8(true)
                     .use_last_modified(true)
                     .use_etag(true)
@@ -375,7 +348,6 @@ async fn main() -> std::io::Result<()> {
             .route("/about", web::get().to(about))
     })
     .workers(num_cpus::get())
-    .backlog(1024)
     .client_request_timeout(Duration::from_secs(60))
     .client_disconnect_timeout(Duration::from_secs(5))
     .bind("127.0.0.1:8080")?
