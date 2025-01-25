@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% include 'partials/head.html' %}
-    <meta name="description" content="Comprehensive documentation for VC Viewer. Learn how to use, customize, and create themes for W3C Verifiable Credentials visualization. Step-by-step guides and API reference.">
-    <meta property="og:description" content="Learn how to use, customize, and create themes for W3C Verifiable Credentials visualization. Complete documentation with examples.">
-    <meta name="twitter:description" content="Learn how to use, customize, and create themes for W3C Verifiable Credentials visualization. Complete documentation with examples.">
-    <title>VC Viewer Documentation - Usage Guide & API Reference</title>
+{% extends "base.html" %}
+
+{% block head %}
+    <!-- Documentation-specific meta -->
+    <meta name="description" content="Comprehensive documentation for the VC Viewer application. Learn how to use the viewer, customize themes, and integrate with your applications.">
+    <meta property="og:description" content="Learn how to use VC Viewer, customize themes, and integrate with your applications. Complete documentation and guides.">
+    <meta name="twitter:description" content="Complete documentation for VC Viewer. Learn about features, theme customization, and integration guides.">
+    <title>VC Viewer - Documentation</title>
+
+    <!-- Documentation-specific styles -->
     <link href="/frontend/src/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" crossorigin="anonymous">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -14,7 +18,7 @@
         "@context": "https://schema.org",
         "@type": "TechArticle",
         "headline": "VC Viewer Documentation",
-        "description": "Comprehensive documentation for VC Viewer, including usage guides, theme customization, and API reference",
+        "description": "Comprehensive documentation for the VC Viewer application, covering features, usage, and customization options.",
         "url": "https://vc-viewer.vamaralds.be/docs",
         "author": {
             "@type": "Person",
@@ -22,236 +26,121 @@
         },
         "publisher": {
             "@type": "Organization",
-            "name": "VC Viewer",
-            "url": "https://vc-viewer.vamaralds.be"
+            "name": "Vamarald",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://vc-viewer.vamaralds.be/frontend/src/images/logo.svg"
+            }
         },
-        "datePublished": "2024-03-01",
-        "dateModified": "2024-03-20",
-        "articleSection": "Technical Documentation",
-        "keywords": "verifiable credentials, documentation, API reference, theme customization, W3C credentials, JSON-LD",
-        "mainEntity": {
-            "@type": "WebApplication",
-            "name": "VC Viewer",
-            "applicationCategory": "DeveloperApplication"
-        }
+        "datePublished": "2024-01-01",
+        "keywords": "VC Viewer, documentation, features, usage, customization"
     }
     </script>
-</head>
-<body data-bs-spy="scroll" data-bs-target="#docsNav" data-bs-offset="100" tabindex="0">
-    <!-- Navigation -->
-    {% include 'partials/navbar.html' %}
+{% endblock %}
 
-    <!-- Header -->
-    <header class="docs-hero">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h1>Documentation</h1>
-                    <p class="lead">
-                        Learn how to use VC Viewer and create your own custom themes.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Documentation Content -->
-    <div class="container py-5">
+{% block content %}
+    <main class="container-fluid">
         <div class="row">
             <!-- Sidebar Navigation -->
-            <div class="col-lg-3">
-                <nav class="docs-nav" id="docsNav">
-                    <div class="nav flex-column">
-                        <a class="nav-link active" href="#getting-started">Getting Started</a>
-                        <a class="nav-link" href="#installation">Local Installation</a>
-                        <a class="nav-link" href="#credential-format">Credential Format</a>
-                        <a class="nav-link" href="#using-themes">Using Themes</a>
-                        <a class="nav-link" href="/docs/create-theme">Creating Themes</a>
-                        <a class="nav-link" href="#contributing">Contributing</a>
-                    </div>
+            <div class="col-md-3 col-xl-2 docs-sidebar">
+                <nav class="nav flex-column">
+                    <h5 class="sidebar-heading">Getting Started</h5>
+                    <a class="nav-link" href="#introduction">Introduction</a>
+                    <a class="nav-link" href="#installation">Installation</a>
+                    <a class="nav-link" href="#quick-start">Quick Start</a>
+
+                    <h5 class="sidebar-heading mt-4">Features</h5>
+                    <a class="nav-link" href="#viewer">Credential Viewer</a>
+                    <a class="nav-link" href="#themes">Theme System</a>
+                    <a class="nav-link" href="#export">Export Options</a>
+
+                    <h5 class="sidebar-heading mt-4">Development</h5>
+                    <a class="nav-link" href="#custom-themes">Creating Themes</a>
+                    <a class="nav-link" href="#api">API Reference</a>
+                    <a class="nav-link" href="#contributing">Contributing</a>
                 </nav>
             </div>
 
             <!-- Main Content -->
-            <div class="col-lg-9">
-                <div class="docs-content">
-                    <!-- Getting Started -->
-                    <section id="getting-started" class="mb-5">
-                        <h2>Getting Started</h2>
-                        <p>VC Viewer is a web-based tool for visualizing W3C Verifiable Credentials. Follow these steps to get started:</p>
-                        <ol>
-                            <li>Navigate to the <a href="/viewer">Viewer</a> page</li>
-                            <li>Paste your W3C Verifiable Credential in JSON format</li>
-                            <li>Choose a theme that matches your credential type</li>
-                            <li>Export the visualization as an image or PDF</li>
-                        </ol>
-                    </section>
+            <div class="col-md-9 col-xl-10 docs-content">
+                <section id="introduction">
+                    <h1>Documentation</h1>
+                    <p>Welcome to the VC Viewer documentation. Here you'll find comprehensive guides and documentation to help you start working with VC Viewer as quickly as possible.</p>
+                </section>
 
-                    <!-- Local Installation -->
-                    <section id="installation" class="mb-5">
-                        <h2>Installation</h2>
-                        <h3>Prerequisites</h3>
-                        <ul>
-                            <li>Option 1 (Docker):
-                                <ul>
-                                    <li>Docker</li>
-                                    <li>Docker Compose</li>
-                                </ul>
-                            </li>
-                            <li>Option 2 (Manual):
-                                <ul>
-                                    <li>Rust (version 1.75.0 or higher)</li>
-                                    <li>Cargo (version 1.75.0 or higher)</li>
-                                </ul>
-                            </li>
-                        </ul>
+                <section id="installation">
+                    <h2>Installation</h2>
+                    <p>VC Viewer can be used directly through our hosted version or installed locally. Choose the method that best suits your needs:</p>
+                    
+                    <h3>Using the Hosted Version</h3>
+                    <p>Simply visit <a href="https://vc-viewer.vamaralds.be">vc-viewer.vamaralds.be</a> to start using VC Viewer immediately. No installation required!</p>
+                    
+                    <h3>Local Installation</h3>
+                    <p>To run VC Viewer locally, follow these steps:</p>
+                    <pre><code class="language-bash"># Clone the repository
+git clone https://github.com/AmaVic/vc-viewer.git
+cd vc-viewer
 
-                        <h3>Installation Methods</h3>
-                        
-                        <h4>Option 1: Using Docker (Recommended)</h4>
-                        <ol>
-                            <li>Clone the repository:
-                                <pre><code class="language-bash">git clone https://github.com/AmaVic/vc-viewer.git
-cd vc-viewer</code></pre>
-                            </li>
-                            <li>Build and run using Docker Compose:
-                                <pre><code class="language-bash">docker compose up --build</code></pre>
-                            </li>
-                        </ol>
-                        <div class="note">
-                            <strong>Note:</strong> The Docker image needs to be built locally as it's not yet published to any container registry.
-                        </div>
+# Build and run using Docker
+docker compose up --build</code></pre>
+                </section>
 
-                        <h4>Option 2: Manual Installation</h4>
-                        <ol>
-                            <li>Clone the repository:
-                                <pre><code class="language-bash">git clone https://github.com/AmaVic/vc-viewer.git
-cd vc-viewer</code></pre>
-                            </li>
-                            <li>Build and run in release mode:
-                                <pre><code class="language-bash">cargo run --release</code></pre>
-                            </li>
-                        </ol>
-                        
-                        <div class="note">
-                            <strong>Important:</strong> Always run the application in release mode (<code>--release</code>) for production use. Debug mode includes additional logging of IP addresses and browser information, which are excluded in release mode to protect user privacy. For more information about our privacy practices, see our <a href="/privacy">Privacy Policy</a>.
-                        </div>
-                    </section>
-
-                    <!-- Credential Format -->
-                    <section id="credential-format" class="mb-5">
-                        <h2>Credential Format</h2>
-                        <p>VC Viewer supports standard W3C Verifiable Credentials in JSON format. Your credential must include:</p>
-                        <ul>
-                            <li>A valid <code>@context</code> array including <code>https://www.w3.org/2018/credentials/v1</code></li>
-                            <li>A <code>type</code> array with at least one specific credential type</li>
-                            <li>An <code>issuer</code> field (string or object with <code>id</code>)</li>
-                            <li>An <code>issuanceDate</code> in ISO 8601 format</li>
-                            <li>A <code>credentialSubject</code> object with the credential data</li>
-                        </ul>
-                        <div class="note">
-                            <strong>Example:</strong>
-                            <pre><code class="language-json">{
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://www.w3.org/2018/credentials/examples/v1"
-  ],
-  "type": ["VerifiableCredential", "UniversityDegreeCredential"],
-  "issuer": {
-    "id": "did:example:123",
-    "name": "Example University"
-  },
-  "issuanceDate": "2023-01-01T00:00:00Z",
-  "credentialSubject": {
-    "id": "did:example:456",
-    "degree": {
-      "type": "BachelorDegree",
-      "name": "Bachelor of Science"
-    }
-  }
-}</code></pre>
-                        </div>
-                    </section>
-
-                    <!-- Using Themes -->
-                    <section id="using-themes" class="mb-5">
-                        <h2>Using Themes</h2>
-                        <p>Themes are automatically selected based on your credential type. Currently available themes include:</p>
-                        <ul>
-                            <li><strong>University Degree Themes</strong>
-                                <ul>
-                                    <li>Classic - Traditional academic design</li>
-                                    <li>Modern - Contemporary minimalist design</li>
-                                    <li>LinkedIn - Professional certification style</li>
-                                </ul>
-                            </li>
-                            <li><strong>Driver License Themes</strong>
-                                <ul>
-                                    <li>Classic - Traditional ID card layout</li>
-                                    <li>Modern - Enhanced visual design</li>
-                                </ul>
-                            </li>
-                            <li><strong>Generic Theme</strong> - Default theme for other credential types</li>
-                        </ul>
-                        <p>Visit our <a href="/themes">Themes Gallery</a> to preview all available themes.</p>
-                    </section>
-
-                    <!-- Contributing -->
-                    <section id="contributing" class="mb-5">
-                        <h2>Contributing</h2>
-                        <p>While direct community theme uploads are not yet supported in the app, we welcome contributions through pull requests! Here's how you can contribute:</p>
-                        <ol>
-                            <li>Fork the repository</li>
-                            <li>Create your theme following our <a href="/docs/create-theme">theme creation guide</a></li>
-                            <li>Submit a pull request with your theme</li>
-                        </ol>
-                        <div class="note">
-                            <strong>Note:</strong> Make sure to follow our theme creation guidelines and include appropriate documentation for your theme.
-                        </div>
-                    </section>
-                </div>
+                <section id="quick-start">
+                    <h2>Quick Start</h2>
+                    <p>Get started with VC Viewer in just a few steps:</p>
+                    <ol>
+                        <li>Navigate to the <a href="/viewer">Viewer page</a></li>
+                        <li>Paste your Verifiable Credential in the input field</li>
+                        <li>Select a theme from the dropdown menu</li>
+                        <li>Export your visualization as an image or PDF</li>
+                    </ol>
+                    <div class="note">
+                        <strong>Note:</strong> You can also try the example credentials to see how different themes look.
+                    </div>
+                </section>
             </div>
         </div>
-    </div>
+    </main>
+{% endblock %}
 
-    <!-- Footer -->
-    {% include 'partials/footer.html' %}
+{% block scripts %}
+    <!-- Syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" crossorigin="anonymous"></script>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-    
-    <!-- Scroll Spy -->
+    <!-- Documentation scripts -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sections = document.querySelectorAll('.docs-content section');
-            const navLinks = document.querySelectorAll('.docs-nav .nav-link');
-            
-            function updateActiveLink() {
-                let currentSection = '';
-                
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-                    if (window.scrollY >= (sectionTop - 100)) {
-                        currentSection = section.getAttribute('id');
-                    }
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
                 });
-                
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href').slice(1) === currentSection) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-            
-            window.addEventListener('scroll', updateActiveLink);
-            updateActiveLink();
+            });
+        });
+
+        // Highlight active section in sidebar
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, {
+            rootMargin: '-20% 0px -80% 0px'
+        });
+
+        document.querySelectorAll('section[id]').forEach(section => {
+            observer.observe(section);
         });
     </script>
-</body>
-</html> 
+{% endblock %} 

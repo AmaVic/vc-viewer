@@ -1,11 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% include "partials/head.html" %}
+{% extends "base.html" %}
+
+{% block head %}
+    <!-- Viewer-specific meta -->
     <meta name="description" content="Try our interactive W3C Verifiable Credentials viewer. Paste your credential, choose a theme, and instantly create beautiful visualizations. Free, secure, and privacy-focused.">
     <meta property="og:description" content="Create beautiful visualizations of your W3C Verifiable Credentials instantly. Choose from multiple themes and export to PDF or image.">
     <meta name="twitter:description" content="Create beautiful visualizations of your W3C Verifiable Credentials instantly. Choose from multiple themes and export to PDF or image.">
     <title>VC Viewer - Interactive Verifiable Credentials Visualization Tool</title>
+
+    <!-- Viewer-specific styles -->
+    <link href="/frontend/src/css/viewer.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" crossorigin="anonymous">
+    
+    <!-- Theme styles -->
+    <link rel="stylesheet" href="/frontend/src/themes/VerifiableCredential/default/default.css">
+    <link rel="stylesheet" href="/frontend/src/themes/UniversityDegreeCredential/classic/classic.css">
+    <link rel="stylesheet" href="/frontend/src/themes/UniversityDegreeCredential/modern/modern.css">
+    <link rel="stylesheet" href="/frontend/src/themes/UniversityDegreeCredential/linkedin/linkedin.css">
+    <link rel="stylesheet" href="/frontend/src/themes/BelgianDriverLicenseCredential/classic/classic.css">
+    <link rel="stylesheet" href="/frontend/src/themes/BelgianDriverLicenseCredential/modern/modern.css">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -28,107 +40,95 @@
             "Export to PDF and image formats",
             "Client-side processing for privacy",
             "Support for all W3C Verifiable Credential types"
-        ],
-        "browserRequirements": "Requires a modern web browser with JavaScript enabled",
-        "permissions": "No special permissions required",
-        "softwareHelp": {
-            "@type": "CreativeWork",
-            "url": "https://vc-viewer.vamaralds.be/docs"
-        },
-        "keywords": "verifiable credentials viewer, interactive VC viewer, credential visualization tool, W3C credentials preview, JSON-LD viewer"
+        ]
     }
     </script>
+{% endblock %}
 
-    <!-- Theme CSS -->
-    <link rel="stylesheet" href="/frontend/src/themes/VerifiableCredential/default/default.css">
-    <link rel="stylesheet" href="/frontend/src/themes/UniversityDegreeCredential/classic/classic.css">
-    <link rel="stylesheet" href="/frontend/src/themes/UniversityDegreeCredential/modern/modern.css">
-    <link rel="stylesheet" href="/frontend/src/themes/UniversityDegreeCredential/linkedin/linkedin.css">
-    <link rel="stylesheet" href="/frontend/src/themes/BelgianDriverLicenseCredential/classic/classic.css">
-    <link rel="stylesheet" href="/frontend/src/themes/BelgianDriverLicenseCredential/modern/modern.css">
-</head>
-<body>
-    {% include "partials/navbar.html" %}
-
-    <!-- Main Content -->
-    <main class="viewer-content py-4">
-        <div class="container">
-            <div class="row g-4">
-                <!-- Input Section -->
-                <div class="col-lg-6">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white py-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Input</h5>
-                                <div class="btn-group">
-                                    <button class="btn btn-outline-primary btn-sm" id="universityExample">
-                                        <i class="fas fa-graduation-cap me-2"></i>University Example
-                                    </button>
-                                    <button class="btn btn-outline-primary btn-sm" id="driverLicenseExample">
-                                        <i class="fas fa-id-card me-2"></i>Driver License Example
-                                    </button>
-                                </div>
+{% block content %}
+    <main class="container py-5">
+        <div class="row g-4">
+            <!-- Input Section -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Input</h5>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary btn-sm" id="universityExample">
+                                    <i class="fas fa-graduation-cap me-2"></i>University Example
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm" id="driverLicenseExample">
+                                    <i class="fas fa-id-card me-2"></i>Driver License Example
+                                </button>
                             </div>
                         </div>
-                        <div class="card-body p-0">
-                            <div class="editor-container">
-                                <pre class="language-json mb-0"><code id="jsonInput" contenteditable="true" spellcheck="false">
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="editor-container">
+                            <pre class="language-json mb-0"><code id="jsonInput" contenteditable="true" spellcheck="false">
 {
     // Paste your credential here
     // or use the example buttons above
 }</code></pre>
-                            </div>
                         </div>
-                    </div>
-                    <!-- Validation Feedback -->
-                    <div class="validation-feedback">
-                        <div class="valid-feedback">
-                            <i class="fas fa-check-circle"></i>
-                            <div>
-                                <strong>Valid Verifiable Credential</strong>
-                            </div>
-                        </div>
-                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
+                <!-- Validation Feedback -->
+                <div class="validation-feedback">
+                    <div class="valid-feedback">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Valid Verifiable Credential</strong>
+                        </div>
+                    </div>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
 
-                <!-- Preview Section -->
-                <div class="col-lg-6">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white py-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Preview</h5>
-                                <div class="d-flex gap-3 align-items-center">
-                                    <select class="form-select form-select-sm" id="themeSelect" style="width: auto;">
-                                        <option value="" disabled selected>Select Theme</option>
-                                    </select>
-                                    <div class="btn-group">
-                                        <button class="btn btn-outline-primary btn-sm" id="exportImage">
-                                            <i class="fas fa-image me-2"></i>Export Image
-                                        </button>
-                                        <button class="btn btn-outline-primary btn-sm" id="exportPDF">
-                                            <i class="fas fa-file-pdf me-2"></i>Export PDF
-                                        </button>
-                                    </div>
+            <!-- Preview Section -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Preview</h5>
+                            <div class="d-flex gap-3 align-items-center">
+                                <select class="form-select form-select-sm" id="themeSelect" style="width: auto;">
+                                    <option value="" disabled selected>Select Theme</option>
+                                </select>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-primary btn-sm" id="exportImage">
+                                        <i class="fas fa-image me-2"></i>Export Image
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="exportPDF">
+                                        <i class="fas fa-file-pdf me-2"></i>Export PDF
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div id="previewContainer"></div>
-                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="previewContainer"></div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+{% endblock %}
 
-    {% include "partials/footer.html" %}
+{% block scripts %}
+    <!-- Export dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" 
+            integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" 
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" 
+            integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" 
+            crossorigin="anonymous"></script>
 
-    <!-- Page Specific Scripts -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
+    <!-- Syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js" crossorigin="anonymous"></script>
+
     <!-- Theme Scripts -->
     <script src="/frontend/src/themes/base/BaseTheme.js"></script>
     <script src="/frontend/src/themes/VerifiableCredential/default/DefaultTheme.js"></script>
@@ -139,7 +139,6 @@
     <script src="/frontend/src/themes/BelgianDriverLicenseCredential/modern/ModernDriverLicenseTheme.js"></script>
     
     <!-- App Scripts -->
-    <script src="/frontend/src/js/main.js"></script>
     <script src="/frontend/src/js/examples.js"></script>
-</body>
-</html> 
+    <script src="/frontend/src/js/main.js"></script>
+{% endblock %} 

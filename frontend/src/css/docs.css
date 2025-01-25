@@ -3,61 +3,79 @@ body {
     position: relative;
 }
 
-.docs-hero {
-    padding: 4rem 0;
-    background: linear-gradient(135deg, 
-        #4338ca 0%, 
-        #6366f1 30%, 
-        #7c3aed 60%, 
-        #8b5cf6 80%, 
-        #a78bfa 100%
-    );
-    color: white;
+/* Sidebar styles */
+.docs-sidebar {
+    background: #f8fafc;
+    padding: 2rem 1rem;
+    border-right: 1px solid #e2e8f0;
+    min-height: calc(100vh - 60px);
 }
 
-.docs-nav {
+.docs-sidebar .nav {
     position: sticky;
     top: 2rem;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    background: white;
-    box-shadow: var(--shadow-sm);
-    height: calc(100vh - 4rem);
-    overflow-y: auto;
 }
 
-.docs-nav .nav-link {
-    color: var(--text-muted);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+.sidebar-heading {
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.docs-sidebar .nav-link {
+    color: #64748b;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.9375rem;
     transition: all 0.2s;
 }
 
-.docs-nav .nav-link:hover {
-    color: var(--primary);
-    background: rgba(99, 102, 241, 0.1);
+.docs-sidebar .nav-link:hover {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
 }
 
-.docs-nav .nav-link.active {
-    color: var(--primary);
-    background: rgba(99, 102, 241, 0.1);
+.docs-sidebar .nav-link.active {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
     font-weight: 500;
 }
 
+/* Main content styles */
 .docs-content {
-    padding: 1rem;
+    padding: 2rem;
+}
+
+.docs-content h1 {
+    color: #1e293b;
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
 }
 
 .docs-content h2 {
-    color: var(--primary);
-    margin-bottom: 1.5rem;
+    color: #334155;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 2.5rem 0 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .docs-content h3 {
-    color: #1f2937;
+    color: #475569;
+    font-size: 1.25rem;
+    font-weight: 600;
     margin: 2rem 0 1rem;
+}
+
+.docs-content p {
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
 }
 
 .docs-content pre {
@@ -65,7 +83,8 @@ body {
     border-radius: 0.75rem;
     padding: 1.25rem;
     margin: 1.5rem 0;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
 }
 
 .docs-content code {
@@ -76,15 +95,15 @@ body {
 .docs-content .file-path {
     font-family: 'Fira Code', monospace;
     font-size: 0.875rem;
-    color: var(--primary);
-    background: rgba(99, 102, 241, 0.1);
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
     padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    border-radius: 0.375rem;
 }
 
 .docs-content .note {
-    background: rgba(99, 102, 241, 0.1);
-    border-left: 4px solid var(--primary);
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid #3b82f6;
     padding: 1rem;
     margin: 1.5rem 0;
     border-radius: 0.5rem;
@@ -96,14 +115,14 @@ body {
     justify-content: space-between;
     margin-top: 3rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #e2e8f0;
 }
 
 .step-nav a {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--primary);
+    color: #3b82f6;
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -111,5 +130,22 @@ body {
 }
 
 .step-nav a:hover {
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .docs-sidebar {
+        min-height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .docs-sidebar .nav {
+        position: static;
+    }
+    
+    .docs-content {
+        padding: 1.5rem;
+    }
 } 
