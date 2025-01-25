@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["AppError"],"fn":["handle_template_error"],"mod":["errors","pages"]};

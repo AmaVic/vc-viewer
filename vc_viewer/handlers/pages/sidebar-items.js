@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["about","cookies","create_theme","docs","index","privacy","themes","viewer"]};
