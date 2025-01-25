@@ -61,11 +61,37 @@
                         <h2>Installation</h2>
                         <h3>Prerequisites</h3>
                         <ul>
-                            <li>Rust (version 1.75.0 or higher)</li>
-                            <li>Cargo (version 1.75.0 or higher)</li>
+                            <li>Option 1 (Docker):
+                                <ul>
+                                    <li>Docker</li>
+                                    <li>Docker Compose</li>
+                                </ul>
+                            </li>
+                            <li>Option 2 (Manual):
+                                <ul>
+                                    <li>Rust (version 1.75.0 or higher)</li>
+                                    <li>Cargo (version 1.75.0 or higher)</li>
+                                </ul>
+                            </li>
                         </ul>
 
-                        <h3>Steps</h3>
+                        <h3>Installation Methods</h3>
+                        
+                        <h4>Option 1: Using Docker (Recommended)</h4>
+                        <ol>
+                            <li>Clone the repository:
+                                <pre><code class="language-bash">git clone https://github.com/AmaVic/vc-viewer.git
+cd vc-viewer</code></pre>
+                            </li>
+                            <li>Build and run using Docker Compose:
+                                <pre><code class="language-bash">docker compose up --build</code></pre>
+                            </li>
+                        </ol>
+                        <div class="note">
+                            <strong>Note:</strong> The Docker image needs to be built locally as it's not yet published to any container registry.
+                        </div>
+
+                        <h4>Option 2: Manual Installation</h4>
                         <ol>
                             <li>Clone the repository:
                                 <pre><code class="language-bash">git clone https://github.com/AmaVic/vc-viewer.git

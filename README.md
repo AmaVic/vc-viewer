@@ -14,7 +14,22 @@ A beautiful, open-source tool for visualizing W3C Verifiable Credentials with cu
 
 ## Quick Start 🚀
 
-Visit [VC Viewer](https://vcviewer.example.com) to start using the tool immediately, or run it locally:
+Visit [VC Viewer](https://vcviewer.example.com) to start using the tool immediately, or run it locally using one of these methods:
+
+### Using Docker (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/vc-viewer.git
+cd vc-viewer
+
+# Build and run using Docker Compose
+docker compose up --build
+```
+
+The application will be available at `http://localhost:8080`.
+
+### Manual Installation
 
 ```bash
 # Clone the repository
@@ -31,15 +46,14 @@ cd ../frontend
 # Serve using your preferred static file server
 ```
 
-The application will be available at `http://localhost:8080`.
-
 ## Development 🛠️
 
 ### Prerequisites
 
-- Rust 1.70 or later
+- Rust 1.75 or later
 - Node.js 18 or later (for frontend development)
 - Git
+- Docker (optional, for containerized deployment)
 
 ### Backend Development
 
@@ -50,13 +64,14 @@ cargo doc         # Generate documentation
 cargo run         # Run in development mode
 ```
 
-### Frontend Development
+### Running with Docker
 
 ```bash
-cd frontend
-npm install      # Install dependencies
-npm run dev      # Start development server
-npm run build    # Build for production
+# Development mode
+docker compose up --build
+
+# Or in detached mode
+docker compose up --build -d
 ```
 
 ## Creating Themes 🎨
