@@ -3,14 +3,8 @@ name: Test
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'backend/**'
-      - 'build.yml'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'backend/**'
-      - 'build.yml'
 
 env:
   CARGO_TERM_COLOR: always
@@ -21,19 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-      
+
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: "backend"
-      
+
       - name: Build
         working-directory: ./backend
         run: cargo build --verbose
-      
+
       - name: Build release
         working-directory: ./backend
         run: cargo build --release --verbose
