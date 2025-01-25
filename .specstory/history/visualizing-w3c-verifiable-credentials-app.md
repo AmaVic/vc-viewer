@@ -70608,7 +70608,416 @@ Let's fix these issues:
 _**Assistant**_
 
 ```
-undefined
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use actix_web::test;
+    use actix_web::http::StatusCode;
+
+    #[actix_web::test]
+    async fn test_index_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(index)
+        ).await;
+        
+        let req = test::TestRequest::get().uri("/").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("Verifiable Credentials Viewer"));
+        assert!(html.contains("Try it Now"));
+    }
+
+    #[actix_web::test]
+    async fn test_viewer_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(viewer)
+        ).await;
+
+        // Test without theme parameter
+        let req = test::TestRequest::get().uri("/viewer").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("viewer"));
+        
+        // Test with theme parameter
+        let req = test::TestRequest::get()
+            .uri("/viewer?theme=classic")
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("classic"));
+    }
+
+    #[actix_web::test]
+    async fn test_themes_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(themes)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/themes").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("themes"));
+    }
+
+    #[actix_web::test]
+    async fn test_docs_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(docs)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/docs").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("docs"));
+    }
+
+    #[actix_web::test]
+    async fn test_create_theme_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(create_theme)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/docs/create-theme").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("docs"));
+    }
+
+    #[actix_web::test]
+    async fn test_privacy_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(privacy)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/privacy").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("privacy"));
+    }
+
+    #[actix_web::test]
+    async fn test_cookies_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(cookies)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/cookies").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("cookies"));
+    }
+
+    #[actix_web::test]
+    async fn test_about_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(about)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/about").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("about"));
+    }
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+
+
+
+
+Now let's fix the integration tests by removing unused imports:
+
+---
+
+_**Assistant**_
+
+```
+use actix_web::{test, App, middleware::Compress};
+use vc_viewer::{
+    handlers::pages::*,
+    middleware::CompressionMonitor,
+};
+
+#[actix_web::test]
+async fn test_index_integration() {
+    // Create test app with all required middleware
+    let app = test::init_service(
+        App::new()
+            .wrap(CompressionMonitor)
+            .wrap(Compress::default())
+            .service(index)
+    ).await;
+
+    // Create test request
+    let req = test::TestRequest::get().uri("/").to_request();
+    let resp = test::call_service(&app, req).await;
+
+    // Assert response
+    assert!(resp.status().is_success());
+    
+    // Check response body
+    let body = test::read_body(resp).await;
+    let html = String::from_utf8(body.to_vec()).unwrap();
+    assert!(html.contains("Verifiable Credentials Viewer"));
+    assert!(html.contains("Try it Now"));
+}
+
+// ... rest of the file unchanged ...
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+
+
+
+
+Now let's fix the unit tests in the handlers module to use the correct testing approach:
+
+---
+
+_**Assistant**_
+
+```
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use actix_web::test;
+    use actix_web::http::StatusCode;
+
+    #[actix_web::test]
+    async fn test_index_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(index)
+        ).await;
+        
+        let req = test::TestRequest::get().uri("/").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("Verifiable Credentials Viewer"));
+        assert!(html.contains("Try it Now"));
+    }
+
+    #[actix_web::test]
+    async fn test_viewer_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(viewer)
+        ).await;
+
+        // Test without theme parameter
+        let req = test::TestRequest::get().uri("/viewer").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("viewer"));
+        
+        // Test with theme parameter
+        let req = test::TestRequest::get()
+            .uri("/viewer?theme=classic")
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("classic"));
+    }
+
+    #[actix_web::test]
+    async fn test_themes_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(themes)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/themes").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("themes"));
+    }
+
+    #[actix_web::test]
+    async fn test_docs_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(docs)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/docs").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("docs"));
+    }
+
+    #[actix_web::test]
+    async fn test_create_theme_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(create_theme)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/docs/create-theme").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("docs"));
+    }
+
+    #[actix_web::test]
+    async fn test_privacy_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(privacy)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/privacy").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("privacy"));
+    }
+
+    #[actix_web::test]
+    async fn test_cookies_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(cookies)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/cookies").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("cookies"));
+    }
+
+    #[actix_web::test]
+    async fn test_about_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(about)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/about").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("about"));
+    }
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+I see that the file already contains the correct changes. The main changes I've made are:
+
+1. Removed unused imports:
+   - Removed `web` and `Config` from integration tests
+   - Removed `HttpRequest` from handler tests
+
+2. Fixed the testing approach:
+   - Now using `test::init_service()` to create test applications
+   - Using `test::call_service()` instead of trying to call handlers directly
+   - Properly handling query parameters through URLs instead of manual construction
+
+3. Added proper middleware in integration tests:
+   - Added both `CompressionMonitor` and `Compress::default()`
+   - Removed unused template references
+
+The tests now follow the correct actix-web testing patterns and should compile without errors. Try running the tests again with:
+
+```bash
+cargo test
+```
+
+Let me know if you encounter any other issues!
+
+---
+
+_**User**_
+
+Now, I'd like you to make it so that when I run cargo doc, the docs are generated in a docs folder in the backend directory (at the root of the backend directory). Now it's in the target directories.
+
+---
+
+_**Assistant**_
+
+I'll help you modify the Cargo configuration to output documentation to the `backend/docs` directory instead of `backend/target/doc`. We can do this by adding a configuration in the `.cargo/config.toml` file.
+
+First, let's create the `.cargo` directory and its config file:
+
+---
+
+_**Assistant**_
+
+```
+mkdir -p backend/.cargo
 ```
 
 ---
