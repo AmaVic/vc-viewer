@@ -1,4 +1,9 @@
 $(document).ready(function() {
+    // Only run initialization code on the viewer page
+    if (!document.getElementById('jsonInput')) {
+        return;
+    }
+
     // Validation timeout for debouncing
     let validationTimeout;
     let hasUserInput = false; // Track if user has interacted with the editor
