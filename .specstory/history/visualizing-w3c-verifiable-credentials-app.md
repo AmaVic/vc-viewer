@@ -67289,7 +67289,1698 @@ I have these warnings. Make sure to remove them, and remove the dependencies in 
 
 _**Assistant**_
 
+I'll help you clean up the unused imports and dependencies.
 
+---
+
+_**Assistant**_
+
+```
+// ... existing code ...
+use actix_files as fs;
+use actix_web::{
+    web, App, HttpResponse, Result,
+    middleware::{Logger, Compress, DefaultHeaders},
+    HttpServer,
+    dev::{Service, ServiceResponse, Transform},
+};
+use futures_util::future::LocalBoxFuture;
+use log::{info, debug, error};
+use tera::Tera;
+use std::path::PathBuf;
+use chrono::Local;
+use std::fs::OpenOptions;
+use std::io::Write;
+use lazy_static::lazy_static;
+use std::sync::Arc;
+use std::time::Duration;
+use num_cpus;
+use std::task::{Context, Poll};
+use actix_web::dev::ServiceRequest;
+use actix_web::body::MessageBody;
+use futures_util::future::ready;
+use futures_util::future::Ready;
+use actix_web::Error;
+// ... existing code ...
+```
+
+---
+
+_**Assistant**_
+
+
+
+Let me try again with a more explicit edit:
+
+---
+
+_**Assistant**_
+
+```
+use actix_files as fs;
+use actix_web::{
+    web, App, HttpResponse, Result,
+    middleware::{Logger, Compress, DefaultHeaders},
+    HttpServer,
+    dev::{Service, ServiceResponse, Transform},
+};
+use futures_util::future::LocalBoxFuture;
+use log::{info, debug, error};
+use tera::Tera;
+use std::path::PathBuf;
+use chrono::Local;
+use std::fs::OpenOptions;
+use std::io::Write;
+use lazy_static::lazy_static;
+use std::sync::Arc;
+use std::time::Duration;
+use num_cpus;
+use std::task::{Context, Poll};
+use actix_web::dev::ServiceRequest;
+use actix_web::body::MessageBody;
+use futures_util::future::ready;
+use futures_util::future::Ready;
+use actix_web::Error;
+
+// ... existing code ...
+```
+
+---
+
+_**Assistant**_
+
+
+
+Now let's check the Cargo.toml to remove any unused dependencies:
+
+---
+
+_**Assistant**_
+
+```
+[package]
+name = "vc-viewer"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+actix-web = { version = "4.0", features = ["compress-brotli", "compress-gzip"] }
+actix-files = "0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tera = "1.19"
+env_logger = "0.11"
+log = "0.4"
+chrono = { version = "0.4", features = ["serde"] }
+lazy_static = "1.4"
+parking_lot = "0.12"
+num_cpus = "1.16"
+futures-util = "0.3"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+```
+
+---
+
+_**Assistant**_
+
+
+
+I've made the following changes:
+
+1. Removed unused imports from `main.rs`:
+   - `pin_project_lite::pin_project`
+   - `std::future::Future`
+   - `std::pin::Pin`
+
+2. Removed unused dependency from `Cargo.toml`:
+   - `pin-project-lite = "0.2"`
+
+The code should now be cleaner and have no unused imports or dependencies. The warnings should be gone when you rebuild the project. Let me know if you see any other warnings or if you'd like me to help with anything else!
+
+---
+
+_**User**_
+
+What is this used for:  (dependency)
+
+---
+
+_**Assistant**_
+
+The `parking_lot` dependency is a replacement for the standard library's synchronization primitives (like Mutex, RwLock, etc.) that provides better performance but with fewer features. However, looking at your code, I don't see any usage of `parking_lot` primitives.
+
+Let me check the codebase to confirm:
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+_**Assistant**_
+
+
+
+Since there are no actual uses of `parking_lot` in your code (it only appears in the Cargo.toml), we can safely remove this dependency. You're using `Arc` from the standard library for thread-safe sharing, and that's sufficient for your current needs.
+
+Let me remove it:
+
+---
+
+_**Assistant**_
+
+```
+[package]
+name = "vc-viewer"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+actix-web = { version = "4.0", features = ["compress-brotli", "compress-gzip"] }
+actix-files = "0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tera = "1.19"
+env_logger = "0.11"
+log = "0.4"
+chrono = { version = "0.4", features = ["serde"] }
+lazy_static = "1.4"
+num_cpus = "1.16"
+futures-util = "0.3"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+```
+
+---
+
+_**Assistant**_
+
+
+
+I've removed the `parking_lot` dependency since it's not being used in your code. The dependency was likely added during early development but ended up not being needed. Your code uses standard library synchronization primitives which are sufficient for your current needs.
+
+The removal of this dependency will:
+1. Reduce your binary size slightly
+2. Speed up compilation time
+3. Simplify your dependency tree
+
+Your application will continue to work exactly the same since the dependency wasn't being used.
+
+---
+
+_**User**_
+
+Great.
+
+Now I'd like you to clean and refactor the back-end. Currently, everything is in a single file. Use an appropriate backend folder structure and refactor the code.
+
+Also, I'd like you to comment the code (for rustdoc) in an idiomatic and thorough way.
+
+---
+
+_**Assistant**_
+
+I'll help you refactor the backend into a more organized structure and add proper documentation. Here's the plan:
+
+1. Create a proper directory structure:
+```
+backend/
+├── src/
+│   ├── main.rs          # Application entry point
+│   ├── lib.rs           # Library root
+│   ├── config/          # Configuration management
+│   │   └── mod.rs
+│   ├── handlers/        # Route handlers
+│   │   └── mod.rs
+│   ├── middleware/      # Custom middleware
+│   │   └── mod.rs
+│   ├── templates/       # Template management
+│   │   └── mod.rs
+│   └── utils/          # Utility functions
+│       └── mod.rs
+```
+
+Let me implement this structure:
+
+---
+
+_**Assistant**_
+
+```
+cd backend && mkdir -p src/{config,handlers,middleware,templates,utils}
+```
+
+---
+
+_**Assistant**_
+
+
+
+Now let's create the module files:
+
+---
+
+_**Assistant**_
+
+```
+touch src/{config,handlers,middleware,templates,utils}/mod.rs src/lib.rs
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+Now let's start refactoring the code into appropriate modules. First, let's create the library root:
+
+---
+
+_**Assistant**_
+
+```
+//! VC Viewer Backend Library
+//! 
+//! This library provides the core functionality for the VC Viewer application,
+//! a web-based viewer for W3C Verifiable Credentials.
+//!
+//! # Architecture
+//! 
+//! The application is structured into several modules:
+//! - `config`: Configuration management and environment settings
+//! - `handlers`: HTTP route handlers for the web application
+//! - `middleware`: Custom Actix middleware components
+//! - `templates`: Template management and rendering
+//! - `utils`: Utility functions and helpers
+
+pub mod config;
+pub mod handlers;
+pub mod middleware;
+pub mod templates;
+pub mod utils;
+
+// Re-export commonly used items
+pub use config::Config;
+pub use handlers::*;
+pub use middleware::compression::CompressionMonitor;
+pub use templates::TEMPLATES;
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+Now let's create the middleware module for the compression monitor:
+
+---
+
+_**Assistant**_
+
+```
+pub mod compression;
+
+pub use compression::CompressionMonitor;
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+Let's create the compression module:
+
+---
+
+_**Assistant**_
+
+```
+//! Compression monitoring middleware
+//! 
+//! This module provides middleware for monitoring compression of HTTP responses.
+//! It logs information about compressed responses including the path, size, and
+//! compression method used.
+
+use actix_web::{
+    dev::{Service, ServiceRequest, ServiceResponse, Transform},
+    Error,
+    body::MessageBody,
+};
+use futures_util::future::{LocalBoxFuture, Ready, ready};
+use log::info;
+use std::task::{Context, Poll};
+
+/// Middleware for monitoring response compression
+/// 
+/// This middleware logs information about compressed responses, including:
+/// - The request path
+/// - The response size
+/// - The compression method used
+/// 
+/// # Example
+/// ```rust
+/// use actix_web::{App, middleware::Compress};
+/// use vc_viewer::middleware::CompressionMonitor;
+/// 
+/// let app = App::new()
+///     .wrap(CompressionMonitor)
+///     .wrap(Compress::default());
+/// ```
+#[derive(Debug, Clone, Copy)]
+pub struct CompressionMonitor;
+
+impl<S, B> Transform<S, ServiceRequest> for CompressionMonitor
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error> + 'static,
+    B: MessageBody + 'static,
+    S::Future: 'static,
+{
+    type Response = ServiceResponse<B>;
+    type Error = Error;
+    type Transform = CompressionMonitorMiddleware<S>;
+    type InitError = ();
+    type Future = Ready<Result<Self::Transform, Self::InitError>>;
+
+    fn new_transform(&self, service: S) -> Self::Future {
+        ready(Ok(CompressionMonitorMiddleware { service }))
+    }
+}
+
+/// The actual middleware service that processes requests
+pub struct CompressionMonitorMiddleware<S> {
+    service: S,
+}
+
+impl<S, B> Service<ServiceRequest> for CompressionMonitorMiddleware<S>
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    B: MessageBody,
+    S::Future: 'static,
+{
+    type Response = ServiceResponse<B>;
+    type Error = Error;
+    type Future = LocalBoxFuture<'static, Result<Self::Response, Self::Error>>;
+
+    fn poll_ready(&self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.service.poll_ready(cx)
+    }
+
+    fn call(&self, req: ServiceRequest) -> Self::Future {
+        let fut = self.service.call(req);
+        Box::pin(async move {
+            let res = fut.await?;
+            if let Some(encoding) = res.headers().get("content-encoding") {
+                info!(
+                    "Compressed response: {} - {} using {}",
+                    res.request().path(),
+                    res.headers()
+                        .get("content-length")
+                        .map_or("unknown size", |v| v.to_str().unwrap_or("invalid")),
+                    encoding.to_str().unwrap_or("unknown")
+                );
+            }
+            Ok(res)
+        })
+    }
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+
+
+
+
+Now let's create the templates module:
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+_**User**_
+
+Keep going
+
+---
+
+_**Assistant**_
+
+I'll continue with creating the templates module:
+
+---
+
+_**Assistant**_
+
+```
+//! Template management and rendering
+//! 
+//! This module handles the initialization and caching of Tera templates,
+//! providing a global template instance that can be used throughout the application.
+
+use lazy_static::lazy_static;
+use log::error;
+use std::sync::Arc;
+use tera::Tera;
+
+lazy_static! {
+    /// Global template instance, initialized once and shared across threads
+    pub static ref TEMPLATES: Arc<Tera> = Arc::new(init_templates());
+    
+    /// Base context containing common template variables
+    pub static ref BASE_CONTEXT: tera::Context = {
+        let mut ctx = tera::Context::new();
+        ctx.insert("version", "v0.0.1");
+        ctx
+    };
+}
+
+/// Initialize the template engine with all templates in the templates directory
+fn init_templates() -> Tera {
+    let mut tera = match Tera::new("frontend/src/templates/**/*.html") {
+        Ok(t) => t,
+        Err(e) => {
+            error!("Template parsing error(s): {}", e);
+            ::std::process::exit(1);
+        }
+    };
+    
+    // Add any custom filters or functions here
+    tera.autoescape_on(vec!["html", ".sql"]);
+    
+    tera
+}
+
+/// Create a new context for template rendering with base values
+/// 
+/// This function creates a new context with the base values (like version)
+/// already inserted, ready for additional template-specific values.
+/// 
+/// # Returns
+/// 
+/// A new `tera::Context` instance with base values
+pub fn new_context() -> tera::Context {
+    BASE_CONTEXT.clone()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_base_context() {
+        let ctx = new_context();
+        assert!(ctx.get("version").is_some());
+    }
+
+    #[test]
+    fn test_templates_load() {
+        let tera = init_templates();
+        assert!(tera.get_template_names().count() > 0);
+    }
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+Now let's create the config module:
+
+---
+
+_**Assistant**_
+
+```
+//! Configuration management
+//! 
+//! This module handles application configuration, including server settings
+//! and environment-specific configurations.
+
+use std::time::Duration;
+
+/// Server configuration settings
+#[derive(Debug, Clone)]
+pub struct Config {
+    /// Server bind address
+    pub bind_address: String,
+    /// Server port
+    pub port: u16,
+    /// Number of worker threads
+    pub workers: usize,
+    /// Client request timeout
+    pub request_timeout: Duration,
+    /// Client disconnect timeout
+    pub disconnect_timeout: Duration,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            bind_address: "127.0.0.1".to_string(),
+            port: 8080,
+            workers: num_cpus::get(),
+            request_timeout: Duration::from_secs(60),
+            disconnect_timeout: Duration::from_secs(5),
+        }
+    }
+}
+
+impl Config {
+    /// Create a new configuration with custom settings
+    /// 
+    /// # Example
+    /// ```rust
+    /// use vc_viewer::config::Config;
+    /// use std::time::Duration;
+    /// 
+    /// let config = Config::new()
+    ///     .with_port(3000)
+    ///     .with_request_timeout(Duration::from_secs(30));
+    /// ```
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Set the server port
+    pub fn with_port(mut self, port: u16) -> Self {
+        self.port = port;
+        self
+    }
+
+    /// Set the bind address
+    pub fn with_bind_address(mut self, addr: impl Into<String>) -> Self {
+        self.bind_address = addr.into();
+        self
+    }
+
+    /// Set the number of worker threads
+    pub fn with_workers(mut self, workers: usize) -> Self {
+        self.workers = workers;
+        self
+    }
+
+    /// Set the client request timeout
+    pub fn with_request_timeout(mut self, timeout: Duration) -> Self {
+        self.request_timeout = timeout;
+        self
+    }
+
+    /// Set the client disconnect timeout
+    pub fn with_disconnect_timeout(mut self, timeout: Duration) -> Self {
+        self.disconnect_timeout = timeout;
+        self
+    }
+
+    /// Get the full bind address (address:port)
+    pub fn get_bind_addr(&self) -> String {
+        format!("{}:{}", self.bind_address, self.port)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_config() {
+        let config = Config::default();
+        assert_eq!(config.port, 8080);
+        assert_eq!(config.bind_address, "127.0.0.1");
+    }
+
+    #[test]
+    fn test_config_builder() {
+        let config = Config::new()
+            .with_port(3000)
+            .with_bind_address("0.0.0.0");
+        
+        assert_eq!(config.port, 3000);
+        assert_eq!(config.bind_address, "0.0.0.0");
+        assert_eq!(config.get_bind_addr(), "0.0.0.0:3000");
+    }
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+
+
+
+
+Now let's create the handlers module:
+
+---
+
+_**Assistant**_
+
+```
+//! HTTP route handlers
+//! 
+//! This module contains all the route handlers for the web application,
+//! organized by functionality.
+
+mod pages;
+mod errors;
+
+pub use pages::*;
+pub use errors::*;
+
+use actix_web::{HttpResponse, Result};
+use crate::templates::{TEMPLATES, new_context};
+
+/// Common error handling for template rendering
+pub(crate) fn handle_template_error(e: tera::Error) -> actix_web::Error {
+    log::error!("Template error: {}", e);
+    actix_web::error::ErrorInternalServerError("Template error")
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+
+
+
+
+Let's create the pages handler module:
+
+---
+
+_**Assistant**_
+
+```
+//! Page handlers
+//! 
+//! This module contains handlers for rendering the main pages of the application.
+
+use actix_web::{web, HttpResponse, Result};
+use crate::templates::{TEMPLATES, new_context};
+use super::handle_template_error;
+
+/// Handler for the index page
+/// 
+/// Renders the home page with basic context information.
+#[actix_web::get("/")]
+pub async fn index() -> Result<HttpResponse> {
+    let mut ctx = new_context();
+    ctx.insert("current_page", "home");
+    
+    let rendered = TEMPLATES.render("pages/index.html", &ctx)
+        .map_err(handle_template_error)?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(rendered))
+}
+
+/// Handler for the viewer page
+/// 
+/// Renders the credential viewer page, optionally with a selected theme.
+#[actix_web::get("/viewer")]
+pub async fn viewer(query: web::Query<std::collections::HashMap<String, String>>) -> Result<HttpResponse> {
+    let mut ctx = new_context();
+    ctx.insert("current_page", "viewer");
+    
+    if let Some(theme) = query.get("theme") {
+        log::debug!("Theme parameter provided: {}", theme);
+        ctx.insert("selected_theme", theme);
+    }
+    
+    let rendered = TEMPLATES.render("pages/viewer.html", &ctx)
+        .map_err(handle_template_error)?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(rendered))
+}
+
+/// Handler for the themes page
+/// 
+/// Renders the page showcasing available themes.
+#[actix_web::get("/themes")]
+pub async fn themes() -> Result<HttpResponse> {
+    let mut ctx = new_context();
+    ctx.insert("current_page", "themes");
+    
+    let rendered = TEMPLATES.render("pages/themes.html", &ctx)
+        .map_err(handle_template_error)?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(rendered))
+}
+
+/// Handler for the documentation page
+#[actix_web::get("/docs")]
+pub async fn docs() -> Result<HttpResponse> {
+    let mut ctx = new_context();
+    ctx.insert("current_page", "docs");
+    
+    let rendered = TEMPLATES.render("pages/docs.html", &ctx)
+        .map_err(handle_template_error)?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(rendered))
+}
+
+/// Handler for the theme creation documentation page
+#[actix_web::get("/docs/create-theme")]
+pub async fn create_theme() -> Result<HttpResponse> {
+    let mut ctx = new_context();
+    ctx.insert("current_page", "docs");
+    
+    let rendered = TEMPLATES.render("pages/create-theme.html", &ctx)
+        .map_err(handle_template_error)?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(rendered))
+}
+
+/// Handler for the privacy policy page
+#[actix_web::get("/privacy")]
+pub async fn privacy() -> Result<HttpResponse> {
+    let mut ctx = new_context();
+    ctx.insert("current_page", "privacy");
+    
+    let rendered = TEMPLATES.render("pages/privacy.html", &ctx)
+        .map_err(handle_template_error)?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(rendered))
+}
+
+/// Handler for the cookie policy page
+#[actix_web::get("/cookies")]
+pub async fn cookies() -> Result<HttpResponse> {
+    let mut ctx = new_context();
+    ctx.insert("current_page", "cookies");
+    
+    let rendered = TEMPLATES.render("pages/cookies.html", &ctx)
+        .map_err(handle_template_error)?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(rendered))
+}
+
+/// Handler for the about page
+#[actix_web::get("/about")]
+pub async fn about() -> Result<HttpResponse> {
+    let mut ctx = new_context();
+    ctx.insert("current_page", "about");
+    
+    let rendered = TEMPLATES.render("pages/about.html", &ctx)
+        .map_err(handle_template_error)?;
+    
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(rendered))
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Let's create the errors handler module:
+
+---
+
+_**Assistant**_
+
+```
+//! Error handlers
+//! 
+//! This module contains handlers for various error conditions.
+
+use actix_web::{
+    error::ResponseError,
+    http::StatusCode,
+    HttpResponse,
+};
+use std::fmt;
+
+/// Custom error types for the application
+#[derive(Debug)]
+pub enum AppError {
+    /// Template rendering error
+    TemplateError(String),
+    /// Not found error
+    NotFound(String),
+    /// Internal server error
+    InternalError(String),
+}
+
+impl fmt::Display for AppError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            AppError::TemplateError(msg) => write!(f, "Template error: {}", msg),
+            AppError::NotFound(msg) => write!(f, "Not found: {}", msg),
+            AppError::InternalError(msg) => write!(f, "Internal error: {}", msg),
+        }
+    }
+}
+
+impl ResponseError for AppError {
+    fn status_code(&self) -> StatusCode {
+        match self {
+            AppError::TemplateError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::NotFound(_) => StatusCode::NOT_FOUND,
+            AppError::InternalError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+        }
+    }
+
+    fn error_response(&self) -> HttpResponse {
+        let mut ctx = crate::templates::new_context();
+        ctx.insert("error", &self.to_string());
+        ctx.insert("status_code", &self.status_code().as_u16());
+
+        let body = crate::templates::TEMPLATES
+            .render("pages/error.html", &ctx)
+            .unwrap_or_else(|_| {
+                format!(
+                    "Error: {} ({})",
+                    self.to_string(),
+                    self.status_code()
+                )
+            });
+
+        HttpResponse::build(self.status_code())
+            .content_type("text/html; charset=utf-8")
+            .body(body)
+    }
+}
+
+/// Convert a template error into an application error
+impl From<tera::Error> for AppError {
+    fn from(err: tera::Error) -> Self {
+        AppError::TemplateError(err.to_string())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_error_display() {
+        let err = AppError::NotFound("Page not found".to_string());
+        assert_eq!(err.to_string(), "Not found: Page not found");
+    }
+
+    #[test]
+    fn test_error_status_codes() {
+        let err = AppError::NotFound("".to_string());
+        assert_eq!(err.status_code(), StatusCode::NOT_FOUND);
+
+        let err = AppError::TemplateError("".to_string());
+        assert_eq!(err.status_code(), StatusCode::INTERNAL_SERVER_ERROR);
+    }
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Finally, let's create the utils module:
+
+---
+
+_**Assistant**_
+
+```
+//! Utility functions
+//! 
+//! This module contains various utility functions used throughout the application.
+
+use std::fs::OpenOptions;
+use std::io::Write;
+use chrono::Local;
+use log::LevelFilter;
+
+/// Custom writer that writes to both file and stderr
+pub struct MultiOutput {
+    file: std::fs::File,
+}
+
+impl MultiOutput {
+    /// Create a new MultiOutput instance
+    pub fn new(file: std::fs::File) -> Self {
+        Self { file }
+    }
+}
+
+impl Write for MultiOutput {
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        // Write to file
+        self.file.write_all(buf)?;
+        // Write to stderr
+        std::io::stderr().write_all(buf)?;
+        Ok(buf.len())
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        self.file.flush()?;
+        std::io::stderr().flush()
+    }
+}
+
+/// Setup logging based on the environment
+pub fn setup_logging() {
+    if cfg!(debug_assertions) {
+        // Development logging - more verbose with timestamps
+        let log_file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open("debug.log")
+            .expect("Failed to open log file");
+
+        let mut builder = env_logger::Builder::new();
+        builder.filter_level(LevelFilter::Debug);
+        builder.format(|buf, record| {
+            writeln!(
+                buf,
+                "{} [{}] - {}",
+                Local::now().format("%Y-%m-%d %H:%M:%S"),
+                record.level(),
+                record.args(),
+            )
+        });
+        builder.target(env_logger::Target::Pipe(Box::new(MultiOutput::new(log_file))));
+        builder.init();
+    } else {
+        // Production logging - minimal overhead
+        env_logger::Builder::new()
+            .filter_level(LevelFilter::Info)
+            .format_timestamp(None)
+            .format_target(false)
+            .init();
+    }
+}
+
+/// Format a file size in bytes to a human-readable string
+pub fn format_size(size: u64) -> String {
+    const UNITS: [&str; 6] = ["B", "KB", "MB", "GB", "TB", "PB"];
+    let mut size = size as f64;
+    let mut unit_index = 0;
+
+    while size >= 1024.0 && unit_index < UNITS.len() - 1 {
+        size /= 1024.0;
+        unit_index += 1;
+    }
+
+    if unit_index == 0 {
+        format!("{} {}", size as u64, UNITS[unit_index])
+    } else {
+        format!("{:.2} {}", size, UNITS[unit_index])
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_format_size() {
+        assert_eq!(format_size(500), "500 B");
+        assert_eq!(format_size(1024), "1.00 KB");
+        assert_eq!(format_size(1024 * 1024), "1.00 MB");
+        assert_eq!(format_size(1024 * 1024 * 1024), "1.00 GB");
+    }
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+
+
+
+
+Now let's update the main.rs file to use our new modular structure:
+
+---
+
+_**Assistant**_
+
+```
+//! VC Viewer Server
+//! 
+//! This is the main entry point for the VC Viewer server application.
+//! It sets up the HTTP server with all necessary middleware and routes.
+
+use actix_files as fs;
+use actix_web::{
+    middleware::{Logger, Compress, DefaultHeaders},
+    App, HttpServer,
+};
+
+use vc_viewer::{
+    config::Config,
+    handlers::*,
+    middleware::CompressionMonitor,
+    utils::setup_logging,
+};
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    // Initialize logging
+    setup_logging();
+
+    // Create server configuration
+    let config = Config::new();
+    log::info!("Starting server at http://{}", config.get_bind_addr());
+
+    // Create and run HTTP server
+    HttpServer::new(move || {
+        let logger = if cfg!(debug_assertions) {
+            Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T")
+        } else {
+            Logger::new("%s %b %D")
+        };
+
+        App::new()
+            .wrap(logger)
+            .wrap(CompressionMonitor)
+            .wrap(Compress::default())
+            .wrap(
+                DefaultHeaders::new()
+                    .add(("Cache-Control", "public, max-age=31536000"))
+                    .add(("X-Content-Type-Options", "nosniff"))
+                    .add(("X-Frame-Options", "DENY"))
+                    .add(("X-XSS-Protection", "1; mode=block"))
+                    .add(("Vary", "Accept-Encoding"))
+            )
+            // Serve static files with optimized settings
+            .service(
+                fs::Files::new("/frontend", "../frontend")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+                    .disable_content_disposition()
+            )
+            // Route handlers
+            .service(index)
+            .service(viewer)
+            .service(themes)
+            .service(docs)
+            .service(create_theme)
+            .service(privacy)
+            .service(cookies)
+            .service(about)
+    })
+    .workers(config.workers)
+    .client_request_timeout(config.request_timeout)
+    .client_disconnect_timeout(config.disconnect_timeout)
+    .bind(config.get_bind_addr())?
+    .run()
+    .await
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+The refactoring is now complete! Here's a summary of the changes:
+
+1. **Modular Structure**:
+   - `config/`: Server configuration management
+   - `handlers/`: HTTP route handlers
+   - `middleware/`: Custom middleware components
+   - `templates/`: Template management
+   - `utils/`: Utility functions
+
+2. **Documentation**:
+   - Added module-level documentation with `//!`
+   - Added function-level documentation with `///`
+   - Added examples in documentation
+   - Added tests for key functionality
+
+3. **Code Organization**:
+   - Separated concerns into appropriate modules
+   - Improved error handling with custom error types
+   - Centralized configuration management
+   - Better logging setup
+
+4. **Key Features**:
+   - Template caching with lazy_static
+   - Compression monitoring
+   - Configurable server settings
+   - Proper error handling
+   - Development/Production logging modes
+   - Static file optimization
+
+5. **Testing**:
+   - Added unit tests for key components
+   - Test coverage for error handling
+   - Template loading tests
+   - Configuration tests
+
+The code is now more maintainable, testable, and follows Rust best practices. Would you like me to explain any part in more detail or make any additional improvements?
+
+---
+
+_**User**_
+
+Fix warnings
+
+---
+
+_**Assistant**_
+
+I'll fix the warnings in the handlers module:
+
+---
+
+_**Assistant**_
+
+```
+//! HTTP route handlers
+//! 
+//! This module contains all the route handlers for the web application,
+//! organized by functionality.
+
+mod pages;
+mod errors;
+
+pub use pages::*;
+pub use errors::*;
+
+/// Common error handling for template rendering
+pub(crate) fn handle_template_error(e: tera::Error) -> actix_web::Error {
+    log::error!("Template error: {}", e);
+    actix_web::error::ErrorInternalServerError("Template error")
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+Now let's fix the remaining warnings in main.rs:
+
+---
+
+_**Assistant**_
+
+```
+//! VC Viewer Server
+//! 
+//! This is the main entry point for the VC Viewer server application.
+//! It sets up the HTTP server with all necessary middleware and routes.
+
+use actix_files as fs;
+use actix_web::{
+    middleware::{Logger, Compress, DefaultHeaders},
+    App, HttpServer,
+};
+
+use vc_viewer::{
+    config::Config,
+    handlers::*,
+    middleware::CompressionMonitor,
+    utils::setup_logging,
+};
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    // Initialize logging
+    setup_logging();
+
+    // Create server configuration
+    let config = Config::new();
+    log::info!("Starting server at http://{}", config.get_bind_addr());
+
+    // Create and run HTTP server
+    HttpServer::new(move || {
+        let logger = if cfg!(debug_assertions) {
+            Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T")
+        } else {
+            Logger::new("%s %b %D")
+        };
+
+        App::new()
+            .wrap(logger)
+            .wrap(CompressionMonitor)
+            .wrap(Compress::default())
+            .wrap(
+                DefaultHeaders::new()
+                    .add(("Cache-Control", "public, max-age=31536000"))
+                    .add(("X-Content-Type-Options", "nosniff"))
+                    .add(("X-Frame-Options", "DENY"))
+                    .add(("X-XSS-Protection", "1; mode=block"))
+                    .add(("Vary", "Accept-Encoding"))
+            )
+            // Serve static files with optimized settings
+            .service(
+                fs::Files::new("/frontend", "../frontend")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+                    .disable_content_disposition()
+            )
+            // Route handlers
+            .service(index)
+            .service(viewer)
+            .service(themes)
+            .service(docs)
+            .service(create_theme)
+            .service(privacy)
+            .service(cookies)
+            .service(about)
+    })
+    .workers(config.workers)
+    .client_request_timeout(config.request_timeout)
+    .client_disconnect_timeout(config.disconnect_timeout)
+    .bind(config.get_bind_addr())?
+    .run()
+    .await
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+Let me try again with a more explicit edit:
+
+---
+
+_**Assistant**_
+
+```
+use actix_files as fs;
+use actix_web::{
+    middleware::{Logger, Compress, DefaultHeaders},
+    App, HttpServer,
+};
+
+use vc_viewer::{
+    config::Config,
+    handlers::*,
+    middleware::CompressionMonitor,
+    utils::setup_logging,
+};
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    // Initialize logging
+    setup_logging();
+
+    // Create server configuration
+    let config = Config::new();
+    log::info!("Starting server at http://{}", config.get_bind_addr());
+
+    // Create and run HTTP server
+    HttpServer::new(move || {
+        let logger = if cfg!(debug_assertions) {
+            Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T")
+        } else {
+            Logger::new("%s %b %D")
+        };
+
+        App::new()
+            .wrap(logger)
+            .wrap(CompressionMonitor)
+            .wrap(Compress::default())
+            .wrap(
+                DefaultHeaders::new()
+                    .add(("Cache-Control", "public, max-age=31536000"))
+                    .add(("X-Content-Type-Options", "nosniff"))
+                    .add(("X-Frame-Options", "DENY"))
+                    .add(("X-XSS-Protection", "1; mode=block"))
+                    .add(("Vary", "Accept-Encoding"))
+            )
+            // Serve static files with optimized settings
+            .service(
+                fs::Files::new("/frontend", "../frontend")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+                    .disable_content_disposition()
+            )
+            // Route handlers
+            .service(index)
+            .service(viewer)
+            .service(themes)
+            .service(docs)
+            .service(create_theme)
+            .service(privacy)
+            .service(cookies)
+            .service(about)
+    })
+    .workers(config.workers)
+    .client_request_timeout(config.request_timeout)
+    .client_disconnect_timeout(config.disconnect_timeout)
+    .bind(config.get_bind_addr())?
+    .run()
+    .await
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+
+
+
+
+I see the issue. The warnings are coming from imports at the top of the file that aren't visible in the current view. Let me try to edit the entire file:
+
+---
+
+_**Assistant**_
+
+```
+//! VC Viewer Server
+//! 
+//! This is the main entry point for the VC Viewer server application.
+//! It sets up the HTTP server with all necessary middleware and routes.
+
+use actix_files as fs;
+use actix_web::{
+    middleware::{Logger, Compress, DefaultHeaders},
+    App, HttpServer,
+};
+
+use vc_viewer::{
+    config::Config,
+    handlers::*,
+    middleware::CompressionMonitor,
+    utils::setup_logging,
+};
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    // Initialize logging
+    setup_logging();
+
+    // Create server configuration
+    let config = Config::new();
+    log::info!("Starting server at http://{}", config.get_bind_addr());
+
+    // Create and run HTTP server
+    HttpServer::new(move || {
+        let logger = if cfg!(debug_assertions) {
+            Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T")
+        } else {
+            Logger::new("%s %b %D")
+        };
+
+        App::new()
+            .wrap(logger)
+            .wrap(CompressionMonitor)
+            .wrap(Compress::default())
+            .wrap(
+                DefaultHeaders::new()
+                    .add(("Cache-Control", "public, max-age=31536000"))
+                    .add(("X-Content-Type-Options", "nosniff"))
+                    .add(("X-Frame-Options", "DENY"))
+                    .add(("X-XSS-Protection", "1; mode=block"))
+                    .add(("Vary", "Accept-Encoding"))
+            )
+            // Serve static files with optimized settings
+            .service(
+                fs::Files::new("/frontend", "../frontend")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+                    .disable_content_disposition()
+            )
+            // Route handlers
+            .service(index)
+            .service(viewer)
+            .service(themes)
+            .service(docs)
+            .service(create_theme)
+            .service(privacy)
+            .service(cookies)
+            .service(about)
+    })
+    .workers(config.workers)
+    .client_request_timeout(config.request_timeout)
+    .client_disconnect_timeout(config.disconnect_timeout)
+    .bind(config.get_bind_addr())?
+    .run()
+    .await
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+Let me check the current state of the file to see what warnings need to be addressed:
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+_**Assistant**_
+
+
+
+Let me check the handlers module to ensure the route handlers are properly exported:
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+_**Assistant**_
+
+
+
+I see the issue now. The warnings are likely coming from the fact that we're using `handlers::*` in `main.rs` but some of the route handlers might not be properly exported from the `pages` module. Let me check the pages module:
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+_**Assistant**_
+
+
+
+The route handlers look properly defined and exported. Let me update the imports in `main.rs` to be more specific about which handlers we're using:
+
+---
+
+_**Assistant**_
+
+```
+//! VC Viewer Server
+//! 
+//! This is the main entry point for the VC Viewer server application.
+//! It sets up the HTTP server with all necessary middleware and routes.
+
+use actix_files as fs;
+use actix_web::{
+    middleware::{Logger, Compress, DefaultHeaders},
+    App, HttpServer,
+};
+
+use vc_viewer::{
+    config::Config,
+    handlers::pages::{index, viewer, themes, docs, create_theme, privacy, cookies, about},
+    middleware::CompressionMonitor,
+    utils::setup_logging,
+};
+
+// ... existing code ...
+```
+
+---
+
+_**Assistant**_
+
+
+
+I see the issue now. We need to make the `pages` module public in the handlers module. Let me fix that:
+
+---
+
+_**Assistant**_
+
+```
+//! HTTP route handlers
+//! 
+//! This module contains all the route handlers for the web application,
+//! organized by functionality.
+
+pub mod pages;
+mod errors;
+
+pub use pages::*;
+pub use errors::*;
+
+/// Common error handling for template rendering
+pub(crate) fn handle_template_error(e: tera::Error) -> actix_web::Error {
+    log::error!("Template error: {}", e);
+    actix_web::error::ErrorInternalServerError("Template error")
+}
+```
+
+---
+
+_**Assistant**_
+
+
+
+Now that we've made the `pages` module public, the warnings in `main.rs` should be resolved. The code is now properly organized with:
+
+1. Explicit imports of the route handlers we're using
+2. Public access to the `pages` module
+3. Proper module organization and visibility
+
+Let me know if you'd like me to make any other improvements or if there are any remaining warnings to address.
+
+---
+
+_**User**_
+
+I have this runtime server error: [ERROR] Template error: Template 'pages/index.html' not found
+
+---
+
+_**Assistant**_
+
+I understand the issue. The error indicates that the template engine can't find the template file `pages/
 
 ---
 
