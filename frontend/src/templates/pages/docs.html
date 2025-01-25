@@ -45,57 +45,156 @@
             <div class="col-md-3 col-xl-2 docs-sidebar">
                 <nav class="nav flex-column">
                     <h5 class="sidebar-heading">Getting Started</h5>
-                    <a class="nav-link" href="#introduction">Introduction</a>
+                    <a class="nav-link" href="#getting-started">Getting Started</a>
                     <a class="nav-link" href="#installation">Installation</a>
-                    <a class="nav-link" href="#quick-start">Quick Start</a>
-
-                    <h5 class="sidebar-heading mt-4">Features</h5>
-                    <a class="nav-link" href="#viewer">Credential Viewer</a>
-                    <a class="nav-link" href="#themes">Theme System</a>
-                    <a class="nav-link" href="#export">Export Options</a>
-
-                    <h5 class="sidebar-heading mt-4">Development</h5>
-                    <a class="nav-link" href="#custom-themes">Creating Themes</a>
-                    <a class="nav-link" href="#api">API Reference</a>
+                    <a class="nav-link" href="#credential-format">Credential Format</a>
+                    <a class="nav-link" href="#using-themes">Using Themes</a>
+                    <a class="nav-link" href="#creating-themes">Creating Themes</a>
                     <a class="nav-link" href="#contributing">Contributing</a>
                 </nav>
             </div>
 
             <!-- Main Content -->
             <div class="col-md-9 col-xl-10 docs-content">
-                <section id="introduction">
-                    <h1>Documentation</h1>
-                    <p>Welcome to the VC Viewer documentation. Here you'll find comprehensive guides and documentation to help you start working with VC Viewer as quickly as possible.</p>
+                <h1>Documentation</h1>
+                <p>Learn how to use VC Viewer and create your own custom themes.</p>
+
+                <section id="getting-started">
+                    <h2>Getting Started</h2>
+                    <p>VC Viewer is a web-based tool for visualizing W3C Verifiable Credentials. Follow these steps to get started:</p>
+                    <ol>
+                        <li>Navigate to the <a href="/viewer">Viewer page</a></li>
+                        <li>Paste your W3C Verifiable Credential in JSON format</li>
+                        <li>Choose a theme that matches your credential type</li>
+                        <li>Export the visualization as an image or PDF</li>
+                    </ol>
                 </section>
 
                 <section id="installation">
                     <h2>Installation</h2>
-                    <p>VC Viewer can be used directly through our hosted version or installed locally. Choose the method that best suits your needs:</p>
-                    
-                    <h3>Using the Hosted Version</h3>
-                    <p>Simply visit <a href="https://vc-viewer.vamaralds.be">vc-viewer.vamaralds.be</a> to start using VC Viewer immediately. No installation required!</p>
-                    
-                    <h3>Local Installation</h3>
-                    <p>To run VC Viewer locally, follow these steps:</p>
+
+                    <h3>Prerequisites</h3>
+                    <ul>
+                        <li>Option 1 (Docker):
+                            <ul>
+                                <li>Docker</li>
+                                <li>Docker Compose</li>
+                            </ul>
+                        </li>
+                        <li>Option 2 (Manual):
+                            <ul>
+                                <li>Rust (version 1.75.0 or higher)</li>
+                                <li>Cargo (version 1.75.0 or higher)</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h3>Installation Methods</h3>
+
+                    <h4>Using the Hosted Version</h4>
+                    <p>Visit <a href="https://vc-viewer.vamaralds.be">vc-viewer.vamaralds.be</a> to use VC Viewer immediately without installation.</p>
+
+                    <h4>Option 1: Using Docker (Recommended)</h4>
                     <pre><code class="language-bash"># Clone the repository
 git clone https://github.com/AmaVic/vc-viewer.git
 cd vc-viewer
 
-# Build and run using Docker
+# Build and run using Docker Compose
 docker compose up --build</code></pre>
+
+                    <div class="note">
+                        <strong>Note:</strong> The Docker image needs to be built locally as it's not yet published to any container registry.
+                    </div>
+
+                    <h4>Option 2: Manual Installation</h4>
+                    <pre><code class="language-bash"># Clone the repository
+git clone https://github.com/AmaVic/vc-viewer.git
+cd vc-viewer
+
+# Build and run in release mode
+cargo run --release</code></pre>
+
+                    <div class="note">
+                        <strong>Important:</strong> Always run the application in release mode (<code>--release</code>) for production use. Debug mode includes additional logging of IP addresses and browser information, which are excluded in release mode to protect user privacy. For more information about our privacy practices, see our <a href="/privacy">Privacy Policy</a>.
+                    </div>
                 </section>
 
-                <section id="quick-start">
-                    <h2>Quick Start</h2>
-                    <p>Get started with VC Viewer in just a few steps:</p>
+                <section id="credential-format">
+                    <h2>Credential Format</h2>
+                    <p>VC Viewer supports standard W3C Verifiable Credentials in JSON format. Your credential must include:</p>
+                    <ul>
+                        <li>A valid <code>@context</code> array including <code>https://www.w3.org/2018/credentials/v1</code></li>
+                        <li>A <code>type</code> array with at least one specific credential type</li>
+                        <li>An <code>issuer</code> field (string or object with <code>id</code>)</li>
+                        <li>An <code>issuanceDate</code> in ISO 8601 format</li>
+                        <li>A <code>credentialSubject</code> object with the credential data</li>
+                    </ul>
+
+                    <h3>Example:</h3>
+                    <pre><code class="language-json">{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1"
+  ],
+  "type": ["VerifiableCredential", "UniversityDegreeCredential"],
+  "issuer": {
+    "id": "did:example:123",
+    "name": "Example University"
+  },
+  "issuanceDate": "2023-01-01T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:456",
+    "degree": {
+      "type": "BachelorDegree",
+      "name": "Bachelor of Science"
+    }
+  }
+}</code></pre>
+                </section>
+
+                <section id="using-themes">
+                    <h2>Using Themes</h2>
+                    <p>Themes are automatically selected based on your credential type. Currently available themes include:</p>
+                    <ul>
+                        <li><strong>University Degree Themes</strong>
+                            <ul>
+                                <li>Classic - Traditional academic design</li>
+                                <li>Modern - Contemporary minimalist design</li>
+                                <li>LinkedIn - Professional certification style</li>
+                            </ul>
+                        </li>
+                        <li><strong>Driver License Themes</strong>
+                            <ul>
+                                <li>Classic - Traditional ID card layout</li>
+                                <li>Modern - Enhanced visual design</li>
+                            </ul>
+                        </li>
+                        <li><strong>Generic Theme</strong> - Default theme for other credential types</li>
+                    </ul>
+                    <p>Visit our <a href="/themes">Themes Gallery</a> to preview all available themes.</p>
+                </section>
+
+                <section id="creating-themes">
+                    <h2>Creating Themes</h2>
+                    <p>Want to create your own theme? Check out our detailed <a href="/docs/create-theme">Theme Creation Guide</a> to learn:</p>
+                    <ul>
+                        <li>How to structure your theme files</li>
+                        <li>Using the base theme class</li>
+                        <li>Styling your theme with CSS</li>
+                        <li>Testing and submitting your theme</li>
+                    </ul>
+                </section>
+
+                <section id="contributing">
+                    <h2>Contributing</h2>
+                    <p>While direct community theme uploads are not yet supported in the app, we welcome contributions through pull requests! Here's how you can contribute:</p>
                     <ol>
-                        <li>Navigate to the <a href="/viewer">Viewer page</a></li>
-                        <li>Paste your Verifiable Credential in the input field</li>
-                        <li>Select a theme from the dropdown menu</li>
-                        <li>Export your visualization as an image or PDF</li>
+                        <li>Fork the repository</li>
+                        <li>Create your theme following our theme creation guide</li>
+                        <li>Submit a pull request with your theme</li>
                     </ol>
                     <div class="note">
-                        <strong>Note:</strong> You can also try the example credentials to see how different themes look.
+                        <strong>Note:</strong> Make sure to follow our theme creation guidelines and include appropriate documentation for your theme.
                     </div>
                 </section>
             </div>
@@ -108,6 +207,8 @@ docker compose up --build</code></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-bash.min.js" crossorigin="anonymous"></script>
 
     <!-- Documentation scripts -->
     <script>
