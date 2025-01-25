@@ -2,7 +2,7 @@ use std::env;
 
 /// Get the host address from environment or default
 pub fn get_host() -> String {
-    env::var("HOST").unwrap_or_else(|_| "127.0.0.1".to_string())
+    env::var("HOST").unwrap_or_else(|_| "0.0.0.0".to_string())
 }
 
 /// Get the port from environment or default

@@ -31,9 +31,9 @@ async fn main() -> std::io::Result<()> {
     // Create and run HTTP server
     HttpServer::new(move || {
         let logger = if cfg!(debug_assertions) {
-            Logger::new("%a %r %s %b %{Referer}i %{User-Agent}i %T")
+            Logger::new("%a \"%r\" %s %b %{Referer}i %T")
         } else {
-            Logger::new("%s %b %D")
+            Logger::new("%r %s %b %T")
         };
 
         App::new()
