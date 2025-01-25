@@ -127,4 +127,144 @@ pub async fn about() -> Result<HttpResponse> {
     Ok(HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
         .body(rendered))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use actix_web::test;
+    use actix_web::http::StatusCode;
+
+    #[actix_web::test]
+    async fn test_index_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(index)
+        ).await;
+        
+        let req = test::TestRequest::get().uri("/").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("Verifiable Credentials Viewer"));
+        assert!(html.contains("Try it Now"));
+    }
+
+    #[actix_web::test]
+    async fn test_viewer_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(viewer)
+        ).await;
+
+        // Test without theme parameter
+        let req = test::TestRequest::get().uri("/viewer").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("viewer"));
+        
+        // Test with theme parameter
+        let req = test::TestRequest::get()
+            .uri("/viewer?theme=classic")
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("classic"));
+    }
+
+    #[actix_web::test]
+    async fn test_themes_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(themes)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/themes").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("themes"));
+    }
+
+    #[actix_web::test]
+    async fn test_docs_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(docs)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/docs").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("docs"));
+    }
+
+    #[actix_web::test]
+    async fn test_create_theme_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(create_theme)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/docs/create-theme").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("docs"));
+    }
+
+    #[actix_web::test]
+    async fn test_privacy_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(privacy)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/privacy").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("privacy"));
+    }
+
+    #[actix_web::test]
+    async fn test_cookies_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(cookies)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/cookies").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("cookies"));
+    }
+
+    #[actix_web::test]
+    async fn test_about_handler() {
+        let app = test::init_service(
+            actix_web::App::new().service(about)
+        ).await;
+
+        let req = test::TestRequest::get().uri("/about").to_request();
+        let resp = test::call_service(&app, req).await;
+        assert_eq!(resp.status(), StatusCode::OK);
+        
+        let body = test::read_body(resp).await;
+        let html = String::from_utf8(body.to_vec()).unwrap();
+        assert!(html.contains("about"));
+    }
 } 

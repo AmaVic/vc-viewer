@@ -3,3 +3,4 @@ backend/target/
 # Logs
 logs/
 *.log
+.specstory/

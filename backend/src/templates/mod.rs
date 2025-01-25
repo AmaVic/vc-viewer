@@ -56,11 +56,64 @@ mod tests {
     fn test_base_context() {
         let ctx = new_context();
         assert!(ctx.get("version").is_some());
+        assert_eq!(ctx.get("version").unwrap().as_str().unwrap(), "v0.0.1");
     }
 
     #[test]
     fn test_templates_load() {
         let tera = init_templates();
-        assert!(tera.get_template_names().count() > 0);
+        let template_names: Vec<_> = tera.get_template_names().map(String::from).collect();
+        
+        // Check that essential templates are loaded
+        let required_templates = [
+            "pages/index.html",
+            "pages/viewer.html",
+            "pages/themes.html",
+            "pages/docs.html",
+            "pages/privacy.html",
+            "pages/cookies.html",
+            "pages/about.html",
+            "partials/head.html",
+            "partials/navbar.html",
+            "partials/footer.html",
+        ];
+
+        for template in required_templates {
+            assert!(template_names.contains(&template.to_string()),
+                   "Missing required template: {}", template);
+        }
+    }
+
+    #[test]
+    fn test_context_modification() {
+        let mut ctx = new_context();
+        
+        // Test adding new values
+        ctx.insert("test_key", &"test_value");
+        assert_eq!(ctx.get("test_key").unwrap().as_str().unwrap(), "test_value");
+        
+        // Test that base values are preserved
+        assert_eq!(ctx.get("version").unwrap().as_str().unwrap(), "v0.0.1");
+        
+        // Test adding complex values
+        let mut map = tera::Map::new();
+        map.insert("nested_key".to_string(), tera::Value::String("nested_value".to_string()));
+        ctx.insert("complex", &tera::Value::Object(map));
+        
+        assert!(ctx.get("complex").is_some());
+        assert!(ctx.get("complex").unwrap().is_object());
+    }
+
+    #[test]
+    fn test_template_error_handling() {
+        let ctx = new_context();
+        
+        // Test rendering with undefined variable
+        let result = init_templates().render_str("{{ undefined_var }}", &ctx);
+        assert!(result.is_err());
+        
+        // Test rendering with invalid syntax
+        let result = init_templates().render_str("{{ invalid_syntax }", &ctx);
+        assert!(result.is_err());
     }
 }
