@@ -121,6 +121,51 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [W3C Verifiable Credentials Working Group](https://www.w3.org/groups/wg/vc)
 - All our [contributors](https://github.com/yourusername/vc-viewer/graphs/contributors)
 
+## Deployment 🚀
+
+### CapRover Deployment
+
+The application can be deployed to your CapRover instance using one of these methods:
+
+#### Method 1: One-Click Deploy (Recommended)
+
+1. Log in to your CapRover dashboard
+2. Go to Apps → Create New App
+3. Enter your app name (e.g., `vc-viewer`)
+4. Check "Has Persistent Data" if you plan to store any data
+5. Go to the "Deployment" tab
+6. Under "Deploy from Github", enter:
+   - Repository: `https://github.com/yourusername/vc-viewer`
+   - Branch: `main`
+   - Username: Your GitHub username
+   - Password: Your GitHub personal access token (with repo access)
+7. Click "Deploy Now"
+
+The application will be built and deployed automatically. Access it at `https://vc-viewer.your-caprover-domain.com`
+
+#### Method 2: Manual Deploy
+
+If you prefer manual deployment or need more control:
+
+```bash
+# Install CapRover CLI if you haven't already
+npm install -g caprover
+
+# Login to your CapRover instance
+caprover login
+
+# Deploy the application
+caprover deploy
+```
+
+### Environment Variables
+
+When deploying to CapRover, you might want to configure these environment variables:
+
+- `HOST`: Set to `0.0.0.0` (required for container deployment)
+- `PORT`: Usually set by CapRover automatically
+- `RUST_LOG`: Set to `info` for production or `debug` for troubleshooting
+
 ---
 
 <div align="center">

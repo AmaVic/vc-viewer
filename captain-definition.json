@@ -1,0 +1,10 @@
+{
+  "caproverApp": "vc-viewer",
+  "caproverName": "vc-viewer",
+  "branch": "main",
+  "instanceCount": 1,
+  "notExposeAsWebApp": false,
+  "containerHttpPort": "8080",
+  "predeploy": "",
+  "websocketSupport": false
+} 
