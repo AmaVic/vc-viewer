@@ -2,10 +2,13 @@ FROM rust:1.84 AS builder
 
 WORKDIR /usr/src/app
 
-# Copy only the backend files needed for building
-COPY backend/Cargo.toml backend/
-# Copy Cargo.lock if it exists, otherwise it will be generated
-COPY backend/Cargo.lock* backend/
+# Copy frontend files first (needed for SEO files)
+COPY frontend frontend/
+
+# Copy the Cargo files
+COPY backend/Cargo.toml backend/Cargo.lock* backend/
+
+# Copy source code
 COPY backend/src backend/src
 
 # Build the backend
@@ -27,7 +30,7 @@ WORKDIR /app/backend
 COPY --from=builder /usr/src/app/backend/target/release/vc-viewer .
 
 # Copy frontend files maintaining the exact structure
-COPY frontend /app/frontend
+COPY --from=builder /usr/src/app/frontend /app/frontend
 
 # Environment variables for proper binding and logging
 ENV RUST_LOG=debug
