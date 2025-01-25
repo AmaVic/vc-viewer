@@ -76,6 +76,7 @@ body {
     color: #475569;
     line-height: 1.7;
     margin-bottom: 1.5rem;
+    font-size: 1rem;
 }
 
 .docs-content pre {
@@ -85,11 +86,18 @@ body {
     margin: 1.5rem 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow-x: auto;
+    font-size: 0.875rem;
+    color: #ffffff;
+}
+
+.docs-content pre code {
+    color: #ffffff;
 }
 
 .docs-content code {
     font-family: 'Fira Code', monospace;
     font-size: 0.875rem;
+    line-height: 1.7;
 }
 
 .docs-content .file-path {
