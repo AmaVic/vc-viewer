@@ -1,4 +1,4 @@
-name: Build and Deploy Docs
+name: Docs
 
 on:
   push:
@@ -20,10 +20,11 @@ jobs:
 
       - name: Build Documentation
         run: cargo doc --no-deps --verbose
+        working-directory: ./backend
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./target/doc
+          publish_dir: ./backend/target/doc
