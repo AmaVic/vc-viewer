@@ -106,12 +106,16 @@
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a></pre></div><pre class="rust"><code><span class="doccomment">//! Configuration management
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a></pre></div><pre class="rust"><code><span class="doccomment">//! Configuration management
 //! 
 //! This module handles application configuration, including server settings
 //! and environment-specific configurations.
 
-</span><span class="kw">use </span>std::time::Duration;
+</span><span class="kw">pub mod </span>env;
+
+<span class="kw">use </span>std::time::Duration;
 
 <span class="doccomment">/// Server configuration settings
 </span><span class="attr">#[derive(Debug, Clone)]
@@ -131,8 +135,8 @@
 <span class="kw">impl </span>Default <span class="kw">for </span>Config {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            bind_address: <span class="string">"127.0.0.1"</span>.to_string(),
-            port: <span class="number">8080</span>,
+            bind_address: env::get_host(),
+            port: env::get_port(),
             workers: num_cpus::get(),
             request_timeout: Duration::from_secs(<span class="number">60</span>),
             disconnect_timeout: Duration::from_secs(<span class="number">5</span>),
@@ -199,8 +203,8 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_default_config() {
         <span class="kw">let </span>config = Config::default();
-        <span class="macro">assert_eq!</span>(config.port, <span class="number">8080</span>);
-        <span class="macro">assert_eq!</span>(config.bind_address, <span class="string">"127.0.0.1"</span>);
+        <span class="macro">assert_eq!</span>(config.port, env::get_port());
+        <span class="macro">assert_eq!</span>(config.bind_address, env::get_host());
     }
 
     <span class="attr">#[test]
