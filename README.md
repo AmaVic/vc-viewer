@@ -1,112 +1,112 @@
-# VC Viewer
+# VC Viewer 🎨
 
-A minimalistic web application for visualizing W3C Verifiable Credentials and Verifiable Presentations.
+A beautiful, open-source tool for visualizing W3C Verifiable Credentials with customizable themes.
 
-## Features
+## Features ✨
 
-- Support for both Verifiable Credentials and Verifiable Presentations
-- Clean and intuitive user interface
-- Dynamic card-based visualization
-- Support for different credential types with customizable templates
-- Example credential loader for testing
+- 🔒 **Privacy First**: All processing happens client-side. Your credentials never leave your browser.
+- 🎨 **Customizable Themes**: Choose from pre-built themes or create your own to match your brand.
+- 🚀 **High Performance**: Built with Rust and modern web technologies for optimal speed.
+- 🌐 **Standards Compliant**: Full support for W3C Verifiable Credentials Data Model.
+- 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices.
+- 🆓 **Free and Open Source**: No ads, no premium features, no catch.
 
-## Project Structure
+## Quick Start 🚀
 
-```
-vc-viewer/
-├── backend/                 # Rust backend
-│   ├── src/
-│   │   └── main.rs         # Main server code
-│   ├── Cargo.toml          # Rust dependencies
-│   └── Cargo.lock
-│
-├── frontend/               # Frontend assets
-│   ├── public/            # Static public files
-│   └── src/
-│       ├── css/           # Stylesheets
-│       │   └── styles.css
-│       ├── js/            # JavaScript files
-│       │   └── main.js
-│       └── templates/     # HTML templates
-│           └── index.html
-│
-└── README.md
-```
+Visit [VC Viewer](https://vcviewer.example.com) to start using the tool immediately, or run it locally:
 
-## Prerequisites
-
-- Rust (latest stable version)
-- Cargo (comes with Rust)
-- A modern web browser
-
-## Setup
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/AmaVic/vc-viewer.git
+# Clone the repository
+git clone https://github.com/yourusername/vc-viewer.git
 cd vc-viewer
-```
 
-2. Build and run the backend:
-```bash
+# Build and run the backend
 cd backend
 cargo build --release
 cargo run --release
+
+# In another terminal, serve the frontend
+cd ../frontend
+# Serve using your preferred static file server
 ```
 
-The application will be available at `http://localhost:8080`
+The application will be available at `http://localhost:8080`.
 
-## Development
+## Development 🛠️
+
+### Prerequisites
+
+- Rust 1.70 or later
+- Node.js 18 or later (for frontend development)
+- Git
 
 ### Backend Development
-- The backend is built with Rust and Actix-web
-- Main server code is in `backend/src/main.rs`
-- Dependencies are managed in `backend/Cargo.toml`
+
+```bash
+cd backend
+cargo test        # Run tests
+cargo doc         # Generate documentation
+cargo run         # Run in development mode
+```
 
 ### Frontend Development
-- Pure HTML/JS/CSS implementation
-- Bootstrap 5 for UI components
-- jQuery for DOM manipulation and AJAX
-- Organized in `frontend/src/`:
-  - `css/`: Stylesheets
-  - `js/`: JavaScript files
-  - `templates/`: HTML templates
 
-## Usage
+```bash
+cd frontend
+npm install      # Install dependencies
+npm run dev      # Start development server
+npm run build    # Build for production
+```
 
-1. Select the input type (Verifiable Credential or Verifiable Presentation)
-2. Paste your JSON input into the text area
-3. Click "Process" to visualize the credential(s)
-4. Use the "Load Example" button to test the application with a sample credential
+## Creating Themes 🎨
 
-## Supported Credential Types
+Themes are CSS files that define how your credentials are displayed. To create a new theme:
 
-1. UniversityDegreeCredential
-   - Comprehensive degree information
-   - Academic details (GPA, honors, etc.)
-   - Institution information
-   - Student details
+1. Visit the [Theme Creation Guide](https://vcviewer.example.com/docs/create-theme)
+2. Use our interactive theme builder
+3. Download your theme
+4. Submit a PR to share it with the community!
 
-2. Default Template (fallback)
-   - Generic visualization for unsupported types
-   - Displays all credential fields
+## Contributing 🤝
 
-## Technologies Used
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-- Backend:
-  - Rust
-  - Actix-web framework
-  - Serde for JSON handling
-  - Logging with env_logger
+### Areas for Contribution
 
-- Frontend:
-  - HTML5
-  - CSS3
-  - JavaScript (ES6+)
-  - Bootstrap 5
-  - jQuery
-  - Font Awesome icons
+- 🎨 New themes
+- 🐛 Bug fixes
+- ✨ New features
+- 📚 Documentation improvements
+- 🌐 Translations
 
-## License
+## Security 🔒
 
-MIT 
+- All credential processing happens client-side
+- No data is ever sent to any server
+- No tracking or analytics
+- Regular security audits
+
+See our [Security Policy](SECURITY.md) for more details.
+
+## Documentation 📚
+
+- [User Guide](https://vcviewer.example.com/docs)
+- [API Documentation](https://vcviewer.example.com/docs/api)
+- [Theme Creation Guide](https://vcviewer.example.com/docs/create-theme)
+- [Privacy Policy](https://vcviewer.example.com/privacy)
+- [Cookie Policy](https://vcviewer.example.com/cookies)
+
+## License 📄
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments 🙏
+
+- [W3C Verifiable Credentials Working Group](https://www.w3.org/groups/wg/vc)
+- All our [contributors](https://github.com/yourusername/vc-viewer/graphs/contributors)
+
+---
+
+<div align="center">
+Made with ❤️ for the Verifiable Credentials community
+</div> 
