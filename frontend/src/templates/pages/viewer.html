@@ -2,8 +2,42 @@
 <html lang="en">
 <head>
     {% include "partials/head.html" %}
-    <meta name="description" content="Visualize and customize your W3C Verifiable Credentials">
-    <title>VC Viewer - Credential Viewer</title>
+    <meta name="description" content="Try our interactive W3C Verifiable Credentials viewer. Paste your credential, choose a theme, and instantly create beautiful visualizations. Free, secure, and privacy-focused.">
+    <meta property="og:description" content="Create beautiful visualizations of your W3C Verifiable Credentials instantly. Choose from multiple themes and export to PDF or image.">
+    <meta name="twitter:description" content="Create beautiful visualizations of your W3C Verifiable Credentials instantly. Choose from multiple themes and export to PDF or image.">
+    <title>VC Viewer - Interactive Verifiable Credentials Visualization Tool</title>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "VC Viewer - Interactive Viewer",
+        "description": "Interactive tool for visualizing W3C Verifiable Credentials with customizable themes",
+        "url": "https://vc-viewer.vamaralds.be/viewer",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "featureList": [
+            "Real-time credential visualization",
+            "Multiple theme options",
+            "Export to PDF and image formats",
+            "Client-side processing for privacy",
+            "Support for all W3C Verifiable Credential types"
+        ],
+        "browserRequirements": "Requires a modern web browser with JavaScript enabled",
+        "permissions": "No special permissions required",
+        "softwareHelp": {
+            "@type": "CreativeWork",
+            "url": "https://vc-viewer.vamaralds.be/docs"
+        },
+        "keywords": "verifiable credentials viewer, interactive VC viewer, credential visualization tool, W3C credentials preview, JSON-LD viewer"
+    }
+    </script>
 
     <!-- Theme CSS -->
     <link rel="stylesheet" href="/frontend/src/themes/VerifiableCredential/default/default.css">

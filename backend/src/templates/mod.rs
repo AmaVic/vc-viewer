@@ -22,10 +22,14 @@ lazy_static! {
 
 /// Initialize the template engine with all templates in the templates directory
 fn init_templates() -> Tera {
+    log::debug!("Initializing templates from path: {}", "../frontend/src/templates/**/*.html");
     let mut tera = match Tera::new("../frontend/src/templates/**/*.html") {
-        Ok(t) => t,
+        Ok(t) => {
+            log::debug!("Successfully loaded templates: {:?}", t.get_template_names().collect::<Vec<_>>());
+            t
+        },
         Err(e) => {
-            error!("Template parsing error(s): {}", e);
+            error!("Template parsing error(s): {:?}", e);
             ::std::process::exit(1);
         }
     };

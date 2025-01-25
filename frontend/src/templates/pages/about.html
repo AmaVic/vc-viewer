@@ -2,9 +2,47 @@
 <html lang="en">
 <head>
     {% include 'partials/head.html' %}
-    <meta name="description" content="About VC Viewer - Learn about the project and its creator">
-    <title>VC Viewer - About</title>
+    <meta name="description" content="Learn about VC Viewer, an open-source project dedicated to making W3C Verifiable Credentials more accessible and visually appealing. Discover our mission, features, and commitment to privacy.">
+    <meta property="og:description" content="Discover VC Viewer: An open-source tool for beautiful Verifiable Credentials visualization. Learn about our mission and privacy-first approach.">
+    <meta name="twitter:description" content="Discover VC Viewer: An open-source tool for beautiful Verifiable Credentials visualization. Learn about our mission and privacy-first approach.">
+    <title>About VC Viewer - Our Mission and Features</title>
     <link href="/frontend/src/css/docs.css" rel="stylesheet">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": "About VC Viewer",
+        "description": "Information about the VC Viewer project, its mission, and features",
+        "url": "https://vc-viewer.vamaralds.be/about",
+        "mainEntity": {
+            "@type": "Organization",
+            "name": "VC Viewer",
+            "url": "https://vc-viewer.vamaralds.be",
+            "description": "Open-source project for visualizing W3C Verifiable Credentials",
+            "founder": {
+                "@type": "Person",
+                "name": "Vamarald"
+            },
+            "knowsAbout": [
+                "W3C Verifiable Credentials",
+                "Digital Identity",
+                "Credential Visualization",
+                "Privacy-Preserving Technology"
+            ],
+            "ethicsPolicy": {
+                "@type": "CreativeWork",
+                "name": "Privacy Policy",
+                "url": "https://vc-viewer.vamaralds.be/privacy"
+            },
+            "sameAs": [
+                "https://github.com/AmaVic/vc-viewer"
+            ]
+        },
+        "keywords": "verifiable credentials, open source project, digital identity, privacy focused, W3C standards, credential visualization"
+    }
+    </script>
 </head>
 <body data-bs-spy="scroll" data-bs-target="#docsNav" data-bs-offset="100" tabindex="0">
     <!-- Navigation -->

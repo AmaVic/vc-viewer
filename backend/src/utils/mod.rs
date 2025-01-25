@@ -2,7 +2,7 @@
 //! 
 //! This module contains various utility functions used throughout the application.
 
-use std::fs::OpenOptions;
+use std::fs::{OpenOptions, create_dir_all};
 use std::io::Write;
 use chrono::Local;
 use log::LevelFilter;
@@ -36,13 +36,16 @@ impl Write for MultiOutput {
 
 /// Setup logging based on the environment
 pub fn setup_logging() {
+    // Create logs directory if it doesn't exist
+    create_dir_all("logs").expect("Failed to create logs directory");
+
     if cfg!(debug_assertions) {
         // Development logging - more verbose with timestamps
         let log_file = OpenOptions::new()
             .create(true)
             .append(true)
-            .open("debug.log")
-            .expect("Failed to open log file");
+            .open("logs/debug.log")
+            .expect("Failed to open debug log file");
 
         let mut builder = env_logger::Builder::new();
         builder.filter_level(LevelFilter::Debug);
@@ -59,11 +62,18 @@ pub fn setup_logging() {
         builder.init();
     } else {
         // Production logging - minimal overhead
-        env_logger::Builder::new()
-            .filter_level(LevelFilter::Info)
-            .format_timestamp(None)
-            .format_target(false)
-            .init();
+        let log_file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open("logs/release.log")
+            .expect("Failed to open release log file");
+
+        let mut builder = env_logger::Builder::new();
+        builder.filter_level(LevelFilter::Info);
+        builder.format_timestamp(None);
+        builder.format_target(false);
+        builder.target(env_logger::Target::Pipe(Box::new(MultiOutput::new(log_file))));
+        builder.init();
     }
 }
 
@@ -78,11 +88,7 @@ pub fn format_size(size: u64) -> String {
         unit_index += 1;
     }
 
-    if unit_index == 0 {
-        format!("{} {}", size as u64, UNITS[unit_index])
-    } else {
-        format!("{:.2} {}", size, UNITS[unit_index])
-    }
+    format!("{:.2} {}", size, UNITS[unit_index])
 }
 
 #[cfg(test)]

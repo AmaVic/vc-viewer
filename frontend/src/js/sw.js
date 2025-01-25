@@ -1,6 +1,8 @@
 const CACHE_NAME = 'vc-viewer-cache-v1';
 const STATIC_ASSETS = [
     '/',
+    '/frontend/src/static/seo/robots.txt',
+    '/frontend/src/static/seo/sitemap.xml',
     '/frontend/src/css/styles.css',
     '/frontend/src/css/viewer.css',
     '/frontend/src/css/docs.css',
@@ -13,6 +15,8 @@ const STATIC_ASSETS = [
     '/frontend/src/themes/BelgianDriverLicenseCredential/classic/ClassicDriverLicenseTheme.js',
     '/frontend/src/themes/BelgianDriverLicenseCredential/modern/ModernDriverLicenseTheme.js',
     '/frontend/src/images/logo.svg',
+    '/frontend/src/images/og-image.png',
+    '/frontend/src/images/apple-touch-icon.png',
 ];
 
 // Install Service Worker

@@ -6,7 +6,7 @@
 use actix_files as fs;
 use actix_web::{
     middleware::{Logger, Compress, DefaultHeaders, NormalizePath, TrailingSlash},
-    App, HttpServer, web,
+    App, HttpServer, web, get, HttpResponse,
 };
 
 use vc_viewer::{
@@ -16,6 +16,21 @@ use vc_viewer::{
     middleware::CompressionMonitor,
     utils::setup_logging,
 };
+
+// SEO file handlers
+#[get("/robots.txt")]
+async fn robots_txt() -> HttpResponse {
+    HttpResponse::Ok()
+        .content_type("text/plain")
+        .body(include_str!("../../frontend/src/static/seo/robots.txt"))
+}
+
+#[get("/sitemap.xml")]
+async fn sitemap_xml() -> HttpResponse {
+    HttpResponse::Ok()
+        .content_type("application/xml")
+        .body(include_str!("../../frontend/src/static/seo/sitemap.xml"))
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -51,6 +66,9 @@ async fn main() -> std::io::Result<()> {
             )
             // Health check endpoint
             .service(health_check)
+            // SEO files
+            .service(robots_txt)
+            .service(sitemap_xml)
             // Serve static files with optimized settings
             .service(
                 fs::Files::new("/frontend", "../frontend")
