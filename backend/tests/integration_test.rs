@@ -11,7 +11,7 @@ async fn test_index_integration() {
         App::new()
             .wrap(CompressionMonitor)
             .wrap(Compress::default())
-            .service(index)
+            .service(index_route)
     ).await;
 
     // Create test request
@@ -24,7 +24,7 @@ async fn test_index_integration() {
     // Check response body
     let body = test::read_body(resp).await;
     let html = String::from_utf8(body.to_vec()).unwrap();
-    assert!(html.contains("Verifiable Credentials Viewer"));
+    assert!(html.contains("Visualize Verifiable Credentials with Style"));
     assert!(html.contains("Try it Now"));
 }
 
@@ -145,7 +145,7 @@ async fn test_compression_middleware() {
         App::new()
             .wrap(CompressionMonitor)
             .wrap(Compress::default())
-            .service(index)
+            .service(index_route)
     ).await;
 
     let req = test::TestRequest::default()
@@ -165,7 +165,7 @@ async fn test_error_handling() {
         App::new()
             .wrap(CompressionMonitor)
             .wrap(Compress::default())
-            .service(index)
+            .service(index_route)
     ).await;
 
     // Test non-existent route

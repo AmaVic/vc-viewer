@@ -189,7 +189,7 @@ mod tests {
         
         let body = test::read_body(resp).await;
         let html = String::from_utf8(body.to_vec()).unwrap();
-        assert!(html.contains("Verifiable Credentials Viewer"));
+        assert!(html.contains("Visualize Verifiable Credentials with Style"));
         assert!(html.contains("Try it Now"));
     }
 

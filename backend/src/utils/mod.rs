@@ -88,7 +88,11 @@ pub fn format_size(size: u64) -> String {
         unit_index += 1;
     }
 
-    format!("{:.2} {}", size, UNITS[unit_index])
+    if unit_index == 0 {
+        format!("{} {}", size, UNITS[unit_index])
+    } else {
+        format!("{:.2} {}", size, UNITS[unit_index])
+    }
 }
 
 #[cfg(test)]
