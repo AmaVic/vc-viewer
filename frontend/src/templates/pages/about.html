@@ -8,7 +8,9 @@
     <title>About VC Viewer - Open Source Verifiable Credentials Visualization</title>
 
     <!-- About-specific styles -->
-    <link href="/frontend/src/css/docs.css" rel="stylesheet">
+    <link href="/static/css/docs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" crossorigin="anonymous">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -141,8 +143,14 @@
 {% endblock %}
 
 {% block scripts %}
+    <!-- Syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" crossorigin="anonymous"></script>
+
+    <!-- Menu highlighting -->
     <script>
-        // Smooth scroll for anchor links
+        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
