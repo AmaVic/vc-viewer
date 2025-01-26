@@ -3,6 +3,11 @@ logs/
 *.log
 .specstory/
 .idea/
+
+# Frontend
 frontend/dist/
 frontend/.parcel-cache/
 frontend/node_modules/
+
+# Keep source files
+!frontend/src/
