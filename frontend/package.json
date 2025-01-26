@@ -1,0 +1,14 @@
+{
+  "name": "vc-viewer-frontend",
+  "version": "1.0.0",
+  "description": "Frontend assets for VC Viewer",
+  "source": "src/js/main.js",
+  "scripts": {
+    "start": "parcel watch src/**/*.{js,css}",
+    "build": "parcel build src/**/*.{js,css}"
+  },
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "devDependencies": {
+    "parcel": "^2.11.0"
+  }
+}

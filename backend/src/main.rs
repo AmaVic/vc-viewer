@@ -13,7 +13,7 @@ use vc_viewer::{
     config::Config,
     handlers::pages::{index_route, render_index, viewer, themes, docs, create_theme, privacy, cookies, about},
     handlers::health::health_check,
-    middleware::CompressionMonitor,
+    middleware::{CompressionMonitor, MimeTypeMiddleware},
     utils::setup_logging,
 };
 
@@ -56,6 +56,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(CompressionMonitor)
             .wrap(Compress::default())
             .wrap(NormalizePath::new(TrailingSlash::Trim))
+            .wrap(MimeTypeMiddleware)
             .wrap(
                 DefaultHeaders::new()
                     .add(("Cache-Control", "public, max-age=31536000"))
@@ -71,19 +72,34 @@ async fn main() -> std::io::Result<()> {
             .service(sitemap_xml)
             // Serve static files with optimized settings
             .service(
-                fs::Files::new("/frontend", "../frontend")
+                fs::Files::new("/static/css", "../frontend/src/css")
                     .prefer_utf8(true)
                     .use_last_modified(true)
                     .use_etag(true)
-                    .disable_content_disposition()
-                    .show_files_listing()
             )
             .service(
-                fs::Files::new("/static", "../frontend/src/static")
+                fs::Files::new("/static/js", "../frontend/src/js")
                     .prefer_utf8(true)
                     .use_last_modified(true)
                     .use_etag(true)
-                    .show_files_listing()
+            )
+            .service(
+                fs::Files::new("/static/images", "../frontend/src/images")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+            )
+            .service(
+                fs::Files::new("/static/themes", "../frontend/src/themes")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
+            )
+            .service(
+                fs::Files::new("/dist", "../frontend/dist")
+                    .prefer_utf8(true)
+                    .use_last_modified(true)
+                    .use_etag(true)
             )
             // Route handlers
             .service(index_route)

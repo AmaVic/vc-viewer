@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /frontend/src/js/
+Disallow: /frontend/src/css/
+
+Sitemap: https://vc-viewer.vamaralds.be/sitemap.xml 

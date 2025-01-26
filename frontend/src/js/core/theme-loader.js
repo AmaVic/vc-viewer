@@ -32,7 +32,7 @@ class ThemeLoader {
   }
 
   static async #loadThemeFiles(credentialType, themeId) {
-    const basePath = `/frontend/src/themes/${credentialType}/${themeId}`;
+    const basePath = `/static/themes/${credentialType}/${themeId}`;
     
     try {
       // Load CSS first

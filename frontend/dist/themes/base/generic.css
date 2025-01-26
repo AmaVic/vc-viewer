@@ -1,0 +1,193 @@
+.generic-theme {
+    max-width: 500px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 0.875rem;
+    overflow: hidden;
+}
+
+.generic-theme .credential-banner {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    padding: 0.75rem 1rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.generic-theme .credential-banner i {
+    font-size: 1.25rem;
+}
+
+.generic-theme .credential-banner h1 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.generic-theme .issuer-name {
+    margin-left: auto;
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.generic-theme .credential-content {
+    padding: 1rem;
+}
+
+.generic-theme .content-card {
+    background: white;
+    border-radius: 0.375rem;
+    border: 1px solid #e5e7eb;
+}
+
+.generic-theme .credential-type {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.generic-theme .credential-data {
+    padding: 1rem;
+}
+
+.generic-theme .data-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.generic-theme .data-section {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.generic-theme .section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.generic-theme .data-item {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.625rem;
+    background: #f9fafb;
+    border-radius: 0.25rem;
+}
+
+.generic-theme .data-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.generic-theme .data-value {
+    font-size: 0.875rem;
+    color: #111827;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.generic-theme .data-value.complex {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    background: #f3f4f6;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid #e5e7eb;
+    white-space: pre-wrap;
+}
+
+.generic-theme .credential-footer {
+    border-top: 1px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9fafb;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.generic-theme .credential-footer .credential-info {
+    display: flex;
+    gap: 2rem;
+}
+
+.generic-theme .credential-footer .info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.generic-theme .credential-footer .label {
+    color: #6b7280;
+}
+
+.generic-theme .credential-footer .value {
+    color: #374151;
+    font-weight: 500;
+}
+
+.generic-theme .credential-footer .credential-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.generic-theme .credential-footer .credential-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.generic-theme .credential-footer .credential-link:hover {
+    text-decoration: underline;
+}
+
+.generic-theme .credential-footer .credential-link i {
+    font-size: 0.875rem;
+}
+
+.generic-theme .credential-footer .powered-by {
+    color: #6b7280;
+}
+
+.generic-theme .credential-footer .powered-by a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.generic-theme .credential-footer .powered-by a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .generic-theme .credential-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .generic-theme .credential-footer .credential-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .generic-theme .credential-footer .credential-links {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+} 
