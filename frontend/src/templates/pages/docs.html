@@ -8,9 +8,8 @@
     <title>VC Viewer - Documentation</title>
 
     <!-- Documentation-specific styles -->
+    <link href="/static/css/prism-tomorrow.min.css" rel="stylesheet">
     <link href="/static/css/docs.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" crossorigin="anonymous">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -204,11 +203,11 @@ cargo run --release</code></pre>
 
 {% block scripts %}
     <!-- Syntax highlighting -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/toolbar/prism-toolbar.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-bash.min.js" crossorigin="anonymous"></script>
+    <script src="/static/js/prism.js"></script>
+    <script src="/static/js/prism-toolbar.min.js"></script>
+    <script src="/static/js/prism-copy-to-clipboard.min.js"></script>
+    <script src="/static/js/prism-json.min.js"></script>
+    <script src="/static/js/prism-bash.min.js"></script>
 
     <!-- Documentation scripts -->
     <script>

@@ -5,10 +5,22 @@
   "source": "src/js/main.js",
   "scripts": {
     "start": "parcel watch src/**/*.{js,css}",
-    "build": "parcel build src/**/*.{js,css}"
+    "build": "parcel build src/**/*.{js,css}",
+    "copy-assets": "node copy-assets.js",
+    "postinstall": "npm run copy-assets"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "devDependencies": {
-    "parcel": "^2.11.0"
+    "@parcel/optimizer-terser": "^2.13.3",
+    "parcel": "^2.11.0",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
+    "bootstrap": "^5.3.3",
+    "html2canvas": "^1.4.1",
+    "jquery": "^3.7.1",
+    "jspdf": "^2.5.2",
+    "prismjs": "^1.29.0"
   }
 }

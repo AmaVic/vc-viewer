@@ -8,9 +8,9 @@
     <title>VC Viewer - Interactive Verifiable Credentials Visualization Tool</title>
 
     <!-- Viewer-specific styles -->
+    <link href="/static/css/prism-tomorrow.min.css" rel="stylesheet">
     <link href="/static/css/viewer.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" crossorigin="anonymous">
-    
+
     <!-- Theme styles -->
     <link rel="stylesheet" href="/static/themes/VerifiableCredential/default/default.css">
     <link rel="stylesheet" href="/static/themes/UniversityDegreeCredential/classic/classic.css">
@@ -118,16 +118,12 @@
 
 {% block scripts %}
     <!-- Export dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" 
-            integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" 
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" 
-            integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" 
-            crossorigin="anonymous"></script>
+    <script src="/static/js/html2canvas.min.js"></script>
+    <script src="/static/js/jspdf.umd.min.js"></script>
 
     <!-- Syntax highlighting -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js" crossorigin="anonymous"></script>
+    <script src="/static/js/prism.js"></script>
+    <script src="/static/js/prism-json.min.js"></script>
 
     <!-- Theme Scripts -->
     <script src="/static/themes/base/BaseTheme.js"></script>

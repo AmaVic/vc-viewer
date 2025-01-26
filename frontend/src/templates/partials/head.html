@@ -1,18 +1,27 @@
 <!-- Common Head Content -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="VC Viewer - A modern viewer for Verifiable Credentials">
 
 <!-- SEO Meta Tags -->
-<meta name="author" content="Vamarald">
+<meta name="author" content="Amaury Vanderborght">
 <meta name="robots" content="index, follow">
 <meta name="keywords" content="verifiable credentials, VC viewer, W3C credentials, digital identity, credential visualization, JSON-LD viewer">
 <link rel="canonical" href="https://vc-viewer.vamaralds.be{{ request.path }}">
 
 <!-- Open Graph Meta Tags -->
-<meta property="og:site_name" content="VC Viewer">
+<meta property="og:title" content="VC Viewer{% if current_page %} - {{ current_page | title }}{% endif %}">
+<meta property="og:description" content="A modern viewer for Verifiable Credentials">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://vc-viewer.vamaralds.be{{ request.path }}">
-<meta property="og:image" content="https://vc-viewer.vamaralds.be/static/images/og-image.png">
+<meta property="og:site_name" content="VC Viewer">
+<meta property="og:image" content="/static/images/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@vamarald">
+<meta name="twitter:title" content="VC Viewer{% if current_page %} - {{ current_page | title }}{% endif %}">
+<meta name="twitter:description" content="A modern viewer for Verifiable Credentials">
+<meta name="twitter:image" content="/static/images/og-image.png">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/static/images/logo.svg">
@@ -23,12 +32,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- Third-party CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/css/fontawesome.min.css" rel="stylesheet">
+<link href="/static/css/solid.min.css" rel="stylesheet">
+<link href="/static/css/brands.min.css" rel="stylesheet">
+<link href="/static/css/prism-tomorrow.min.css" rel="stylesheet">
 
 <!-- Custom Styles -->
 <link href="/static/css/styles.css" rel="stylesheet">
 <link href="/static/css/viewer.css" rel="stylesheet">
+
+<!-- Title -->
+<title>VC Viewer{% if current_page %} - {{ current_page | title }}{% endif %}</title>
 
 <!-- Performance monitoring -->
 <script>

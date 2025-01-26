@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% include "partials/head.html" %}
+{% extends "base.html" %}
+
+{% block head %}
     <meta name="description" content="Open-source tool for visualizing W3C Verifiable Credentials with customizable themes. Create beautiful, interactive views for digital credentials with our free and privacy-focused viewer.">
     <meta property="og:description" content="Create beautiful, interactive views for W3C Verifiable Credentials. Free, open-source, and privacy-focused.">
     <meta name="twitter:description" content="Create beautiful, interactive views for W3C Verifiable Credentials. Free, open-source, and privacy-focused.">
@@ -36,11 +35,9 @@
         "keywords": "verifiable credentials, VC viewer, W3C credentials, digital identity, credential visualization, JSON-LD viewer"
     }
     </script>
-</head>
-<body>
-    <!-- Navigation -->
-    {% include "partials/navbar.html" %}
+{% endblock %}
 
+{% block content %}
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
@@ -191,16 +188,4 @@
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    {% include 'partials/footer.html' %}
-
-    <!-- Scripts -->
-    <script>
-        // Initialize Prism.js
-        document.addEventListener('DOMContentLoaded', (event) => {
-            Prism.highlightAll();
-        });
-    </script>
-</body>
-</html> 
+{% endblock %} 

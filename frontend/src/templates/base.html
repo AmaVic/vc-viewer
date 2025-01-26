@@ -1,23 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include "partials/head.html" %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Common meta tags -->
+    <meta name="author" content="Amaury Vanderborght">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="VC Viewer">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:creator" content="@vamarald">
+    
+    <!-- Common styles -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/fontawesome.min.css" rel="stylesheet">
+    <link href="/static/css/solid.min.css" rel="stylesheet">
+    <link href="/static/css/brands.min.css" rel="stylesheet">
+    <link href="/static/css/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+    
     {% block head %}{% endblock %}
 </head>
 <body>
-    {% include "partials/navbar.html" %}
-    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/static/images/logo.svg" alt="VC Viewer Logo" height="30">
+                VC Viewer
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/viewer">Viewer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/themes">Themes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/docs">Docs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/AmaVic/vc-viewer" target="_blank" rel="noopener">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     {% block content %}{% endblock %}
-    
+
     {% include "partials/footer.html" %}
 
-    <!-- Common Scripts -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
-            crossorigin="anonymous"></script>
-    
+    <!-- Common scripts -->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/prism.js"></script>
+    <script src="/static/js/prism-json.min.js"></script>
     {% block scripts %}{% endblock %}
+
+    <!-- Navigation highlighting -->
+    <script>
+        $(document).ready(function() {
+            // Get current path
+            const path = window.location.pathname;
+            // Remove trailing slash if present
+            const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
+            
+            // Find and highlight the current nav item
+            $('.nav-link').each(function() {
+                const href = $(this).attr('href');
+                if (href === cleanPath || (cleanPath === '' && href === '/')) {
+                    $(this).addClass('active');
+                }
+            });
+
+            // Initialize Prism.js
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAll();
+            }
+        });
+    </script>
+
+    <!-- Page load time measurement -->
+    <script>
+        window.addEventListener('load', () => {
+            const loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+            console.log(`Page load time: ${loadTime}ms`);
+        });
+    </script>
 </body>
 </html> 

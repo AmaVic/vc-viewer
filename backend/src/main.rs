@@ -8,6 +8,7 @@ use actix_web::{
     middleware::{Logger, Compress, DefaultHeaders, NormalizePath, TrailingSlash},
     App, HttpServer, web, get, HttpResponse,
 };
+use log;
 
 use vc_viewer::{
     config::Config,
@@ -72,19 +73,7 @@ async fn main() -> std::io::Result<()> {
             .service(sitemap_xml)
             // Serve static files with optimized settings
             .service(
-                fs::Files::new("/static/css", "../frontend/src/css")
-                    .prefer_utf8(true)
-                    .use_last_modified(true)
-                    .use_etag(true)
-            )
-            .service(
-                fs::Files::new("/static/js", "../frontend/src/js")
-                    .prefer_utf8(true)
-                    .use_last_modified(true)
-                    .use_etag(true)
-            )
-            .service(
-                fs::Files::new("/static/images", "../frontend/src/images")
+                fs::Files::new("/static", "../frontend/src")
                     .prefer_utf8(true)
                     .use_last_modified(true)
                     .use_etag(true)
