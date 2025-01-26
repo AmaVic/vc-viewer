@@ -501,7 +501,7 @@
         
         <span class="kw">let </span>body = test::read_body(resp).<span class="kw">await</span>;
         <span class="kw">let </span>html = String::from_utf8(body.to_vec()).unwrap();
-        <span class="macro">assert!</span>(html.contains(<span class="string">"Verifiable Credentials Viewer"</span>));
+        <span class="macro">assert!</span>(html.contains(<span class="string">"Visualize Verifiable Credentials with Style"</span>));
         <span class="macro">assert!</span>(html.contains(<span class="string">"Try it Now"</span>));
     }
 
