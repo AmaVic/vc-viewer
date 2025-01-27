@@ -1,10 +1,25 @@
-target/
+# Build artifacts
+backend/target/
+frontend/dist/
+frontend/.parcel-cache/
+frontend/node_modules/
+
+# Git
 .git/
 .gitignore
+
+# Development files
 .env
 **/*.rs.bk
+.specstory/
+.idea/
+README.md
+
+# Docker files
 Dockerfile
 docker-compose.yml
 .dockerignore
-README.md
-.specstory/ 
+
+# Logs
+logs/
+*.log 

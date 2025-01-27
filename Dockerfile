@@ -1,19 +1,21 @@
 FROM rust:1.84 AS builder
 
+# Install Node.js in the Rust image
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /usr/src/app
 
-# Copy frontend files first (needed for SEO files)
-COPY frontend frontend/
+# Copy the entire project (needed for build script)
+COPY . .
 
-# Copy the Cargo files
-COPY backend/Cargo.toml backend/Cargo.lock* backend/
+# Make scripts executable
+RUN chmod +x build.sh run.sh
 
-# Copy source code
-COPY backend/src backend/src
-
-# Build the backend
-WORKDIR /usr/src/app/backend
-RUN cargo build --release
+# Build the project (includes both frontend and backend)
+RUN ./build.sh
 
 FROM ubuntu:22.04
 
@@ -24,16 +26,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Create app directory structure
-WORKDIR /app/backend
+WORKDIR /app
 
-# Copy only the backend binary
-COPY --from=builder /usr/src/app/backend/target/release/vc-viewer .
+# Copy the built application and scripts
+COPY --from=builder /usr/src/app/backend/target/release/vc-viewer backend/target/release/
+COPY --from=builder /usr/src/app/frontend/dist frontend/dist
+COPY --from=builder /usr/src/app/frontend/src frontend/src
+COPY --from=builder /usr/src/app/run.sh .
 
-# Copy frontend files maintaining the exact structure
-COPY --from=builder /usr/src/app/frontend /app/frontend
+# Make run script executable
+RUN chmod +x run.sh
 
 # Environment variables for proper binding and logging
-ENV RUST_LOG=debug
+ENV RUST_LOG=info
 ENV HOST=0.0.0.0
 ENV PORT=8080
 
@@ -42,4 +47,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8080/_health || exit 1
 
 EXPOSE 8080
-CMD ["./vc-viewer"] 
+CMD ["./run.sh"] 

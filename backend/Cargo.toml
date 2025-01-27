@@ -2,6 +2,7 @@
 name = "vc-viewer"
 version = "0.0.1"
 edition = "2021"
+rust-version = "1.75"
 
 [dependencies]
 actix-web = { version = "4.4.0", features = ["compress-brotli", "compress-gzip"] }
