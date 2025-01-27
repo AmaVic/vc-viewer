@@ -41,6 +41,8 @@ jobs:
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.84.0
 
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
