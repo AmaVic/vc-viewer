@@ -17,6 +17,7 @@ pub async fn index_route() -> Result<HttpResponse> {
 /// Generic index handler that can be used for both direct and catch-all routes
 pub async fn render_index() -> Result<HttpResponse> {
     let mut ctx = new_context();
+    ctx.insert("current_page", "none");
     
     // Add request path for canonical URLs
     ctx.insert("request", &tera::to_value(RequestContext {
@@ -121,7 +122,7 @@ pub async fn create_theme() -> Result<HttpResponse> {
 #[actix_web::get("/privacy")]
 pub async fn privacy() -> Result<HttpResponse> {
     let mut ctx = new_context();
-    ctx.insert("current_page", "privacy");
+    ctx.insert("current_page", "none");
     
     ctx.insert("request", &tera::to_value(RequestContext {
         path: "/privacy".to_string()
@@ -139,7 +140,7 @@ pub async fn privacy() -> Result<HttpResponse> {
 #[actix_web::get("/cookies")]
 pub async fn cookies() -> Result<HttpResponse> {
     let mut ctx = new_context();
-    ctx.insert("current_page", "cookies");
+    ctx.insert("current_page", "none");
     
     ctx.insert("request", &tera::to_value(RequestContext {
         path: "/cookies".to_string()

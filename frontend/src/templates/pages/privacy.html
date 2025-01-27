@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <link href="/frontend/src/css/docs.css" rel="stylesheet">
+    <link href="/static/css/docs.css" rel="stylesheet">
     <title>Privacy Policy - VC Viewer</title>
     <meta name="description" content="Privacy policy for VC Viewer - our commitment to protecting your privacy and data.">
 {% endblock %}
@@ -87,7 +87,7 @@
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                document.querySelectorAll('.nav-link').forEach(link => {
+                document.querySelectorAll('.docs-sidebar .nav-link').forEach(link => {
                     link.classList.remove('active');
                     if (link.getAttribute('href') === '#' + entry.target.id) {
                         link.classList.add('active');

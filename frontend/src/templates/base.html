@@ -17,6 +17,7 @@
     <link href="/static/css/solid.min.css" rel="stylesheet">
     <link href="/static/css/brands.min.css" rel="stylesheet">
     <link href="/static/css/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="/static/css/prism-toolbar.min.css" rel="stylesheet">
     <link href="/static/css/styles.css" rel="stylesheet">
     
     {% block head %}{% endblock %}
@@ -35,16 +36,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/viewer">Viewer</a>
+                        <a class="nav-link {% if current_page == 'viewer' %}active{% endif %}" href="/viewer">Viewer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/themes">Themes</a>
+                        <a class="nav-link {% if current_page == 'themes' %}active{% endif %}" href="/themes">Themes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/docs">Docs</a>
+                        <a class="nav-link {% if current_page == 'docs' %}active{% endif %}" href="/docs">Docs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link {% if current_page == 'about' %}active{% endif %}" href="/about">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="https://github.com/AmaVic/vc-viewer" target="_blank" rel="noopener">
@@ -64,31 +65,10 @@
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/prism.js"></script>
+    <script src="/static/js/prism-toolbar.min.js"></script>
+    <script src="/static/js/prism-copy-to-clipboard.min.js"></script>
     <script src="/static/js/prism-json.min.js"></script>
     {% block scripts %}{% endblock %}
-
-    <!-- Navigation highlighting -->
-    <script>
-        $(document).ready(function() {
-            // Get current path
-            const path = window.location.pathname;
-            // Remove trailing slash if present
-            const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
-            
-            // Find and highlight the current nav item
-            $('.nav-link').each(function() {
-                const href = $(this).attr('href');
-                if (href === cleanPath || (cleanPath === '' && href === '/')) {
-                    $(this).addClass('active');
-                }
-            });
-
-            // Initialize Prism.js
-            if (typeof Prism !== 'undefined') {
-                Prism.highlightAll();
-            }
-        });
-    </script>
 
     <!-- Page load time measurement -->
     <script>

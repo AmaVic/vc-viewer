@@ -40,26 +40,20 @@ const paths = {
         }
     },
     prismjs: {
-        css: {
-            src: 'node_modules/prismjs/themes/prism-tomorrow.min.css',
-            dest: 'src/css/prism-tomorrow.min.css'
-        },
+        css: [
+            {
+                src: 'node_modules/prismjs/themes/prism-tomorrow.min.css',
+                dest: 'src/css/prism-tomorrow.min.css'
+            },
+            {
+                src: 'node_modules/prismjs/plugins/toolbar/prism-toolbar.min.css',
+                dest: 'src/css/prism-toolbar.min.css'
+            }
+        ],
         js: [
             {
                 src: 'node_modules/prismjs/prism.js',
                 dest: 'src/js/prism.js'
-            },
-            {
-                src: 'node_modules/prismjs/components/prism-json.min.js',
-                dest: 'src/js/prism-json.min.js'
-            },
-            {
-                src: 'node_modules/prismjs/components/prism-javascript.min.js',
-                dest: 'src/js/prism-javascript.min.js'
-            },
-            {
-                src: 'node_modules/prismjs/components/prism-css.min.js',
-                dest: 'src/js/prism-css.min.js'
             },
             {
                 src: 'node_modules/prismjs/plugins/toolbar/prism-toolbar.min.js',
@@ -68,6 +62,14 @@ const paths = {
             {
                 src: 'node_modules/prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js',
                 dest: 'src/js/prism-copy-to-clipboard.min.js'
+            },
+            {
+                src: 'node_modules/prismjs/components/prism-json.min.js',
+                dest: 'src/js/prism-json.min.js'
+            },
+            {
+                src: 'node_modules/prismjs/components/prism-javascript.min.js',
+                dest: 'src/js/prism-javascript.min.js'
             }
         ]
     },
@@ -121,7 +123,7 @@ paths.fontawesome.css.forEach(file => copyFile(file.src, file.dest));
 copyDir(paths.fontawesome.webfonts.src, paths.fontawesome.webfonts.dest);
 
 // Copy Prism.js files
-copyFile(paths.prismjs.css.src, paths.prismjs.css.dest);
+paths.prismjs.css.forEach(file => copyFile(file.src, file.dest));
 paths.prismjs.js.forEach(file => copyFile(file.src, file.dest));
 
 // Copy html2canvas

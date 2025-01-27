@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <link href="/frontend/src/css/docs.css" rel="stylesheet">
+    <link href="/static/css/docs.css" rel="stylesheet">
     <title>Cookie Policy - VC Viewer</title>
     <meta name="description" content="Cookie policy for VC Viewer - we use no cookies or tracking technologies.">
 {% endblock %}
@@ -79,7 +79,7 @@
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                document.querySelectorAll('.nav-link').forEach(link => {
+                document.querySelectorAll('.docs-sidebar .nav-link').forEach(link => {
                     link.classList.remove('active');
                     if (link.getAttribute('href') === '#' + entry.target.id) {
                         link.classList.add('active');

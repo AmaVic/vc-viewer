@@ -88,10 +88,11 @@ body {
     overflow-x: auto;
     font-size: 0.875rem;
     color: #ffffff;
+    position: relative;
 }
 
 .docs-content pre code {
-    color: #ffffff;
+    display: block;
 }
 
 .docs-content code {
@@ -139,6 +140,53 @@ body {
 
 .step-nav a:hover {
     background: rgba(59, 130, 246, 0.1);
+}
+
+/* Button styles */
+.btn {
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--text-white);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary);
+    color: var(--text-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #64748b;
+}
+
+.btn-secondary:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Responsive adjustments */

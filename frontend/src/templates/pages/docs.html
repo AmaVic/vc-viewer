@@ -94,19 +94,18 @@
                     <p>Visit <a href="https://vc-viewer.vamaralds.be">vc-viewer.vamaralds.be</a> to use VC Viewer immediately without installation.</p>
 
                     <h4>Option 1: Using Docker (Recommended)</h4>
-                    <pre><code class="language-bash"># Clone the repository
+                    <pre><code class="language-shell"># Clone the repository
 git clone https://github.com/AmaVic/vc-viewer.git
 cd vc-viewer
 
 # Build and run using Docker Compose
 docker compose up --build</code></pre>
-
                     <div class="note">
                         <strong>Note:</strong> The Docker image needs to be built locally as it's not yet published to any container registry.
                     </div>
 
                     <h4>Option 2: Manual Installation</h4>
-                    <pre><code class="language-bash"># Clone the repository
+                    <pre><code class="language-shell"># Clone the repository
 git clone https://github.com/AmaVic/vc-viewer.git
 cd vc-viewer
 
@@ -203,13 +202,9 @@ cargo run --release</code></pre>
 
 {% block scripts %}
     <!-- Syntax highlighting -->
-    <script src="/static/js/prism.js"></script>
-    <script src="/static/js/prism-toolbar.min.js"></script>
-    <script src="/static/js/prism-copy-to-clipboard.min.js"></script>
     <script src="/static/js/prism-json.min.js"></script>
-    <script src="/static/js/prism-bash.min.js"></script>
+    <script src="/static/js/prism-javascript.min.js"></script>
 
-    <!-- Documentation scripts -->
     <script>
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

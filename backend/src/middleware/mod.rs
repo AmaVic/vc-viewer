@@ -46,13 +46,15 @@ where
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
         let path = req.path().to_string();
-        let content_type = if path.starts_with("/static/") || path.starts_with("/dist/") {
+        let content_type = if path.starts_with("/static/") || path.starts_with("/dist/") || path.starts_with("/frontend/src/") {
             if path.ends_with(".css") {
                 Some(HeaderValue::from_static("text/css"))
             } else if path.ends_with(".js") {
                 Some(HeaderValue::from_static("application/javascript"))
             } else if path.ends_with(".svg") {
                 Some(HeaderValue::from_static("image/svg+xml"))
+            } else if path.ends_with(".ico") {
+                Some(HeaderValue::from_static("image/x-icon"))
             } else {
                 None
             }
