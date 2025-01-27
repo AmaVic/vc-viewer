@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["compression"]};
+window.SIDEBAR_ITEMS = {"mod":["compression"],"struct":["MimeTypeMiddleware","MimeTypeMiddlewareService"]};
