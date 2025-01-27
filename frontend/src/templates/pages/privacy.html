@@ -2,8 +2,8 @@
 
 {% block head %}
     <link href="/static/css/docs.css" rel="stylesheet">
-    <title>Privacy Policy - VC Viewer</title>
-    <meta name="description" content="Privacy policy for VC Viewer - our commitment to protecting your privacy and data.">
+    <title>VC Viewer - Privacy Policy</title>
+    <meta name="description" content="Privacy policy for VC Viewer - No user data collection. Period.">
 {% endblock %}
 
 {% block content %}
@@ -28,7 +28,10 @@
 
             <section id="transparency">
                 <h2>Transparency</h2>
-                <p>At VC Viewer, we take your privacy seriously. Our approach is simple: we collect absolutely no data from our users. This policy outlines our commitment to protecting your privacy and explains how we handle your information.</p>
+                <p>
+                    VC Viewer takes your privacy seriously. The chosen approach is very simple: we collect absolutely no user data.
+                    This page outlines our commitment to protecting your privacy and explains how we handle your information.
+                </p>
             </section>
 
             <section id="data-collection">
@@ -39,7 +42,7 @@
                     <li>No tracking scripts</li>
                     <li>No user behavior monitoring</li>
                     <li>No personal information collection</li>
-                    <li>No cookies of any kind</li>
+                    <li>No cookies of any kind (see <a href="/cookies" target="_blank"> cookies policy</a>)</li>
                 </ul>
             </section>
 
@@ -48,19 +51,24 @@
                 <p>Our server maintains minimal logs for operational and debugging purposes only. In production, these logs only record:</p>
                 <ul>
                     <li>The requested page or resource</li>
+                    <li>The HTTP method and version</li>
                     <li>The HTTP status code of the response</li>
-                    <li>The timestamp of the request</li>
+                    <li>The size of the response in bytes</li>
+                    <li>The time taken to process the request</li>
                 </ul>
 
-                <p>Example log entry when viewing the homepage:</p>
-                <pre><code>GET "/" 200 0.123</code></pre>
+                <p>The user's IP addresses, user agents, and other identifying information are not stored in these logs.</p>
+
+                <p>Example log entries when viewing the website pages:</p>
+                <pre><code>[INFO ] GET /privacy HTTP/1.1 200 9083 0.008481
+[INFO ] GET /static/css/solid.min.css HTTP/1.1 200 572 0.000299
+[INFO ] GET /static/css/fontawesome.min.css HTTP/1.1 200 56777 0.002067
+[INFO ] GET /static/css/docs.css HTTP/1.1 200 3895 0.003813</code></pre>
 
                 <p>These logs:</p>
                 <ul>
-                    <li>Are automatically rotated and deleted after 7 days</li>
                     <li>Are never used for analytics or tracking</li>
                     <li>Do not contain any personal identifiable information</li>
-                    <li>Are only used for debugging and maintaining service quality</li>
                 </ul>
             </section>
 

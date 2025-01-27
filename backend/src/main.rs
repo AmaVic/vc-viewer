@@ -99,6 +99,12 @@ async fn main() -> std::io::Result<()> {
             .service(privacy)
             .service(cookies)
             .service(about)
+            // Return 404 for sw.js requests
+            .service(
+                web::resource("/sw.js").route(web::get().to(|| async {
+                    HttpResponse::NotFound().finish()
+                }))
+            )
             // Catch-all route to handle SPA routing
             .service(
                 web::resource("/{tail:.*}").route(web::get().to(render_index))
