@@ -70,6 +70,14 @@ const paths = {
             {
                 src: 'node_modules/prismjs/components/prism-javascript.min.js',
                 dest: 'src/js/prism-javascript.min.js'
+            },
+            {
+                src: 'node_modules/prismjs/components/prism-bash.min.js',
+                dest: 'src/js/prism-bash.min.js'
+            },
+            {
+                src: 'node_modules/prismjs/components/prism-shell-session.min.js',
+                dest: 'src/js/prism-shell-session.min.js'
             }
         ]
     },

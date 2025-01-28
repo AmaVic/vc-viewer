@@ -58,7 +58,7 @@ body {
 
 .docs-content h2 {
     color: #334155;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 600;
     margin: 2.5rem 0 1.5rem;
     padding-bottom: 0.5rem;
@@ -66,10 +66,19 @@ body {
 }
 
 .docs-content h3 {
-    color: #475569;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #1e293b;
     font-weight: 600;
-    margin: 2rem 0 1rem;
+}
+
+.docs-content h4 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #334155;
+    font-weight: 600;
 }
 
 .docs-content p {
@@ -113,6 +122,22 @@ body {
 .docs-content .note {
     background: rgba(59, 130, 246, 0.1);
     border-left: 4px solid #3b82f6;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+}
+
+.docs-content .note-danger {
+    background: rgba(237, 74, 41, 0.1);
+    border-left: 4px solid #ef3e1b;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+}
+
+.docs-content .note-warning {
+    background: rgba(237, 159, 41, 0.1);
+    border-left: 4px solid #efb61b;
     padding: 1rem;
     margin: 1.5rem 0;
     border-radius: 0.5rem;

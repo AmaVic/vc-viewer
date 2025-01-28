@@ -1,162 +1,289 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <!-- Theme creation guide specific meta -->
-    <meta name="description" content="Learn how to create custom themes for VC Viewer. Step-by-step guide for developing and submitting your own credential visualization themes.">
-    <meta property="og:description" content="Create your own custom themes for VC Viewer. Complete guide with examples and best practices.">
-    <meta name="twitter:description" content="Step-by-step guide for creating custom VC Viewer themes. Learn theme development and submission process.">
-    <title>VC Viewer - Theme Creation Guide</title>
-
-    <!-- Theme creation guide specific styles -->
-    <link href="/static/css/docs.css" rel="stylesheet">
+    <title>Create Theme - VC Viewer Documentation</title>
+    <meta name="description" content="Learn how to create custom themes for VC Viewer. Step-by-step guide to building beautiful visualizations for Verifiable Credentials.">
     <link href="/static/css/prism-tomorrow.min.css" rel="stylesheet">
-    <link href="/static/css/themes.css" rel="stylesheet">
+    <link href="/static/css/docs.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
     <main class="container-fluid">
         <div class="row">
-            <!-- Sidebar Navigation -->
-            <div class="col-md-3 col-xl-2 docs-sidebar">
+            <div class="col-lg-3 docs-sidebar">
                 <nav class="nav flex-column">
-                    <h5 class="sidebar-heading">Theme Development</h5>
+                    <div class="sidebar-heading">Theme Creation Guide</div>
                     <a class="nav-link" href="#overview">Overview</a>
                     <a class="nav-link" href="#structure">Theme Structure</a>
-                    <a class="nav-link" href="#base-theme">Base Theme</a>
-                    <a class="nav-link" href="#styling">Theme Styling</a>
+                    <a class="nav-link" href="#base-theme">Base Theme Class</a>
+                    <a class="nav-link" href="#creating-theme">Creating Your Theme</a>
+                    <a class="nav-link" href="#styling">Styling Your Theme</a>
                     <a class="nav-link" href="#testing">Testing</a>
-                    <a class="nav-link" href="#submission">Theme Submission</a>
+                    <a class="nav-link" href="#submitting">Submitting Your Theme</a>
                 </nav>
             </div>
 
-            <!-- Main Content -->
-            <div class="col-md-9 col-xl-10 docs-content">
-                <h1>Theme Creation Guide</h1>
-                <p>Learn how to create custom themes for VC Viewer.</p>
+            <div class="col-lg-9 docs-content">
+                <h1>Creating Custom Themes</h1>
 
                 <section id="overview">
                     <h2>Overview</h2>
-                    <p>VC Viewer themes are composed of two main parts:</p>
-                    <ul>
-                        <li>A JavaScript class that extends the base theme and handles credential data</li>
-                        <li>A CSS file that defines the visual appearance of the theme</li>
-                    </ul>
-                    <div class="note">
-                        <strong>Note:</strong> Before creating a new theme, check if a similar theme already exists in our <a href="/themes">Themes Gallery</a>.
-                    </div>
+                    <p>This guide will walk you through creating a custom theme for VC Viewer. Themes define how credentials are visualized, allowing you to create beautiful and functional displays for different types of credentials.</p>
                 </section>
 
                 <section id="structure">
                     <h2>Theme Structure</h2>
-                    <p>Each theme should follow this directory structure:</p>
+                    <p>Each theme consists of two main files:</p>
+                    <ul>
+                        <li>A JavaScript file containing the theme logic (<code>YourTheme.js</code>)</li>
+                        <li>A CSS file for styling (<code>your-theme.css</code>)</li>
+                    </ul>
+
+                    <p>Themes are organized by credential type and variant in the following structure:</p>
                     <pre><code class="language-text">frontend/src/themes/
-└── CredentialType/
-    └── theme-name/
-        ├── theme-name.css
-        └── ThemeName.js</code></pre>
-                    
-                    <p>For example, a modern university degree theme would be structured as:</p>
-                    <pre><code class="language-text">frontend/src/themes/
-└── UniversityDegreeCredential/
-    └── modern/
-        ├── modern.css
-        └── ModernTheme.js</code></pre>
+├── CredentialType/
+│   ├── variant1/
+│   │   ├── Variant1Theme.js
+│   │   └── variant1.css
+│   └── variant2/
+│       ├── Variant2Theme.js
+│       └── variant2.css</code></pre>
                 </section>
 
                 <section id="base-theme">
-                    <h2>Base Theme</h2>
-                    <p>All themes must extend the <code>BaseTheme</code> class and implement required methods:</p>
-                    <pre><code class="language-javascript">class ModernUniversityTheme extends BaseTheme {
-    constructor() {
-        super('modern', 'Modern University Theme');
-        this.supportedTypes = ['UniversityDegreeCredential'];
+                    <h2>Base Theme Class</h2>
+                    <p>All themes extend the <code>BaseTheme</code> class, which provides common functionality and required methods:</p>
+                    <pre><code class="language-javascript">class BaseTheme {
+    constructor(credential) {
+        this.credential = credential;
+        this.subject = credential.credentialSubject;
     }
 
-    render(credential) {
-        // Create and return the theme's HTML structure
-        const container = document.createElement('div');
-        container.className = 'modern-university-theme';
+    // Required methods that must be implemented
+    getThemeTitle() { }
+    getThemeIcon() { }
+    getContentHTML() { }
+
+    // Helper methods available to all themes
+    formatDate(dateString) { }
+    getIssuerName() { }
+    render() { }
+}</code></pre>
+                </section>
+
+                <section id="creating-theme">
+                    <h2>Creating Your Theme</h2>
+                    <p>Here's an example of a custom theme for university degrees that shows how to handle specific credential fields:</p>
+                    <pre><code class="language-javascript">class ModernUniversityTheme extends BaseTheme {
+    // Define theme metadata - used for theme selection
+    static id = 'modern';
+    static name = 'Modern University Theme';
+    static description = 'A modern design for university degrees';
+    static author = 'Your Name';
+
+    getThemeTitle() {
+        // Use specific degree information from the credential
+        const degreeType = this.subject.degree.type;
+        const degreeName = this.subject.degree.name;
+        return `${degreeType}: ${degreeName}`;
+    }
+
+    getThemeIcon() {
+        // Check if the credential has a custom image
+        if (this.subject.degree.image) {
+            // Return an img element with the credential's image
+            return `&lt;img 
+                src="${this.subject.degree.image}" 
+                alt="Degree Icon"
+                class="degree-icon"
+            /&gt;`;
+        }
         
-        // Add credential data to the container
-        container.innerHTML = `
-            &lt;div class="header"&gt;
-                &lt;h1&gt;${this.getIssuerName(credential)}&lt;/h1&gt;
-            &lt;/div&gt;
-            &lt;div class="content"&gt;
-                &lt;!-- Add more credential data here --&gt;
+        // Fallback to a default icon if no image is provided
+        return '&lt;i class="fas fa-graduation-cap"&gt;&lt;/i&gt;';
+    }
+
+    getContentHTML() {
+        // Early return if required data is missing
+        if (!this.credential || !this.subject) return '';
+
+        // Extract specific degree-related information
+        const studentName = this.subject.name;
+        const major = this.subject.degree.major;
+        const honors = this.subject.degree.honors;
+        const gpa = this.subject.degree.gpa;
+        const graduationDate = this.formatDate(this.subject.degree.graduationDate);
+        const universityName = this.getIssuerName();
+        const facultyName = this.subject.degree.faculty;
+        const studentId = this.subject.studentId;
+        const universityLogo = this.subject.degree.universityLogo;
+
+        // Build the HTML structure with detailed degree information
+        return `
+            &lt;div class="modern-university-theme"&gt;
+                &lt;!-- Header Section --&gt;
+                &lt;div class="degree-header"&gt;
+                    ${universityLogo ? `&lt;img src="${universityLogo}" alt="University Logo" class="university-logo"/&gt;` : ''}
+                    ${this.getThemeIcon()}
+                    &lt;h1&gt;${this.getThemeTitle()}&lt;/h1&gt;
+                    &lt;div class="university-name"&gt;${universityName}&lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Student Information --&gt;
+                &lt;div class="student-info"&gt;
+                    &lt;div class="info-group"&gt;
+                        &lt;label&gt;Student Name&lt;/label&gt;
+                        &lt;div class="value"&gt;${studentName}&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class="info-group"&gt;
+                        &lt;label&gt;Student ID&lt;/label&gt;
+                        &lt;div class="value"&gt;${studentId}&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Degree Details --&gt;
+                &lt;div class="degree-details"&gt;
+                    &lt;div class="detail-item"&gt;
+                        &lt;label&gt;Major&lt;/label&gt;
+                        &lt;div class="value"&gt;${major}&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class="detail-item"&gt;
+                        &lt;label&gt;Faculty&lt;/label&gt;
+                        &lt;div class="value"&gt;${facultyName}&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class="detail-item"&gt;
+                        &lt;label&gt;Graduation Date&lt;/label&gt;
+                        &lt;div class="value"&gt;${graduationDate}&lt;/div&gt;
+                    &lt;/div&gt;
+                    ${honors ? `
+                        &lt;div class="detail-item honors"&gt;
+                            &lt;label&gt;Honors&lt;/label&gt;
+                            &lt;div class="value"&gt;${honors}&lt;/div&gt;
+                        &lt;/div&gt;
+                    ` : ''}
+                    ${gpa ? `
+                        &lt;div class="detail-item"&gt;
+                            &lt;label&gt;GPA&lt;/label&gt;
+                            &lt;div class="value"&gt;${gpa}&lt;/div&gt;
+                        &lt;/div&gt;
+                    ` : ''}
+                &lt;/div&gt;
+
+                &lt;!-- Verification Info --&gt;
+                &lt;div class="verification-info"&gt;
+                    &lt;div class="issue-date"&gt;
+                        &lt;label&gt;Issue Date&lt;/label&gt;
+                        &lt;div class="value"&gt;${this.formatDate(this.credential.issuanceDate)}&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class="credential-id"&gt;
+                        &lt;label&gt;Credential ID&lt;/label&gt;
+                        &lt;div class="value"&gt;${this.credential.id}&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Footer --&gt;
+                &lt;div class="degree-footer"&gt;
+                    &lt;a href="#" onclick="window.viewOriginalCredential()"&gt;
+                        &lt;i class="fas fa-external-link-alt"&gt;&lt;/i&gt;
+                        View Original Credential
+                    &lt;/a&gt;
+                    &lt;span class="powered-by"&gt;
+                        Powered by VC Viewer
+                    &lt;/span&gt;
+                &lt;/div&gt;
             &lt;/div&gt;
         `;
-        
-        return container;
-    }
-
-    getIssuerName(credential) {
-        return typeof credential.issuer === 'string' 
-            ? credential.issuer 
-            : credential.issuer.name || credential.issuer.id;
     }
 }</code></pre>
                 </section>
 
                 <section id="styling">
-                    <h2>Theme Styling</h2>
-                    <p>Create a CSS file for your theme's visual appearance:</p>
+                    <h2>Styling Your Theme</h2>
+                    <p>Create a CSS file to style your theme. Make sure to namespace all styles under your theme's main class:</p>
                     <pre><code class="language-css">.modern-university-theme {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
-.modern-university-theme .header {
+.modern-university-theme .degree-header {
     text-align: center;
     margin-bottom: 2rem;
 }
 
-.modern-university-theme .content {
-    /* Add more styles */
+.modern-university-theme .university-logo {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.modern-university-theme .degree-icon {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.modern-university-theme .student-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.modern-university-theme .degree-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.modern-university-theme .verification-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
 }</code></pre>
 
-                    <h3>Best Practices</h3>
-                    <ul>
-                        <li>Use BEM or similar naming convention to avoid style conflicts</li>
-                        <li>Support both light and dark modes using CSS variables</li>
-                        <li>Ensure responsive design for various screen sizes</li>
-                        <li>Optimize for print when exporting to PDF</li>
-                    </ul>
+                    <div class="note">
+                        <strong>Note:</strong> When handling images in your theme, always:
+                        <ul>
+                            <li>Add appropriate fallbacks for missing images</li>
+                            <li>Set maximum dimensions to maintain layout consistency</li>
+                            <li>Use proper alt text for accessibility</li>
+                            <li>Consider lazy loading for better performance</li>
+                        </ul>
+                    </div>
                 </section>
 
                 <section id="testing">
-                    <h2>Testing Your Theme</h2>
-                    <p>Test your theme thoroughly with different credentials:</p>
-                    <ol>
-                        <li>Test with minimal valid credentials</li>
-                        <li>Test with full credentials containing all optional fields</li>
-                        <li>Verify dark mode appearance</li>
-                        <li>Test responsiveness on different screen sizes</li>
-                        <li>Test PDF and image export functionality</li>
-                    </ol>
+                    <h2>Testing</h2>
+                    <p>Test your theme with various credential data to ensure it handles:</p>
+                    <ul>
+                        <li>All required and optional fields</li>
+                        <li>Missing or null values</li>
+                        <li>Different screen sizes (responsive design)</li>
+                        <li>Export to PDF, image, and SVG formats</li>
+                    </ul>
                 </section>
 
-                <section id="submission">
-                    <h2>Theme Submission</h2>
+                <section id="submitting">
+                    <h2>Submitting Your Theme</h2>
                     <p>To submit your theme:</p>
                     <ol>
-                        <li>Fork the <a href="https://github.com/AmaVic/vc-viewer">VC Viewer repository</a></li>
-                        <li>Add your theme following the structure guidelines</li>
-                        <li>Update the themes registry in <code>frontend/src/themes/registry.js</code></li>
-                        <li>Submit a pull request with:
+                        <li>Fork the VC Viewer repository</li>
+                        <li>Add your theme files to the appropriate directory</li>
+                        <li>Update the theme registry in <code>BaseTheme.js</code></li>
+                        <li>Create a pull request with:
                             <ul>
-                                <li>Theme files (JS and CSS)</li>
-                                <li>Updated registry</li>
-                                <li>Example credentials for testing</li>
-                                <li>Screenshots of the theme</li>
+                                <li>A description of your theme</li>
+                                <li>Screenshots showing different credential states</li>
+                                <li>Example credential data for testing</li>
                             </ul>
                         </li>
                     </ol>
-                    <div class="note">
-                        <strong>Note:</strong> Make sure your theme follows our code style and includes appropriate documentation.
-                    </div>
                 </section>
             </div>
         </div>
@@ -166,10 +293,10 @@
 {% block scripts %}
     <!-- Syntax highlighting -->
     <script src="/static/js/prism.js"></script>
+    <script src="/static/js/prism-json.min.js"></script>
     <script src="/static/js/prism-javascript.min.js"></script>
     <script src="/static/js/prism-css.min.js"></script>
 
-    <!-- Menu highlighting -->
     <script>
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

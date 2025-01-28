@@ -65,7 +65,7 @@
                         <li>Navigate to the <a href="/viewer">Viewer page</a></li>
                         <li>Paste your W3C Verifiable Credential in JSON format</li>
                         <li>Choose a theme that matches your credential type</li>
-                        <li>Export the visualization as an image or PDF</li>
+                        <li>Export the visualization as an image, PDF or SVG</li>
                     </ol>
                 </section>
 
@@ -76,14 +76,16 @@
                     <ul>
                         <li>Option 1 (Docker):
                             <ul>
-                                <li>Docker</li>
-                                <li>Docker Compose</li>
+                                <li>Docker (version 27.4.0 or higher)</li>
+                                <li>Docker Compose (version 2.31.0 or higher)</li>
                             </ul>
                         </li>
                         <li>Option 2 (Manual):
                             <ul>
-                                <li>Rust (version 1.75.0 or higher)</li>
-                                <li>Cargo (version 1.75.0 or higher)</li>
+                                <li>Rust (version 1.84.0 or higher)</li>
+                                <li>Cargo (version 1.84.0 or higher)</li>
+                                <li>Node.js (version 22.11.0 or higher)</li>
+                                <li>npm (version 10.9.0 or higher)</li>
                             </ul>
                         </li>
                     </ul>
@@ -93,13 +95,15 @@
                     <h4>Using the Hosted Version</h4>
                     <p>Visit <a href="https://vc-viewer.vamaralds.be">vc-viewer.vamaralds.be</a> to use VC Viewer immediately without installation.</p>
 
-                    <h4>Option 1: Using Docker (Recommended)</h4>
+                    <h4>Option 1: Local Installation with Docker</h4>
                     <pre><code class="language-shell"># Clone the repository
 git clone https://github.com/AmaVic/vc-viewer.git
 cd vc-viewer
 
-# Build and run using Docker Compose
-docker compose up --build</code></pre>
+# Build docker image (may require sudo)
+docker compose build
+# Start docker container
+docker compose up</code></pre>
                     <div class="note">
                         <strong>Note:</strong> The Docker image needs to be built locally as it's not yet published to any container registry.
                     </div>
@@ -109,8 +113,22 @@ docker compose up --build</code></pre>
 git clone https://github.com/AmaVic/vc-viewer.git
 cd vc-viewer
 
-# Build and run in release mode
+# Build the frontend
+cd frontend
+npm install
+npm run build
+
+# Build the backend
+cd ../backend
+cargo build --release
+
+# Start the Web Server
 cargo run --release</code></pre>
+
+<p>Utility scripts are also available to clean, build and run the application from the root project directory:</p>
+<pre><code class="language-shell">./clean.sh # Clean frontend and backend
+./build.sh # Build frontend and backend
+./run.sh # Run the webserver</code></pre>
 
                     <div class="note">
                         <strong>Important:</strong> Always run the application in release mode (<code>--release</code>) for production use. Debug mode includes additional logging of IP addresses and browser information, which are excluded in release mode to protect user privacy. For more information about our privacy practices, see our <a href="/privacy">Privacy Policy</a>.
@@ -148,6 +166,12 @@ cargo run --release</code></pre>
     }
   }
 }</code></pre>
+                    <div class="note-danger">
+                        <strong>Important:</strong> The VC Viewer does not provide any kind of cryptographic validation of the certificates. It is purely a visualizer.
+                    </div>
+                    <div class="note-warning">
+                        <strong>Warning:</strong> Validation of JSON as W3C Verifiable Credentials is weak and does not support many different specific types of credentials. Contributions are welcome! Feel free to create a pull request on the <a href="https://github.com/AmaVic/vc-viewer" target="_blank">Github repository</a>.
+                    </div>
                 </section>
 
                 <section id="using-themes">
@@ -202,8 +226,11 @@ cargo run --release</code></pre>
 
 {% block scripts %}
     <!-- Syntax highlighting -->
+    <script src="/static/js/prism.js"></script>
     <script src="/static/js/prism-json.min.js"></script>
     <script src="/static/js/prism-javascript.min.js"></script>
+    <script src="/static/js/prism-bash.min.js"></script>
+    <script src="/static/js/prism-shell-session.min.js"></script>
 
     <script>
         // Smooth scrolling for anchor links
