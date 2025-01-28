@@ -220,14 +220,11 @@
     justify-content: space-between;
     align-items: center;
     background: #f8fafc;
-    flex-wrap: wrap;
-    gap: 1rem;
 }
 
 .modern-driver-license-theme .credential-footer .credential-info {
     display: flex;
     gap: 2rem;
-    flex-wrap: wrap;
 }
 
 .modern-driver-license-theme .credential-footer .info-item {
@@ -235,7 +232,6 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
-    white-space: nowrap;
 }
 
 .modern-driver-license-theme .credential-footer .label {
@@ -251,7 +247,6 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    flex-wrap: wrap;
 }
 
 .modern-driver-license-theme .credential-footer .credential-link {
@@ -263,7 +258,6 @@
     font-size: 0.875rem;
     font-weight: 500;
     transition: all 0.2s;
-    white-space: nowrap;
 }
 
 .modern-driver-license-theme .credential-footer .credential-link:hover {
@@ -272,9 +266,8 @@
 }
 
 .modern-driver-license-theme .credential-footer .powered-by {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: #6b7280;
-    white-space: nowrap;
 }
 
 .modern-driver-license-theme .credential-footer .powered-by a {

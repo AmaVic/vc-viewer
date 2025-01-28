@@ -12,8 +12,9 @@ use log;
 
 use vc_viewer::{
     config::Config,
-    handlers::pages::{index_route, render_index, viewer, themes, docs, create_theme, privacy, cookies, about},
+    handlers::pages::{index_route, viewer, themes, docs, create_theme, privacy, cookies, about},
     handlers::health::health_check,
+    handlers::errors::AppError,
     middleware::{CompressionMonitor, MimeTypeMiddleware},
     utils::setup_logging,
 };
@@ -78,18 +79,6 @@ async fn main() -> std::io::Result<()> {
                     .use_last_modified(true)
                     .use_etag(true)
             )
-            .service(
-                fs::Files::new("/static/themes", "../frontend/src/themes")
-                    .prefer_utf8(true)
-                    .use_last_modified(true)
-                    .use_etag(true)
-            )
-            .service(
-                fs::Files::new("/dist", "../frontend/dist")
-                    .prefer_utf8(true)
-                    .use_last_modified(true)
-                    .use_etag(true)
-            )
             // Route handlers
             .service(index_route)
             .service(viewer)
@@ -98,16 +87,12 @@ async fn main() -> std::io::Result<()> {
             .service(create_theme)
             .service(privacy)
             .service(cookies)
-            .service(about)
-            // Return 404 for sw.js requests
+            .service(about)            
+            // Catch-all route to return 404 for unknown routes
             .service(
-                web::resource("/sw.js").route(web::get().to(|| async {
-                    HttpResponse::NotFound().finish()
+                web::resource("/{tail:.*}").route(web::get().to(|| async {
+                    Err::<HttpResponse, actix_web::Error>(AppError::NotFound("Page not found".to_string()).into())
                 }))
-            )
-            // Catch-all route to handle SPA routing
-            .service(
-                web::resource("/{tail:.*}").route(web::get().to(render_index))
             )
     })
     .workers(config.workers)

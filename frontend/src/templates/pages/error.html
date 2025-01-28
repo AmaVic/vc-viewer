@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <meta name="description" content="Page not found - VC Viewer">
+    <meta property="og:description" content="The requested page could not be found.">
+    <meta name="twitter:description" content="The requested page could not be found.">
+    <title>{% if status_code == 404 %}Page Not Found{% else %}Error{% endif %} - VC Viewer</title>
+{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                {% if status_code == 404 %}
+                    <div class="error-code">404</div>
+                    <h1 class="error-title">Page Not Found</h1>
+                    <p class="error-description">
+                        The page you're looking for doesn't exist or has been moved.
+                    </p>
+                {% else %}
+                    <div class="error-code">{{ status_code }}</div>
+                    <h1 class="error-title">An Error Occurred</h1>
+                    <p class="error-description">
+                        {{ error }}
+                    </p>
+                {% endif %}
+                <div class="error-actions">
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home"></i> Go Home
+                    </a>
+                    <a href="/docs" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-book"></i> Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

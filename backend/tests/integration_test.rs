@@ -175,4 +175,10 @@ async fn test_error_handling() {
     let resp = test::call_service(&app, req).await;
     
     assert_eq!(resp.status(), 404);
+    
+    // Check response body contains 404 page content
+    let body = test::read_body(resp).await;
+    let html = String::from_utf8(body.to_vec()).unwrap();
+    assert!(html.contains("Page Not Found"));
+    assert!(html.contains("The page you're looking for doesn't exist or has been moved"));
 } 

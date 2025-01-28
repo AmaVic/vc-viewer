@@ -5,7 +5,7 @@
 
 pub mod pages;
 pub mod health;
-mod errors;
+pub mod errors;
 
 pub use pages::*;
 pub use errors::*;

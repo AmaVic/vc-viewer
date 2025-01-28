@@ -84,6 +84,10 @@ const paths = {
             src: 'node_modules/jspdf/dist/jspdf.umd.min.js',
             dest: 'src/js/jspdf.umd.min.js'
         }
+    },
+    themes: {
+        src: 'src/themes',
+        dest: 'src/themes'
     }
 };
 
@@ -106,7 +110,11 @@ function copyDir(src, dest) {
     for (const file of files) {
         const srcPath = path.join(src, file);
         const destPath = path.join(dest, file);
-        fs.copyFileSync(srcPath, destPath);
+        if (fs.statSync(srcPath).isDirectory()) {
+            copyDir(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
     }
     console.log(`Copied directory ${src} to ${dest}`);
 }
@@ -131,5 +139,8 @@ copyFile(paths.html2canvas.js.src, paths.html2canvas.js.dest);
 
 // Copy jsPDF
 copyFile(paths.jspdf.js.src, paths.jspdf.js.dest);
+
+// Copy theme files
+copyDir(paths.themes.src, paths.themes.dest);
 
 console.log('All assets copied successfully!'); 
