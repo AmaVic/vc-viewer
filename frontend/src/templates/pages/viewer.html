@@ -103,6 +103,9 @@
                                     <button class="btn btn-outline-primary btn-sm" id="exportPDF">
                                         <i class="fas fa-file-pdf me-2"></i>Export PDF
                                     </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="exportSVG">
+                                        <i class="fas fa-bezier-curve me-2"></i>Export SVG
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -119,6 +122,7 @@
 {% block scripts %}
     <!-- Export dependencies -->
     <script src="/static/js/html2canvas.min.js"></script>
+    <script src="/static/js/html-to-image.js"></script>
     <script src="/static/js/jspdf.umd.min.js"></script>
 
     <!-- Syntax highlighting -->

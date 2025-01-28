@@ -79,6 +79,12 @@ const paths = {
             dest: 'src/js/html2canvas.min.js'
         }
     },
+    htmlToImage: {
+        js: {
+            src: 'node_modules/html-to-image/dist/html-to-image.js',
+            dest: 'src/js/html-to-image.js'
+        }
+    },
     jspdf: {
         js: {
             src: 'node_modules/jspdf/dist/jspdf.umd.min.js',
@@ -136,6 +142,9 @@ paths.prismjs.js.forEach(file => copyFile(file.src, file.dest));
 
 // Copy html2canvas
 copyFile(paths.html2canvas.js.src, paths.html2canvas.js.dest);
+
+// Copy html-to-image
+copyFile(paths.htmlToImage.js.src, paths.htmlToImage.js.dest);
 
 // Copy jsPDF
 copyFile(paths.jspdf.js.src, paths.jspdf.js.dest);

@@ -718,6 +718,44 @@ $(document).ready(function() {
         }
     });
 
+    $('#exportSVG').click(async function() {
+        const $output = $('#previewContainer');
+        const $credential = $output.children().first(); // Get first child of preview container
+        
+        if ($credential.length === 0) {
+            showError('No credential to export. Please input a valid credential first.');
+            return;
+        }
+        
+        try {
+            // Show loading state
+            const $btn = $(this);
+            const originalText = $btn.html();
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Exporting...');
+            
+            // Convert to SVG using html-to-image
+            const svgString = await htmlToImage.toSvg($credential[0], {
+                quality: 1,
+                backgroundColor: '#ffffff'
+            });
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = 'credential.svg';
+            link.href = svgString;
+            link.click();
+            
+            // Reset button state
+            $btn.prop('disabled', false).html(originalText);
+            
+            logger.info('Credential exported as SVG');
+        } catch (error) {
+            logger.error('Error exporting credential as SVG:', error);
+            showError('Failed to export SVG. Please try again.');
+            $(this).prop('disabled', false).html(originalText);
+        }
+    });
+
     // Initial state - don't show validation feedback
     $('.validation-feedback').removeClass('show');
 }); 
