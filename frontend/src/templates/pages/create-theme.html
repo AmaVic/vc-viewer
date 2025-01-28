@@ -69,6 +69,86 @@
     getIssuerName() { }
     render() { }
 }</code></pre>
+
+                    <h3>Theme Registration</h3>
+                    <p>Themes are automatically registered based on their static properties. Each theme must define the following static properties:</p>
+                    
+                    <pre><code class="language-javascript">class ModernUniversityTheme extends BaseTheme {
+    // Required static properties for automatic registration
+    static id = 'modern';                                           // Unique identifier for the theme
+    static name = 'Modern University Theme';                        // Display name
+    static description = 'A modern design for university degrees';  // Theme description
+    static author = 'Your Name';                                    // Theme author
+    static supportedTypes = ['UniversityDegreeCredential'];        // Supported credential types
+    
+    // ... rest of the theme implementation
+}</code></pre>
+
+                    <div class="note">
+                        <strong>Important:</strong> Make sure to:
+                        <ul>
+                            <li>Use a unique <code>id</code> within the credential type namespace</li>
+                            <li>Specify all supported credential types in <code>supportedTypes</code></li>
+                            <li>Provide meaningful name and description for the theme selector UI</li>
+                        </ul>
+                    </div>
+
+                    <h3>Theme Directory Structure</h3>
+                    <p>Your theme should be placed in the appropriate credential type directory:</p>
+                    <pre><code class="language-text">frontend/src/themes/
+├── UniversityDegreeCredential/
+│   └── modern/              # Your theme directory
+│       ├── index.js         # Exports your theme class
+│       ├── ModernTheme.js   # Your theme implementation
+│       └── modern.css       # Your theme styles</code></pre>
+
+                    <div class="note">
+                        <strong>Important:</strong> Make sure to:
+                        <ul>
+                            <li>Place your theme in the correct credential type directory</li>
+                            <li>Export your theme class in <code>index.js</code></li>
+                            <li>Name your files consistently with your theme ID</li>
+                        </ul>
+                    </div>
+
+                    <h3>Dependencies</h3>
+                    <p>The following dependencies are available for use in your theme:</p>
+                    <ul>
+                        <li><strong>Font Awesome</strong> - For icons (<code>@fortawesome/fontawesome-free</code>)</li>
+                        <li><strong>Bootstrap</strong> - For layout and utilities (<code>bootstrap</code>)</li>
+                        <li><strong>jQuery</strong> - For DOM manipulation if needed (<code>jquery</code>)</li>
+                    </ul>
+
+                    <p>If your theme requires additional dependencies:</p>
+                    <ol>
+                        <li>Add them to <code>frontend/package.json</code></li>
+                        <li>Update <code>frontend/copy-assets.js</code> to copy required files</li>
+                        <li>Document the dependencies in your theme's README</li>
+                    </ol>
+
+                    <pre><code class="language-javascript">// Example copy-assets.js entry
+module.exports = {
+    // ... existing entries ...
+    yourDependency: {
+        js: {
+            src: 'node_modules/your-dependency/dist/your-dependency.min.js',
+            dest: 'src/js/your-dependency.min.js'
+        },
+        css: {
+            src: 'node_modules/your-dependency/dist/your-dependency.min.css',
+            dest: 'src/css/your-dependency.min.css'
+        }
+    }
+};</code></pre>
+
+                    <div class="note">
+                        <strong>Note:</strong> After adding new dependencies:
+                        <ol>
+                            <li>Run <code>npm install</code> to install the new packages</li>
+                            <li>Run <code>npm run copy-assets</code> to copy dependency files</li>
+                            <li>Add any new script/style tags to your theme's template</li>
+                        </ol>
+                    </div>
                 </section>
 
                 <section id="creating-theme">
@@ -271,19 +351,65 @@
 
                 <section id="submitting">
                     <h2>Submitting Your Theme</h2>
-                    <p>To submit your theme:</p>
+                    <p>Follow these steps to submit your theme to the VC Viewer project:</p>
+
+                    <h3>1. Prepare Your Theme</h3>
+                    <ul>
+                        <li>Ensure all required static properties are defined</li>
+                        <li>Test your theme thoroughly with different credential data</li>
+                        <li>Add comprehensive comments to your code</li>
+                        <li>Include example credentials in your theme directory</li>
+                    </ul>
+
+                    <h3>2. Fork and Structure</h3>
                     <ol>
-                        <li>Fork the VC Viewer repository</li>
-                        <li>Add your theme files to the appropriate directory</li>
-                        <li>Update the theme registry in <code>BaseTheme.js</code></li>
-                        <li>Create a pull request with:
-                            <ul>
-                                <li>A description of your theme</li>
-                                <li>Screenshots showing different credential states</li>
-                                <li>Example credential data for testing</li>
-                            </ul>
+                        <li>Fork the <a href="https://github.com/AmaVic/vc-viewer" target="_blank">VC Viewer repository</a></li>
+                        <li>Create a new branch for your theme (e.g., <code>theme/modern-university</code>)</li>
+                        <li>Add your theme files in the appropriate directory:
+                            <pre><code class="language-text">frontend/src/themes/[CredentialType]/[theme-id]/
+├── index.js           # Exports your theme class
+├── ThemeClass.js     # Your theme implementation
+├── theme.css         # Your theme styles
+├── README.md         # Theme documentation
+└── examples/         # Example credentials
+    └── example.json  # Example credential data</code></pre>
                         </li>
                     </ol>
+
+                    <h3>3. Documentation</h3>
+                    <p>Include a <code>README.md</code> in your theme directory with:</p>
+                    <ul>
+                        <li>Theme description and features</li>
+                        <li>Supported credential types and fields</li>
+                        <li>Screenshots showing:
+                            <ul>
+                                <li>Default theme appearance</li>
+                                <li>Different credential states (with/without optional fields)</li>
+                                <li>Responsive design examples</li>
+                            </ul>
+                        </li>
+                        <li>Any special setup or configuration requirements</li>
+                    </ul>
+
+                    <h3>4. Submit Pull Request</h3>
+                    <p>Create a pull request with:</p>
+                    <ul>
+                        <li>A clear title describing your theme</li>
+                        <li>Description of the theme's unique features</li>
+                        <li>Screenshots embedded in the PR description</li>
+                        <li>Links to example credentials</li>
+                        <li>Any special considerations or requirements</li>
+                    </ul>
+
+                    <div class="note">
+                        <strong>Note:</strong> Before submitting:
+                        <ul>
+                            <li>Ensure your theme follows the project's code style</li>
+                            <li>Verify all examples work correctly</li>
+                            <li>Test with different screen sizes and export formats</li>
+                            <li>Make sure all dependencies are properly documented</li>
+                        </ul>
+                    </div>
                 </section>
             </div>
         </div>
