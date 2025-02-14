@@ -11,3 +11,5 @@ frontend/node_modules/
 
 # Keep source files
 !frontend/src/
+
+.DS_Store
