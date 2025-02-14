@@ -8,13 +8,12 @@ A beautiful, open-source tool for visualizing W3C Verifiable Credentials with cu
 - 🔒 **Privacy First**: All processing happens client-side. Your credentials never leave your browser.
 - 🎨 **Customizable Themes**: Choose from pre-built themes or create your own to match your brand.
 - 🚀 **High Performance**: Built with Rust and modern web technologies for optimal speed.
-- 🌐 **Standards Compliant**: Full support for W3C Verifiable Credentials Data Model.
-- 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices.
+- 🌐 **Standards Compliant**: (Partial) support for W3C Verifiable Credentials Data Model.
 - 🆓 **Free and Open Source**: No ads, no premium features, no catch.
 
 ## Quick Start 🚀
 
-Visit [VC Viewer](https://vcviewer.example.com) to start using the tool immediately, or run it locally using one of these methods:
+Visit [VC Viewer](https://vc-viewer.vamaralds.be) to start using the tool immediately, or run it locally using one of these methods:
 
 ### Using Docker (Recommended)
 
@@ -30,6 +29,7 @@ docker compose up --build
 The application will be available at `http://localhost:8080`.
 
 ### Manual Installation
+More details in the [documentation](https://vc-viewer.vamaralds.be/docs).
 
 ```bash
 # Clone the repository
@@ -47,6 +47,7 @@ cd ../frontend
 ```
 
 ## Development 🛠️
+Detailed documentation is available in the [documentation](https://vc-viewer.vamaralds.be/docs) pages.
 
 ### Prerequisites
 
