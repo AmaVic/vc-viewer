@@ -80,12 +80,13 @@ class SelectiveUniversityTheme extends BaseTheme {
     }
 
     static info = {
+        id: 'selective',
         name: 'Selective Academic',
         description: 'A selective disclosure view showing only major and essential details',
-        credentialType: 'UniversityDegreeCredential',
-        author: 'VC Viewer',
+        author: 'VC Viewer Team',
+        supportedTypes: ['UniversityDegreeCredential']
     };
 }
 
 // Register this theme
-BaseTheme.register('UniversityDegreeCredential:selective', SelectiveUniversityTheme); 
+BaseTheme.register('UniversityDegreeCredential', SelectiveUniversityTheme); 

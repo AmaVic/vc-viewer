@@ -71,25 +71,32 @@
 }</code></pre>
 
                     <h3>Theme Registration</h3>
-                    <p>Themes are automatically registered based on their static properties. Each theme must define the following static properties:</p>
+                    <p>Themes must define their metadata using static properties in a specific format:</p>
                     
                     <pre><code class="language-javascript">class ModernUniversityTheme extends BaseTheme {
-    // Required static properties for automatic registration
-    static id = 'modern';                                           // Unique identifier for the theme
-    static name = 'Modern University Theme';                        // Display name
-    static description = 'A modern design for university degrees';  // Theme description
-    static author = 'Your Name';                                    // Theme author
-    static supportedTypes = ['UniversityDegreeCredential'];        // Supported credential types
+    // Theme metadata in the format expected by the registration system
+    static info = {
+        id: 'modern',                                           // Unique identifier for the theme
+        name: 'Modern University Theme',                        // Display name
+        description: 'A modern design for university degrees',  // Theme description
+        author: 'Your Name'                                    // Theme author
+    };
+    
+    static supportedTypes = ['UniversityDegreeCredential'];    // Supported credential types
     
     // ... rest of the theme implementation
-}</code></pre>
+}
+
+// Register the theme
+BaseTheme.register('UniversityDegreeCredential', ModernUniversityTheme);</code></pre>
 
                     <div class="note">
                         <strong>Important:</strong> Make sure to:
                         <ul>
-                            <li>Use a unique <code>id</code> within the credential type namespace</li>
-                            <li>Specify all supported credential types in <code>supportedTypes</code></li>
-                            <li>Provide meaningful name and description for the theme selector UI</li>
+                            <li>Define all required metadata in the <code>static info</code> object</li>
+                            <li>Specify supported credential types in <code>static supportedTypes</code></li>
+                            <li>Register your theme using <code>BaseTheme.register</code></li>
+                            <li>Use unique IDs within the credential type namespace</li>
                         </ul>
                     </div>
 

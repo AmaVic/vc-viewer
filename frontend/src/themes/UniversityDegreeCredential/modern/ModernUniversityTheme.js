@@ -1,34 +1,50 @@
 class ModernUniversityTheme extends BaseTheme {
+    // Theme metadata in the format expected by the registration system
+    static info = {
+        id: 'modern',
+        name: 'Modern University Theme',
+        description: 'A sleek and modern design for university degree credentials',
+        author: 'VC Viewer Team'
+    };
+    
+    static supportedTypes = ['UniversityDegreeCredential'];
+
     constructor(credential) {
         super(credential);
-        this.id = 'modern';
-        this.name = 'Modern University Theme';
-        this.description = 'A sleek and modern design for university degree credentials';
-        this.author = 'VC Viewer Team';
-        this.supportedTypes = ['UniversityDegreeCredential'];
-        
-        if (credential) {
-            this.degree = credential.credentialSubject.degree;
+        // Store commonly used credential data for easier access
+        if (credential?.credentialSubject) {
+            this.degree = credential.credentialSubject.degree || {};
+            this.subject = credential.credentialSubject;
         }
     }
 
-    static supportedTypes = ['UniversityDegreeCredential'];
-
-
     getThemeIcon() {
+        // Use custom degree image if available
+        if (this.degree.image) {
+            return `<img 
+                src="${this.degree.image}" 
+                alt="Degree Icon" 
+                class="degree-icon"
+            />`;
+        }
         return '<i class="fas fa-graduation-cap"></i>';
     }
 
     getThemeTitle() {
-        return this.credential ? `${this.getIssuerName()}` : 'University Degree';
+        if (!this.credential) return 'University Degree';
+        return `${this.getIssuerName()} - ${this.degree.type || 'Degree'}`;
     }
 
     getContentHTML() {
-        if (!this.credential) return '';
-        
-        const { degree } = this;
-        const recipientId = this.credential.credentialSubject.id || '';
+        if (!this.credential || !this.subject) {
+            return '<div class="error-message">Invalid credential data</div>';
+        }
+
+        // Extract and validate required data
+        const recipientId = this.subject.id || '';
         const shortId = recipientId.split(':').pop() || recipientId;
+        const degreeName = this.degree.name || 'Not specified';
+        const degreeType = this.degree.type || 'Not specified';
         
         return `
             <div class="credential-banner">
@@ -42,14 +58,14 @@ class ModernUniversityTheme extends BaseTheme {
             <div class="degree-content">
                 <div class="content-card">
                     <div class="degree-header">
-                        <div class="degree-name">${degree.name || 'Computer Science'}</div>
-                        <div class="degree-type">${degree.type || 'Bachelor of Science'}</div>
+                        <div class="degree-name">${degreeName}</div>
+                        <div class="degree-type">${degreeType}</div>
                     </div>
 
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">Name</div>
-                            <div class="info-value">${this.credential.credentialSubject.name}</div>
+                            <div class="info-value">${this.subject.name || 'Not specified'}</div>
                         </div>
                         
                         <div class="info-item">
@@ -59,41 +75,37 @@ class ModernUniversityTheme extends BaseTheme {
                         
                         <div class="info-item">
                             <div class="info-label">Major</div>
-                            <div class="info-value">${degree.major || degree.name || 'Not specified'}</div>
+                            <div class="info-value">${this.degree.major || degreeName}</div>
                         </div>
                         
-                        ${degree.minor ? `
+                        ${this.degree.minor ? `
                             <div class="info-item">
                                 <div class="info-label">Minor</div>
-                                <div class="info-value">${degree.minor}</div>
+                                <div class="info-value">${this.degree.minor}</div>
                             </div>
                         ` : ''}
                         
                         <div class="info-item">
                             <div class="info-label">Graduation Date</div>
-                            <div class="info-value">${this.formatDate(degree.graduationDate)}</div>
+                            <div class="info-value">${this.formatDate(this.degree.graduationDate)}</div>
                         </div>
                         
-                        ${degree.gpa ? `
+                        ${this.degree.gpa ? `
                             <div class="info-item">
                                 <div class="info-label">Grade Point Average</div>
-                                <div class="info-value">${degree.gpa}</div>
+                                <div class="info-value">${this.degree.gpa}</div>
+                            </div>
+                        ` : ''}
+
+                        ${this.degree.honors ? `
+                            <div class="info-item honors">
+                                <div class="info-label">Honors</div>
+                                <div class="info-value">${Array.isArray(this.degree.honors) ? 
+                                    this.degree.honors.join(', ') : 
+                                    this.degree.honors}</div>
                             </div>
                         ` : ''}
                     </div>
-
-                    <!--
-                    ${degree.honors?.length ? `
-                        <div class="honors-section">
-                            <div class="honors-title">Honors & Achievements</div>
-                            <div class="honors-list">
-                                ${degree.honors.map(honor => `
-                                    <div class="honor-item">${honor}</div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    -->
 
                     <div class="credential-footer">
                         <div class="footer-grid">
@@ -146,4 +158,4 @@ class ModernUniversityTheme extends BaseTheme {
 }
 
 // Register the theme
-BaseTheme.register(ModernUniversityTheme); 
+BaseTheme.register('UniversityDegreeCredential', ModernUniversityTheme); 

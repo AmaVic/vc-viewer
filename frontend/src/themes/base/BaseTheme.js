@@ -20,15 +20,19 @@ class BaseTheme {
                 console.log('Successfully registered theme:', key);
             } else {
                 // New format: register(class)
-                const tempInstance = new typeOrClass({
-                    type: ['VerifiableCredential'],
-                    issuer: 'Example Issuer',
-                    issuanceDate: new Date().toISOString(),
-                    credentialSubject: {}
-                });
-                const key = `${tempInstance.supportedTypes[0]}:${tempInstance.id}`;
-                BaseTheme.themes[key] = typeOrClass;
-                console.log('Successfully registered theme:', key);
+                if (typeOrClass.info && typeOrClass.info.supportedTypes) {
+                    // Class has static info property
+                    const type = typeOrClass.info.supportedTypes[0];
+                    const key = `${type}:${typeOrClass.info.id}`;
+                    BaseTheme.themes[key] = typeOrClass;
+                    console.log('Successfully registered theme:', key);
+                } else {
+                    // Fallback for classes without static info
+                    const tempInstance = new typeOrClass(null);
+                    const key = `${tempInstance.supportedTypes[0]}:${tempInstance.id}`;
+                    BaseTheme.themes[key] = typeOrClass;
+                    console.log('Successfully registered theme:', key);
+                }
             }
         } catch (error) {
             console.error('Failed to register theme:', error);
@@ -40,25 +44,25 @@ class BaseTheme {
     }
 
     static getThemesByType(credentialType) {
+        console.debug('Getting themes for credential type:', credentialType);
         const themes = [];
         for (const [key, ThemeClass] of Object.entries(BaseTheme.themes)) {
             try {
-                if (ThemeClass.info && ThemeClass.supportedTypes) {
-                    // Old format
-                    if (ThemeClass.supportedTypes.includes(credentialType)) {
+                const [type, id] = key.split(':');
+                if (type === credentialType) {
+                    if (ThemeClass.info) {
+                        // Use static info if available
                         themes.push({
-                            id: ThemeClass.info.id,
+                            id: id,
                             name: ThemeClass.info.name,
                             description: ThemeClass.info.description,
                             author: ThemeClass.info.author
                         });
-                    }
-                } else {
-                    // New format
-                    const tempInstance = new ThemeClass(null);
-                    if (tempInstance.supportedTypes.includes(credentialType)) {
+                    } else {
+                        // Fallback for old format
+                        const tempInstance = new ThemeClass(null);
                         themes.push({
-                            id: tempInstance.id,
+                            id: id,
                             name: tempInstance.name,
                             description: tempInstance.description,
                             author: tempInstance.author

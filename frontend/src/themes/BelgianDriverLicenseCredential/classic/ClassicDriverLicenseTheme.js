@@ -3,10 +3,9 @@ class ClassicDriverLicenseTheme extends BaseTheme {
         id: 'classic',
         name: 'Classic Driver License Theme',
         description: 'A traditional style for Belgian driver licenses',
-        author: 'VC Viewer Team'
+        author: 'VC Viewer Team',
+        supportedTypes: ['BelgianDriverLicenseCredential']
     };
-
-    static supportedTypes = ['BelgianDriverLicenseCredential'];
 
     constructor(credential) {
         super(credential);
@@ -120,4 +119,4 @@ class ClassicDriverLicenseTheme extends BaseTheme {
 }
 
 // Register the theme
-BaseTheme.register('BelgianDriverLicenseCredential', ClassicDriverLicenseTheme); 
+BaseTheme.register(ClassicDriverLicenseTheme); 

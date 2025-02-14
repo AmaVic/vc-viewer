@@ -1,12 +1,14 @@
 class ClassicUniversityTheme extends BaseTheme {
+    static info = {
+        id: 'classic',
+        name: 'Classic University Theme',
+        description: 'A professional and elegant design for university degree credentials',
+        author: 'VC Viewer Team',
+        supportedTypes: ['UniversityDegreeCredential']
+    };
+
     constructor(credential) {
         super(credential);
-        this.id = 'classic';
-        this.name = 'Classic University Theme';
-        this.description = 'A professional and elegant design for university degree credentials';
-        this.author = 'VC Viewer Team';
-        this.supportedTypes = ['UniversityDegreeCredential'];
-        
         if (credential) {
             this.degree = credential.credentialSubject.degree;
         }

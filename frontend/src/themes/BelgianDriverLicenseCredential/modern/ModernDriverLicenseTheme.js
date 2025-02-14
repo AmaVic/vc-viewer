@@ -3,10 +3,9 @@ class ModernDriverLicenseTheme extends BaseTheme {
         id: 'modern',
         name: 'Modern Driver License Theme',
         description: 'A sleek and modern design for Belgian driver licenses',
-        author: 'VC Viewer Team'
+        author: 'VC Viewer Team',
+        supportedTypes: ['BelgianDriverLicenseCredential']
     };
-
-    static supportedTypes = ['BelgianDriverLicenseCredential'];
 
     constructor(credential) {
         super(credential);
