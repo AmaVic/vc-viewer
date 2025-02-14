@@ -36,53 +36,19 @@ More details in the [documentation](https://vc-viewer.vamaralds.be/docs).
 git clone https://github.com/yourusername/vc-viewer.git
 cd vc-viewer
 
-# Build and run the backend
-cd backend
-cargo build --release
-cargo run --release
+# Clean the app (if needed)
+sh ./clean.sh
 
-# In another terminal, serve the frontend
-cd ../frontend
-# Serve using your preferred static file server
-```
+# Build back-end and front-end
+sh ./build.sh
 
-## Development 🛠️
-Detailed documentation is available in the [documentation](https://vc-viewer.vamaralds.be/docs) pages.
-
-### Prerequisites
-
-- Rust 1.75 or later
-- Node.js 18 or later (for frontend development)
-- Git
-- Docker (optional, for containerized deployment)
-
-### Backend Development
-
-```bash
-cd backend
-cargo test        # Run tests
-cargo doc         # Generate documentation
-cargo run         # Run in development mode
-```
-
-### Running with Docker
-
-```bash
-# Development mode
-docker compose up --build
-
-# Or in detached mode
-docker compose up --build -d
+# Run the application
+sh ./run.sh
 ```
 
 ## Creating Themes 🎨
 
-Themes are CSS files that define how your credentials are displayed. To create a new theme:
-
-1. Visit the [Theme Creation Guide](https://vcviewer.example.com/docs/create-theme)
-2. Use our interactive theme builder
-3. Download your theme
-4. Submit a PR to share it with the community!
+Themes are CSS files that define how your credentials are displayed. To create a new theme, check out our [Theme Creation Guide](https://vc-viewer.vamaralds.be/docs/create-theme).
 
 ## Contributing 🤝
 
@@ -94,21 +60,19 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 - 🐛 Bug fixes
 - ✨ New features
 - 📚 Documentation improvements
-- 🌐 Translations
 
 ## Security 🔒
 
 - All credential processing happens client-side
-- No data is ever sent to any server
+- No credential data is ever sent to any server
 - No tracking or analytics
-- Regular security audits
 
-See our [Security Policy](SECURITY.md) for more details.
+**Warning**: This is a side project in alpha version. Use at your own risk.
+
 
 ## Documentation 📚
 
-- [User Guide](https://vcviewer.example.com/docs)
-- [API Documentation](https://vcviewer.example.com/docs/api)
+- [User Guide](https://vc-viewer.vamaralds.be/docs)
 - [Theme Creation Guide](https://vcviewer.example.com/docs/create-theme)
 - [Privacy Policy](https://vcviewer.example.com/privacy)
 - [Cookie Policy](https://vcviewer.example.com/cookies)
@@ -116,56 +80,6 @@ See our [Security Policy](SECURITY.md) for more details.
 ## License 📄
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments 🙏
-
-- [W3C Verifiable Credentials Working Group](https://www.w3.org/groups/wg/vc)
-- All our [contributors](https://github.com/yourusername/vc-viewer/graphs/contributors)
-
-## Deployment 🚀
-
-### CapRover Deployment
-
-The application can be deployed to your CapRover instance using one of these methods:
-
-#### Method 1: One-Click Deploy (Recommended)
-
-1. Log in to your CapRover dashboard
-2. Go to Apps → Create New App
-3. Enter your app name (e.g., `vc-viewer`)
-4. Check "Has Persistent Data" if you plan to store any data
-5. Go to the "Deployment" tab
-6. Under "Deploy from Github", enter:
-   - Repository: `https://github.com/yourusername/vc-viewer`
-   - Branch: `main`
-   - Username: Your GitHub username
-   - Password: Your GitHub personal access token (with repo access)
-7. Click "Deploy Now"
-
-The application will be built and deployed automatically. Access it at `https://vc-viewer.your-caprover-domain.com`
-
-#### Method 2: Manual Deploy
-
-If you prefer manual deployment or need more control:
-
-```bash
-# Install CapRover CLI if you haven't already
-npm install -g caprover
-
-# Login to your CapRover instance
-caprover login
-
-# Deploy the application
-caprover deploy
-```
-
-### Environment Variables
-
-When deploying to CapRover, you might want to configure these environment variables:
-
-- `HOST`: Set to `0.0.0.0` (required for container deployment)
-- `PORT`: Usually set by CapRover automatically
-- `RUST_LOG`: Set to `info` for production or `debug` for troubleshooting
 
 ---
 
